@@ -40,7 +40,7 @@ public interface Constants {
 	 */
 	public final static String MODULE_LOGIN_SYSTEM="登录系统";
 	public final static String MODULE_EXIT_SYSTEM="退出系统";	
-	
+	 
 	public final static String MODULE_RADIUS_LOG="Radius日志";
 	
 	public final static String MODULE_AUTH_RULE = "认证规则设置";
