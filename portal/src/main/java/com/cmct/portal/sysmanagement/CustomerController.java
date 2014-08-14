@@ -48,7 +48,7 @@ public class CustomerController extends AbstractController {
 		Collection<CustomerPO> list=null;
 		List<CustomerPO> customers=new ArrayList<CustomerPO>();
 		CustomerPO customer;
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		//设置显示数量
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
@@ -113,7 +113,7 @@ public class CustomerController extends AbstractController {
 			customer.setRemark(customerPO.getRemark());
 			customers.add(customer);
 		}
-		Map mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("list",customers);
 		mp.put("page",page);
 		mp.put("pageForm",pageForm);
@@ -199,7 +199,7 @@ public class CustomerController extends AbstractController {
 		List<CustomerPO> customers=new ArrayList<CustomerPO>();
 		CustomerPO customer;
 		
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
 		if(pageForm.getPageNum()>0){
@@ -247,7 +247,7 @@ public class CustomerController extends AbstractController {
 			customer.setRemark(customerPO.getRemark());
 			customers.add(customer);
 		}
-		Map mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("list",customers);
 		mp.put("page",page);
 		mp.put("pageForm",pageForm);

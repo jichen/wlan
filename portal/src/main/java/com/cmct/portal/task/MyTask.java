@@ -42,7 +42,7 @@ public class MyTask extends TimerTask{
 		ApMIBService apMIBService=(ApMIBService)SpringContext.getbean("apMIBService");
 		APAndClientService apAndClientService=(APAndClientService)SpringContext.getbean("apAndClientService");
 		
-		Map<String,Object> mp =new HashMap();
+		Map<String,Object> mp =new HashMap<String,Object>();
 		mp.put("status","0");
 
 		//数据库中数据

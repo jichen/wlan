@@ -1,7 +1,6 @@
 package com.cmct.portal.radius.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -22,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 import com.cmct.common.Json.JSONUtil;
-import com.cmct.common.util.DateUtil;
 import com.cmct.common.util.PropertyConfigureHandler;
 import com.cmct.common.util.ui.Page;
 import com.cmct.common.util.ui.PageFormModel;
@@ -43,7 +40,7 @@ public class RadiusLogController {
 		pm.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET,"utf-8");
 		
 		String time1="",time2="",username="";
-		Map mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		List<RadPostAuthVO> list=new ArrayList<RadPostAuthVO>();
 		
 		if(pageForm.getName()!=null){

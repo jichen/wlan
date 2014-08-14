@@ -6,9 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cmct.portal.dao.ACDao;
 import com.cmct.portal.dao.PhoneAndMacDao;
-import com.cmct.portal.po.ACPO;
 import com.cmct.portal.po.PhoneAndMac;
 
 @Service("phoneAndMacService")
@@ -54,20 +52,20 @@ public class PhoneAndMacService  {
 		return phoneMacDao.find(propertiesMap);
 	}
 	
-	public List<PhoneAndMac> findPages(Map propertiesMap,Integer start,Integer limit){
+	public List<PhoneAndMac> findPages(Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<PhoneAndMac> list=phoneMacDao.find(propertiesMap, start, limit);
 		return list;
 	}
 	
 	
 
-	public List<PhoneAndMac> findPages_sql(String sql,Map propertiesMap,Integer start,Integer limit){
+	public List<PhoneAndMac> findPages_sql(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<PhoneAndMac> list=phoneMacDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}	
 		
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return phoneMacDao.getTotalCount(sql, propertiesMap);
 	} 
 	

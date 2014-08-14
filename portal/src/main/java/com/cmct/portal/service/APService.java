@@ -44,18 +44,18 @@ public class APService  {
 	}
 	
 
-	public List<APPO> findPages_sql(String sql,Map propertiesMap,Integer start,Integer limit){
+	public List<APPO> findPages_sql(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<APPO> list=aPDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}	
 	
 	
-	public List<APPO> findPages(Map propertiesMap,Integer start,Integer limit){
+	public List<APPO> findPages(Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<APPO> list=aPDao.find(propertiesMap, start, limit);
 		return list;
 	}
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return aPDao.getTotalCount(sql, propertiesMap);
 	} 
 

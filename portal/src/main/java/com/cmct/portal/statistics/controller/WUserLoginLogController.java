@@ -31,8 +31,8 @@ public class WUserLoginLogController extends AbstractController {
 
 	@RequestMapping(value = "/list")
 	public ModelAndView list(Page page,PageFormModel pageForm,HttpServletRequest req) throws Exception {
-		Map propertiesMap =new HashMap();
-		Map mp=new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
 		String sqlCount="select count(*) from WLANUSERLogPO where 1=1 ";

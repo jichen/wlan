@@ -33,13 +33,13 @@ public class TemplatePageService {
 
 	} 
 	
-	public List<TemplatePagePO> findPages(Map propertiesMap,Integer start,Integer limit){
+	public List<TemplatePagePO> findPages(Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<TemplatePagePO> list=templatePageDAO.find(propertiesMap, start, limit);
 		return list;
 	}
 	
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return templatePageDAO.getTotalCount(sql, propertiesMap);
 	} 
 }

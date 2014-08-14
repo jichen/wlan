@@ -53,7 +53,7 @@ public class TemplateMapController extends AbstractController {
 		TemplatePagePO bean = templatePageService.findOne(id);
 		ModelAndView mav=null;
 		//
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		propertiesMap.put("template_id",id);
 		List<TemplateMapPO> list=templateMapService.findList(propertiesMap);
 		if(list.size()>0){
@@ -210,7 +210,7 @@ public class TemplateMapController extends AbstractController {
 		
 		TemplatePagePO bean = templatePageService.findOne(id);	
 		
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		propertiesMap.put("template_id",id);
 		//根据id排序
 		List<String[]> orderBies = new ArrayList<String[]>();
@@ -282,7 +282,7 @@ public class TemplateMapController extends AbstractController {
 		String templatePageId=request.getParameter("id");
 		Integer tid=Integer.valueOf(templatePageId);
 
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		propertiesMap.put("template_id",tid);
 		List<TemplateMapPO> list=templateMapService.findList(propertiesMap);
 
@@ -483,11 +483,13 @@ public class TemplateMapController extends AbstractController {
 		}
 		return rL;
 	}
-	private List<TemplateMapPO> returnList_order(String type, List<TemplateMapPO> list) {
+	
+	
+	public List<TemplateMapPO> returnList_order(String type, List<TemplateMapPO> list) {
 		List<TemplateMapPO> rL=new ArrayList<TemplateMapPO>();
 		for(TemplateMapPO t:list){
 			if(type.equals(t.getData_type())){			
-				System.out.println("value=="+t.getValue());
+				//System.out.println("value=="+t.getValue());
 				rL.add(t);
 			}
 		}

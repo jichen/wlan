@@ -27,6 +27,12 @@ import javax.persistence.Table;
 @Table(name="T_USER_ROLE")
 public class UserRolePO  implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	/** 描述  */
 	
 	private Integer id;

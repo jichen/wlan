@@ -39,8 +39,8 @@ public class SystemLogController extends AbstractController {
 	 */
 	@RequestMapping(value = "/loginlist")
 	public ModelAndView loginlist(Page page,PageFormModel pageForm,HttpServletRequest req) throws Exception {	
-		Map propertiesMap =new HashMap();
-		Map mp=new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		//设置显示数量
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
@@ -86,8 +86,8 @@ public class SystemLogController extends AbstractController {
 	 */
 	@RequestMapping(value = "/operationlist")
 	public ModelAndView operationlist(Page page,PageFormModel pageForm,HttpServletRequest req) throws Exception {	
-		Map propertiesMap =new HashMap();
-		Map mp=new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		//设置显示数量
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();

@@ -22,11 +22,11 @@ public class StatisticsVoService {
 		return statisticsDao.pageQuery(sql,  start, limit);
 	}
 	
-	public List<Object> CountWlanList(String sql, Map propertiesMap,int start, int limit){
+	public List<Object> CountWlanList(String sql, Map<String,Object> propertiesMap,int start, int limit){
 		return statisticsDao.pageQuery(sql, propertiesMap, start, limit);
 	}
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return statisticsDao.getTotalCount(sql, propertiesMap);
 	}
 }

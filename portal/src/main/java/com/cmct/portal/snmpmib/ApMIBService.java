@@ -27,7 +27,6 @@ import com.cmct.portal.po.SnmpAPtoClientAdress;
 import com.cmct.portal.po.SnmpApInfo;
 import com.cmct.portal.po.SnmpApStatusInfo;
 import com.cmct.portal.po.SnmpClientofAP;
-import com.cmct.portal.service.APAndClientService;
 
 @Service("apMIBService")
 public class ApMIBService {

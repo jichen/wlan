@@ -1,6 +1,5 @@
 package com.cmct.portal.authenticate.controller;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.cmct.common.util.PropertyConfigureHandler;
 import com.cmct.portal.po.ACPO;
@@ -35,13 +33,10 @@ import com.cmct.portal.service.AuthRuleService;
 import com.cmct.portal.service.BLackListService;
 import com.cmct.portal.service.PhoneAndMacService;
 import com.cmct.portal.service.SMSPWDLogService;
-import com.cmct.portal.service.UserService;
 import com.cmct.portal.service.WLANUSERLogService;
 import com.cmct.portal.snmpmib.ApMIBService;
 import com.cmct.portal.interfaces.exception.PortalException;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 
@@ -199,7 +194,7 @@ public class AuthController {
 			//获取ACIP
 			String acIP="";
 			String sql=" from ACPO where 1=1  and isdelete= :isdelete order by id ";
-			Map propertiesMap =new HashMap();
+			Map<String,Object> propertiesMap =new HashMap<String,Object>();
 			propertiesMap.put("isdelete","N");
 			List<ACPO> acs=acService.findPages_sql(sql, propertiesMap, 0, 10);
 			if(null != acs && acs.size()>0){
@@ -256,7 +251,7 @@ public class AuthController {
 				//获取ACIP(根据获取的信息，判断那个ac都数据库查询该AC的配置信息)
 				String acIP="";
 				String sql=" from ACPO where 1=1  and isdelete= :isdelete order by id ";
-				Map propertiesMap =new HashMap();
+				Map<String,Object> propertiesMap =new HashMap<String,Object>();
 				propertiesMap.put("isdelete","N");
 				List<ACPO> acs=acService.findPages_sql(sql, propertiesMap, 0, 10);
 				if(null != acs && acs.size()>0){
@@ -312,7 +307,7 @@ public class AuthController {
 	
 	
 	private void clientToApOfMAC_Login(String phone,String clientMac){
-		Map<String,Object> mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("phone", phone);
 		mp.put("mac", clientMac);
 		//更新WLAN登录用户表
@@ -343,7 +338,7 @@ public class AuthController {
 		}
 	}
 	private void clientToApOfMAC_Exit(String phone,String clientMac){
-		Map<String,Object> mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("mac", clientMac);
 		mp.put("phone", phone);
 		//更新WLAN登录用户表
@@ -353,7 +348,7 @@ public class AuthController {
 		pm.setTime(new Date());
 		phoneAndMacService.updatePM(pm);
 		//更改APAndClient
-		Map<String,Object> mp1=new HashMap();
+		Map<String,Object> mp1=new HashMap<String,Object>();
 		mp1.put("clientmac", clientMac);
 		mp1.put("status", "0");
 		APAndClient apc=apAndClientService.find_Newest(mp1);

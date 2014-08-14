@@ -21,18 +21,18 @@ public class LoginLogService {
 	} 
 	
 	
-	public List<LoginLogPO> findPages(Map propertiesMap,Integer start,Integer limit){
+	public List<LoginLogPO> findPages(Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<LoginLogPO> list=loginLogDao.find(propertiesMap, start, limit);
 		return list;
 	}
 	
-	public List<LoginLogPO> pageQuery(String sql,Map propertiesMap,Integer start,Integer limit){
+	public List<LoginLogPO> pageQuery(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<LoginLogPO> list=loginLogDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}
 	
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return loginLogDao.getTotalCount(sql, propertiesMap);
 	} 
 	

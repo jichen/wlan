@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cmct.portal.dao.RoleDao;
-import com.cmct.portal.po.APPO;
 import com.cmct.portal.po.RolePO;
-import com.cmct.portal.po.UserPO;
-
 
 @Service
 public class RoleService {
@@ -54,7 +51,7 @@ public class RoleService {
 		
 	}
 	
-	public Map findOne_update(Integer roleid){
+	public Map<String,Object> findOne_update(Integer roleid){
 		Map<String,Object> propertiesMap = new HashMap<String,Object>();
 		propertiesMap.put("id",roleid);	
 		List<RolePO> roles=roleDao.find(propertiesMap);
@@ -107,18 +104,18 @@ public class RoleService {
 	}
 	
 	
-	public List<RolePO> findPages_sql(String sql,Map propertiesMap,Integer start,Integer limit){
+	public List<RolePO> findPages_sql(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<RolePO> list=roleDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}	
 	
 	
-	public List<RolePO> findPages(Map propertiesMap,Integer start,Integer limit){
+	public List<RolePO> findPages(Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<RolePO> list=roleDao.find(propertiesMap, start, limit);
 		return list;
 	}
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return roleDao.getTotalCount(sql, propertiesMap);
 	} 
 	
