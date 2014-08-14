@@ -30,7 +30,7 @@ public interface Constants {
 	public final static String Funtion_Content_Update = "模板页面内容修改";
 	
 	public final static String Funtion_View = "浏览";
-	
+	    
 	//分配权限
 	public final static String Funtion_Assign_Roles = "分配权限";
 	//撤销权限
@@ -66,5 +66,6 @@ public interface Constants {
 	public final static String FilePath_CSS="css/";
 	public final static String FilePath_IMAGE="images/";
 	public final static String FilePath_TEMPLATE_PAGE="template";
+	public final static String TEST="TEST";
 
 }
