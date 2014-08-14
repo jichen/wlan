@@ -1,13 +1,7 @@
 import java.io.IOException;
-import java.io.PrintWriter;
-
-import javax.servlet.http.HttpServletResponse;
-
-import oracle.net.aso.p;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.junit.Test;
@@ -17,9 +11,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.cmct.common.util.Passwordmd5;
-import com.cmct.radius.dao.RadCheckDao;
-import com.cmct.radius.dao.RadUserGroupDao;
-import com.cmct.radius.dao.UserInfoDao;
 import com.cmct.radius.service.RadUserService;
 
 
@@ -59,7 +50,6 @@ public class TestSMS {
 			int Status=client.executeMethod(pm);
 			System.out.println("Status_TEST=="+Status);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 				e.printStackTrace();
 		}
 	}
