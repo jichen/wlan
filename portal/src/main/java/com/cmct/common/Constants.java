@@ -66,5 +66,6 @@ public interface Constants {
 	public final static String FilePath_CSS="css/";
 	public final static String FilePath_IMAGE="images/";
 	public final static String FilePath_TEMPLATE_PAGE="template";
+	public final static String TEST="TEST";
 
 }
