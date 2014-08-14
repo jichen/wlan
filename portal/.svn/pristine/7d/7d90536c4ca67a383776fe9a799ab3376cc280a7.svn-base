@@ -1,0 +1,40 @@
+package com.cmct.common.util.ui;
+
+/**
+ * 
+ * @title 		
+ * @description 申明常用的ajax返回情况（成功�?失败），供controller返回ajax使用
+ * @usage		
+ * @copyright	Copyright 2011  SHCMCT Corporation. All rights reserved.
+ * @company		上海中移通信�?��工程有限公司
+ * @author		John.Yao
+ * @create		2012-11-15 下午1:15:46
+ */
+public class DwzAjaxResultUtil {
+
+	private static final String HTTP_STATUS_CODE_SUCCESS = "200";
+
+	private static final String RESPONSE_CALLBACKTYPE_ACTION = "closeCurrent";
+
+	private static final String DEFAULT_MESSAGE_SUCCESS = "当前操作已成�?";
+
+	public static String ajaxDoneSuccess(String msg, boolean isCloseCur) {
+		DwzAJaxRsp rsp = new DwzAJaxRsp();
+		rsp.setStatusCode(HTTP_STATUS_CODE_SUCCESS);
+		rsp.setMessage(msg);
+		if (isCloseCur) {
+			rsp.setCallbackType(RESPONSE_CALLBACKTYPE_ACTION);
+		}
+
+		return rsp.toJSON();
+	}
+
+	public static String ajaxDoneSuccess() {
+		DwzAJaxRsp rsp = new DwzAJaxRsp();
+		rsp.setStatusCode(HTTP_STATUS_CODE_SUCCESS);
+		rsp.setMessage(DEFAULT_MESSAGE_SUCCESS);
+		rsp.setCallbackType(RESPONSE_CALLBACKTYPE_ACTION);
+		return rsp.toJSON();
+	}
+
+}

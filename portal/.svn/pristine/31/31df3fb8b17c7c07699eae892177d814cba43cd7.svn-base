@@ -1,0 +1,91 @@
+package com.cmct.portal.authenticate.controller;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.cmct.portal.po.AuthRulePO;
+import com.cmct.portal.service.AuthRuleService;
+
+@Controller
+@RequestMapping(value = "/authenticate")
+public class AuthController {
+
+	@Autowired
+	private AuthRuleService authRuleService;
+	
+	@RequestMapping(value = "/authPage")
+	public String createPage(HttpServletRequest request) {
+		//
+		String userAgent = request.getHeader("user-agent");
+		if (userAgent.contains("iphone") || userAgent.contains("ipad") || userAgent.contains("android")) {
+			return "/pages/authenticate/mobileAuth";
+		} else {
+			return "/pages/authenticate/pcAuth";
+		}
+	}
+	
+	@RequestMapping(value = "/dynamic")
+	public void dynamic(HttpServletRequest request,HttpServletResponse response,String username) throws HttpException, IOException {
+		PrintWriter pw=null;
+		pw=response.getWriter();
+		HttpClient client = new HttpClient();
+		PostMethod pm = new PostMethod("http://127.0.0.1:8081/radius/dinamicPwd/fetch");
+		NameValuePair vp = new NameValuePair();
+		vp.setName("username");
+		vp.setValue(username);
+		pm.setQueryString(new NameValuePair[]{vp});
+		int Status=client.executeMethod(pm);
+		String ajaxDate="N";
+		if(Status==HttpStatus.SC_OK){
+			Collection<AuthRulePO> list=authRuleService.getAll();
+			for(AuthRulePO arPO:list){
+				ajaxDate=arPO.getAuth_interval().toString();
+			}
+		}
+		pw.write(ajaxDate);
+		pw.close();
+	}
+	
+	@RequestMapping(value = "/overdue")
+	public void isoverdue(HttpServletRequest request,HttpServletResponse response,String username) throws HttpException, IOException {
+		PrintWriter pw=null;
+		pw=response.getWriter();
+		List<AuthRulePO> list=authRuleService.getAll();
+		AuthRulePO arPO=list.get(0);
+		String validtime=arPO.getTime().toString();
+		
+		HttpClient client = new HttpClient();
+		PostMethod pm = new PostMethod("http://127.0.0.1:8081/radius/dinamicPwd/isoverdue");
+		NameValuePair[] vp = {
+				new NameValuePair("username",username),
+				new NameValuePair("validtime",validtime),
+			};
+		
+		pm.addParameters(vp);
+		
+		
+		int Status=client.executeMethod(pm);
+
+		
+		String ajaxDate="N";
+		if(Status==HttpStatus.SC_OK){
+			ajaxDate="Y";
+		}
+		pw.write(ajaxDate);
+		pw.close();
+	}
+}

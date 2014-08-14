@@ -1,0 +1,36 @@
+<html>
+<LINK rel=stylesheet type=text/css href="${css_1}">
+<%@include file="/include.inc.jsp"%>
+</HEAD>
+<BODY bgColor=#ffffff><BR><BR>
+<TABLE border=0 cellSpacing=0 cellPadding=0 width=478 align=center>
+  <TBODY>
+  <TR>
+    <TD bgColor=#ffcc00><DIV class=text align=center>${text_1}</DIV></TD>
+    <TD width=1><IMG border=0 src="" width=1 height=65></TD>
+  </TR>
+  <TR>
+    <TD bgColor=#f4f9fd vAlign=center colSpan=2>
+      <FORM onsubmit="return check()" method=post name=admininfo action="">
+      <TABLE class=d border=0 cellSpacing=0 cellPadding=0 width="100%" align=center height=59>
+        <TBODY>
+        <TR bgColor=#f1f9fe>
+          <TD height=30 width="50%">${text_2}
+						<INPUT class=kuang type=text name=adminname>
+          </TD>
+          <TD height=30 width="50%">${text_3}
+          	<INPUT class=kuang type=password name=adminpsw>
+          </TD>
+        </TR>
+        </TBODY>
+       </TABLE>
+       </FORM>
+    </TD>
+  <TR>
+    <TD colSpan=2><IMG border=0 name=login_r4_c2 src="${ctx}/template/imageshow?path=${image_1}" /></TD>
+  </TR>
+  </TBODY>
+</TABLE>
+
+</BODY>
+</html>

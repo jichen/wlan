@@ -1,0 +1,215 @@
+package com.cmct.common.util.ui;
+
+import java.util.Date;
+
+public class PageFormModel {
+	
+	private int pageNum ;
+	
+	private String name;
+
+	private String datetype;
+	
+	private String isdelete;
+
+	private String location;
+
+	private String ac_id;
+	
+	private String ap_id;
+
+	private String ac_name;
+	
+	private String ap_name;
+	
+	private String contact;//
+
+	private String phone;//
+	
+	private String ip;//ip
+	
+	private String cust_name;//
+	
+	private Integer cust_id;//企业ID
+
+	private Integer parentId;//module父类ID
+	
+	private Date startTime;
+
+	private Date endTime;
+	
+	private Date auth_time1;
+
+	private Date auth_time2;
+	
+	private Date exit_time1;
+
+	private Date exit_time2;
+	
+	private String module;//操作模块
+
+	private String function_name;//操作类型
+	
+	
+	
+	
+	public Date getAuth_time1() {
+		return auth_time1;
+	}
+	public void setAuth_time1(Date auth_time1) {
+		this.auth_time1 = auth_time1;
+	}
+	
+	
+	public Date getAuth_time2() {
+		return auth_time2;
+	}
+	public void setAuth_time2(Date auth_time2) {
+		this.auth_time2 = auth_time2;
+	}
+	
+	
+	public Date getExit_time1() {
+		return exit_time1;
+	}
+	public void setExit_time1(Date exit_time1) {
+		this.exit_time1 = exit_time1;
+	}
+	
+	
+	public Date getExit_time2() {
+		return exit_time2;
+	}
+	public void setExit_time2(Date exit_time2) {
+		this.exit_time2 = exit_time2;
+	}
+
+	
+	public String getModule() {
+		return module;
+	}
+	public void setModule(String module) {
+		this.module = module;
+	}
+	
+	public String getFunction_name() {
+		return function_name;
+	}
+	public void setFunction_name(String function_name) {
+		this.function_name = function_name;
+	}
+	public Date getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+	
+	public Date getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+	public Integer getParentId() {
+		return parentId;
+	}
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
+	public Integer getCust_id() {
+		return cust_id;
+	}
+	public void setCust_id(Integer cust_id) {
+		this.cust_id = cust_id;
+	}
+	public String getCust_name() {
+		return cust_name;
+	}
+	public void setCust_name(String cust_name) {
+		this.cust_name = cust_name;
+	}	
+	public String getAp_name() {
+		return ap_name;
+	}
+	public void setAp_name(String ap_name) {
+		this.ap_name = ap_name;
+	}	
+	public String getAc_name() {
+		return ac_name;
+	}
+	public void setAc_name(String ac_name) {
+		this.ac_name = ac_name;
+	}	
+	
+	public String getIp() {
+		return ip;
+	}
+	public void setIp(String ip) {
+		this.ip = ip;
+	}	
+	
+	
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getContact() {
+		return contact;
+	}
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+	
+	public String getAc_id() {
+		return ac_id;
+	}
+	public void setAc_id(String ac_id) {
+		this.ac_id = ac_id;
+	}
+	public String getAp_id() {
+		return ap_id;
+	}
+	public void setAp_id(String ap_id) {
+		this.ap_id = ap_id;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getIsdelete() {
+		return isdelete;
+	}
+	public void setIsdelete(String isdelete) {
+		this.isdelete = isdelete;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	
+	public int getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public String getDatetype() {
+		return datetype;
+	}
+	public void setDatetype(String datetype) {
+		this.datetype = datetype;
+	}
+
+
+}

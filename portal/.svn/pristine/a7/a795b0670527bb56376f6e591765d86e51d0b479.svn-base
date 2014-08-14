@@ -1,0 +1,149 @@
+
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<LINK rel=stylesheet type=text/css href="${css_1}">
+<HEAD>
+<script src="${ctx}/static/js/jquery/jquery-1.7.2.js" type="text/javascript"></script>
+<script type="text/javascript">
+function submitFun(){
+	var flag=true;
+	var phone=$("#username").val();
+	var password=$("#password").val();
+	if($.trim($("#username").val())==""){
+		alert("请输入用户名称");
+		return false;
+	}
+	else if($.trim($("#password").val())==""){
+		alert("请输入密码");
+		return false;
+	}
+	
+	var userip=$("#userip").val();
+	if(flag){
+		$.ajax({
+			type:"POST",
+			url:"${ctx}/authenticate/overdue",
+			data:{'username':phone,'password':password,'userip':userip},
+			dataType:"json", 
+			success:function(json){
+				if(json["status"]==0){
+					alert(json["msg"]);
+					window.location.href= "${ctx}/access/wlan_index.jsp";
+				}else if(json["status"]==1){
+					alert(json["msg"]);
+					return false;
+				}else if(json["status"]==2){
+					alert(json["msg"]);
+					return false;
+				}
+			},
+			error:function(json){
+				alert("系统问题请尽快联系服务方");
+				return false;
+			}
+		});
+	}else{
+		return false;
+	}
+}
+
+
+//获取动态密码
+function dynamic_pwd(){
+	var flag=true;
+	var phone=$("#username").val();
+	if($.trim($("#username").val())=="" || !/^\d{11}$/.test(phone)){
+		 alert("请输入11为手机号码作为用户名");
+		 flag=false;
+	}
+	if(flag){
+		$.ajax({
+			type:"POST",
+			url:"${ctx}/authenticate/dynamic",
+			data:{'username':phone},
+			success:function(date){
+				if(date=="N"){
+					alert("系统错误请再次获取密码");
+					dynamic_look();
+				}else if(date=="F"){
+					alert("对不起，您没有权限获取动态密码。");
+					dynamic_look();
+				}else{
+					//间隔时间(换算成秒)
+					interval_time=date*60;
+					$("#dynamic").attr("disabled","");
+					alert("已发送短信密码");
+					dynamic_disabled(interval_time);
+				}				
+			}
+		});
+	}else{
+		return false;
+	}
+	
+}
+
+//动态密码按钮倒计时
+function dynamic_disabled(secs){
+	wait=secs*1000;//等的毫秒数;
+	for(i=1;i<=secs;i++){
+		setTimeout("doUpdate("+i+","+secs+")",i*1000);
+	}
+}
+
+function doUpdate(num,all){
+	var wut=all-num;
+	if(wut!=0){
+		$("#dynamic").attr("value","获取动态密码("+wut+")");
+	}else{
+		dynamic_look();
+	}
+}
+function dynamic_look(){
+	$("#dynamic").attr("disabled",false);
+	$("#dynamic").attr("value","获取动态密码");
+}
+
+
+
+</script>
+</HEAD>
+<BODY bgColor="#ffffff"><BR /><BR />
+<form id="login_wlan" name="login_wlan">
+<TABLE border=0 cellSpacing=0 cellPadding=0 width="350px" align="center">
+  <TR>
+    <TD bgColor="#ffcc00"><DIV class="text" align="center">${text_1}</DIV></TD>
+    <TD width="1"></TD>
+  </TR>
+  <TR>
+    <TD bgColor=#f4f9fd vAlign=center colSpan=2>
+      <TABLE class=d border=0 cellSpacing=0 cellPadding=0 width="350px" align="center" height="59">
+        <TR bgColor=#f1f9fe>
+          <TD height=30 width="200px">${text_2}
+			<input id="username" name="username" type="text" maxlength="20" value="" size="15" />
+          </TD>
+          <TD height=30 width="150px">${text_3}
+          	<input id="password" name="password" type="password" maxlength="20" value="" size="8"/>
+			<input id="userip" name="userip" type="hidden" maxlength="20" value="${userip}" />
+          </TD>
+        </TR>
+       </TABLE>
+    </TD>
+  </TR>
+  <TR>
+    <TD>
+		<input name="" type="button" id="J_SubmitStatic"  value="登录" onclick="submitFun()"/>
+		<input name="" type="reset" id="J_ResetStatic"  value="重置"/>
+		<input id="dynamic" name="dynamic" type="button" onclick="dynamic_pwd()" value="获取动态密码"  />
+    </TD>
+  </TR>
+  <TR>
+    <TD>
+    	<IMG border=0 name=login_r4_c2 src="${ctx}/template/imageshow?path=${image_1}" width="350px" height="20px"/>
+    </TD>
+  </TR>
+
+</TABLE>
+</form>
+</BODY>
+</html>

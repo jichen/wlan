@@ -1,0 +1,49 @@
+<%@page contentType="text/html;charset=UTF-8" 	trimDirectiveWhitespaces="true"%>
+<%@include file="/include.inc.jsp" %>
+<form method="post" action="${ctx }/sysmanagement/ac/add" class="pageForm required-validate" onsubmit="return validateCallback(this, navTabAjaxDone);">
+	<table border="1" align="left" langH="138" style="width: 70%;height:100%;">
+		<tr>
+			<td align="left" height="25px">
+				AC名称:<input type="text" name="ac_name"  class="required" size="20" maxlength="32" />
+			</td>
+		</tr>
+		<tr>
+			<td align="left" height="25px">
+				公司名称:<input  id="cust_id" name="cust.cust_id" value="" type="text" />
+					<input id="cust_name" name="cust.cust_name" type="text" 
+						postField="keyword" suggestFields="cust_id,cust_name" suggestUrl="" 
+						lookupGroup="cust" value="" readonly="readonly" />
+					<a class="btnLook"   href="${ctx }/sysmanagement/customer/lookUp" lookupGroup="cust">查找带回</a>
+			</td>
+		</tr>
+		<tr>
+			<td align="left" height="25px">
+				ip:<input type="text" name="ip"   class="required" size="20" maxlength="32"  />
+			</td>
+		</tr>
+		<tr>
+			<td align="left" height="25px">
+				位置:<input type="text" name="location"  class="" size="20" maxlength="32"/>
+			</td>
+		</tr>
+		<tr>
+			<td align="left" height="25px">备注:</td>
+		</tr>	
+		<tr>
+			<td align="left"> 
+				<textarea cols="91" rows="4" name="remark"></textarea>
+			</td>
+		</tr>	
+	
+	</table>
+
+
+			
+	<div class="formBar">
+		<ul>
+			<li><div class="buttonActive"><div class="buttonContent"><button type="submit">确定</button></div></div></li>
+			<li><div class="button"><div class="buttonContent"><button type="button" class="close">关闭</button></div></div></li>
+		</ul>
+	</div>
+</table>
+</form>

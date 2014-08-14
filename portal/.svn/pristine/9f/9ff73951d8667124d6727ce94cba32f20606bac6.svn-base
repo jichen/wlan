@@ -1,0 +1,14 @@
+dataSource.driver=com.mysql.jdbc.Driver
+dataSource.url=jdbc:mysql://127.0.0.1:3306/test_wlan
+dataSource.username=root
+dataSource.password=root
+
+
+#hibernate config
+hibernate.dialect=org.hibernate.dialect.MySQLDialect
+hibernate.show_sql=true
+hibernate.generate_statistics=true
+hibernate.connection.release_mode=auto
+hibernate.autoReconnect=true
+hibernate.format_sql=false
+hibernate.hbm2ddl.auto=update

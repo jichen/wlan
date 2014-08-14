@@ -1,0 +1,66 @@
+package com.cmct.portal.login.controller;
+
+
+import java.net.BindException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.cmct.portal.dao.UserDao;
+import com.cmct.portal.po.UserPO;
+import com.cmct.portal.service.UserService;
+
+@Controller
+@RequestMapping(value = "/login")
+public class LoginController {
+	
+	private String viewpage;
+	public String getViewpage() {
+		return viewpage;
+	}
+
+	public void setViewpage(String viewpage) {
+		this.viewpage = viewpage;
+	}
+	
+	@Autowired
+	private UserService userService;
+		
+	@RequestMapping(value = "/submit")
+	public ModelAndView submit(HttpServletRequest request,HttpServletResponse response,Object command,BindException error) throws Exception {
+		
+		System.out.println(request.getParameter("username"));
+		
+		System.out.println(request.getParameter("password"));
+
+		Collection<UserPO> list=userService.getAll();
+		List<UserPO> users=new ArrayList<UserPO>();
+		UserPO user;
+		for(UserPO userPO:list){
+			user=new UserPO();
+			user.setUserId(userPO.getUserId());
+			user.setUserName(userPO.getUserName());
+			user.setPwd(userPO.getPwd());
+			users.add(user);
+		}
+		Map mp=new HashMap();
+		mp.put("list",users);
+
+		return new ModelAndView("/index",mp);
+		
+	}
+
+
+	
+	
+}

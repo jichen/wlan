@@ -1,0 +1,222 @@
+package com.cmct.portal.security.controller;
+
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.cmct.common.Constants;
+import com.cmct.common.annotation.Log;
+import com.cmct.common.util.AbstractController;
+import com.cmct.common.util.ui.Page;
+import com.cmct.common.util.ui.PageFormModel;
+import com.cmct.portal.po.RolePO;
+import com.cmct.portal.service.ModuleService;
+import com.cmct.portal.service.RoleService;
+import com.google.common.collect.Lists;
+
+
+
+
+@Controller
+@RequestMapping("security/role")
+public class RoleController extends AbstractController {
+	
+	@Autowired
+	private RoleService roleService;
+
+	@Autowired
+	private ModuleService moduleService;
+	
+	private static final String CREATE = "/pages/view/security/role/add";
+	private static final String UPDATE = "/pages/view/security/role/update";
+	private static final String LIST = "/pages/view/security/role/list";
+	
+	private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
+
+	@RequestMapping(value = "/preAdd")
+	public String preCreate(Map<String, Object> map) {
+		map.put("module", moduleService.getTree());
+		return CREATE;
+	}
+
+	// 重新组装PermissionList（切分SN,SN1的形式）
+	private void refactor(RolePO role) {
+		List<String> allList = Lists.newArrayList();
+		List<String> list = role.getPermissionList();
+		for (String string : list) {
+			if (StringUtils.isBlank(string)) {
+				continue;
+			}
+
+			if (string.contains(",")) {
+				String[] arr = string.split(",");
+				allList.addAll(Arrays.asList(arr));
+			} else {
+				allList.add(string);
+			}
+		}
+		role.setPermissionList(allList);
+	}
+	
+	@Log(module = Constants.MODULE_SYS_ROLE, function = Constants.Funtion_Add)
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	@ResponseBody
+	public String add(RolePO role,HttpServletRequest request) {
+		RolePO mulRole = roleService.findOne(role.getName());
+		if (mulRole != null) {
+			return ajaxDoneError("该角色已存在");
+		}
+		List<RolePO> roles = roleService.findByCode(role.getCode());
+		if (roles != null && roles.size() >= 1) {
+			mulRole = roles.get(0);
+		}
+		if (mulRole != null) {
+			return ajaxDoneError("该角色已存在");
+		}
+		refactor(role);
+		roleService.save(role);
+		return ajaxDoneSuccess(" ",true,LIST);
+	}
+
+	@RequestMapping(value = "/preUpdate/{id}")
+	public ModelAndView preUpdate(@PathVariable Integer id) {
+		Map mp = roleService.findOne_update(id);
+		
+		String rolePermissionList = (String) mp.get("rolePermissionList");
+		RolePO role = (RolePO) mp.get("role");
+		ModelAndView mav = new ModelAndView(UPDATE);
+		mav.addObject("role", role);
+		mav.addObject("module", moduleService.getTree());
+		mav.addObject("rolePermissionList", rolePermissionList);
+		return mav;
+	}
+
+	@Log(module = Constants.MODULE_SYS_ROLE, function = Constants.Funtion_Update)
+	@RequestMapping(value = "/update")
+	@ResponseBody
+	public String update(RolePO role,  HttpServletRequest request) {
+		RolePO role1 = roleService.findOne(role.getId());
+		List<RolePO> list = roleService.findByRoleName(role.getName());
+		if (!role1.getName().equals(role.getName())) {
+			list.add(role);
+		} 
+		List<RolePO> list1 = (List<RolePO>) roleService.findByCode(role.getCode());
+		if (!role1.getCode().equals(role.getCode())) {
+			list1.add(role);
+		}
+		if (list != null && list.size() >= 2 || list1 != null && list1.size() >= 2) {
+			return ajaxDoneError("该角色已存在");
+		} else {
+			refactor(role);
+			roleService.update(role);
+			return ajaxDoneSuccess(" ", true, "LIST");
+		}
+	}
+
+	@Log(module = Constants.MODULE_SYS_ROLE, function = Constants.Funtion_Delete)
+	@RequestMapping(value = "/delete/{id}")
+	@ResponseBody
+	public String delete(@PathVariable Integer id, HttpServletRequest request) {
+		if (id == Integer.valueOf(1)) {
+			logger.debug("尝试删除超级管理员");
+			return ajaxDoneError("超级管理员不能删除");
+		} else {
+			roleService.delete(id);
+			return ajaxDoneSuccess(" ", false, "LIST");
+		}
+	}
+	
+	
+	@RequestMapping(value = "/list")
+	public ModelAndView list(Page page,PageFormModel pageForm, HttpServletRequest req) {
+
+		List<RolePO> list = null;
+
+		Map propertiesMap =new HashMap();
+		Integer start = 0;
+		Integer limit=page.getNumPerPage();
+		String sqlCount="select count(*) from RolePO where 1=1 ";
+		String sql=" from RolePO where 1=1 ";
+		String where_sql="";
+		if(pageForm.getPageNum()>0){
+			start=(Integer.valueOf(pageForm.getPageNum())-1)*page.getNumPerPage();
+		}
+		
+		sql=sql+where_sql;
+		sqlCount=sqlCount+where_sql;
+		list=roleService.findPages_sql(sql,propertiesMap, start, limit);
+		page.setTotalCount(roleService.getTotalCount_where(sqlCount, propertiesMap));
+		//request.getSession().setAttribute("parentModule", moduleService.get(pageForm.getParentId()));
+		
+		Map mp=new HashMap();
+		mp.put("list",list);
+		mp.put("page",page);
+		mp.put("pageForm",pageForm);
+		return new ModelAndView("/pages/view/security/role/list",mp);
+	}
+
+	@RequestMapping(value = "/ajaxName")
+	public void ajaxName(HttpServletRequest request,HttpServletResponse response,String name) throws IOException {
+		RolePO info = roleService.findOne(name);
+		Map<String, Object> rs = new HashMap<String, Object>();
+		PrintWriter pw=null;
+		pw=response.getWriter();
+		String ajaxDate="0";
+		if (info != null) {
+			ajaxDate="1";
+		}
+		pw.write(ajaxDate);
+		pw.close();
+	}
+
+	@RequestMapping(value = "/ajaxCode")
+	public void ajaxCode(HttpServletRequest request,HttpServletResponse response,String code) throws IOException {
+		List<RolePO> roles = roleService.findByCode(code);
+		RolePO info = null;
+		if (roles != null && roles.size() >= 1) {
+			info = roles.get(0);
+		}
+		Map<String, Object> rs = new HashMap<String, Object>();
+		PrintWriter pw=null;
+		pw=response.getWriter();
+		String ajaxDate="0";
+		if (info != null) {
+			ajaxDate="1";
+		}
+		pw.write(ajaxDate);
+		pw.close();
+	}
+
+	@RequestMapping(value = "/mulRole")
+	@ResponseBody
+	public Map<String, Object> mulRole(@RequestParam("roleName") String name) {
+		List<RolePO> list = roleService.findByRoleName(name);
+		Map<String, Object> rs = new HashMap<String, Object>();
+		if (list != null && list.size() >= 1) {
+			rs.put("status", 1);
+		} else {
+			rs.put("status", 0);
+		}
+		return rs;
+	}
+}

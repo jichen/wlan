@@ -1,0 +1,36 @@
+package com.cmct.portal.template.controller;
+
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
+@Controller
+@RequestMapping(value = "/template")
+public class TemplateController {
+
+	@RequestMapping(value = "/execute")
+	public String execute(HttpServletRequest request,HttpServletResponse response) throws Exception {
+	   Configuration cfg = new Configuration();
+	   cfg.setServletContextForTemplateLoading(request.getSession().getServletContext(), "WEB-INF/templates");
+	   
+	   Map<String,Object> dataMap = new HashMap<String,Object>();
+	   dataMap.put("message", "First step for freemarker template");
+	   
+	   Template t = cfg.getTemplate("test.ftl");
+	   response.setContentType("text/html;charset=UTF-8");
+	   
+	   PrintWriter out = response.getWriter();
+	   
+	   t.process(dataMap, out);
+	   return "";
+	}	
+}

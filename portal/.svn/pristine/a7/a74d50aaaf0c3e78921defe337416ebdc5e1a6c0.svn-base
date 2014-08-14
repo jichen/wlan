@@ -1,0 +1,50 @@
+package com.cmct.portal.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cmct.portal.dao.ACDao;
+import com.cmct.portal.po.ACPO;
+
+
+@Service
+public class ACService  {
+	@Autowired
+	private ACDao aCDao;
+	
+	public List<ACPO> getAll(){
+		return aCDao.findAll();
+		
+	} 
+	public List<ACPO> findByLogin(Map login){
+		List<ACPO> list=aCDao.find(login);
+		return list;
+	}
+	
+	public void saveAC(ACPO entity){
+		aCDao.save(entity);
+	} 
+	
+	public void updateAC(ACPO entity){
+		aCDao.update(entity);
+	} 
+	
+	//查询记录数
+	public Integer countRow() {
+		String sql=" from ACPO ";
+		return aCDao.getCount(sql);
+
+	} 
+	
+	//查询记录数
+	public ACPO findOne(Integer id) {
+		return aCDao.get(id);
+
+	} 
+	
+	
+	
+}

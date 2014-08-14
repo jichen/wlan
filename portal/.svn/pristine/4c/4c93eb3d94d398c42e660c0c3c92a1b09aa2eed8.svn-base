@@ -1,0 +1,72 @@
+package com.cmct.common.util.ui;
+
+public class PageFormModel {
+	/**
+	 * 当前页码
+	 */
+	private String pageNum ;
+	
+	private String name;
+
+	private String isdelete;
+
+	private String location;
+
+	private String ac_id;
+	
+	private String contact;//联系人
+	
+
+
+	private String phone;//联系方式
+	
+
+	
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getContact() {
+		return contact;
+	}
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+	
+	public String getAc_id() {
+		return ac_id;
+	}
+	public void setAc_id(String ac_id) {
+		this.ac_id = ac_id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getIsdelete() {
+		return isdelete;
+	}
+	public void setIsdelete(String isdelete) {
+		this.isdelete = isdelete;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	
+	public String getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(String pageNum) {
+		this.pageNum = pageNum;
+	}
+
+}

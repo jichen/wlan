@@ -1,0 +1,18 @@
+package com.cmct.portal.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cmct.portal.dao.OperateLogDao;
+import com.cmct.portal.po.OperateLogPO;
+
+
+@Service
+public class OperateLogService {
+	@Autowired
+	private OperateLogDao operateLogDao;
+	
+	public void save(OperateLogPO entity){
+		operateLogDao.save(entity);
+	} 
+}

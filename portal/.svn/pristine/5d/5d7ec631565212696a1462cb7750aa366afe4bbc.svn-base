@@ -1,0 +1,94 @@
+package com.cmct.portal.po;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "T_AP")
+public class APPO {
+	private Integer id;
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	
+	private String remark;
+	
+	@Column(columnDefinition="TEXT", nullable = true)
+	public String getRemark() {
+		return remark;
+	}
+
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+
+	private Integer ac_id;
+	@Column(nullable = false, length = 11)
+	public Integer getAc_id() {
+		return ac_id;
+	}
+
+
+	public void setAc_id(Integer ac_id) {
+		this.ac_id = ac_id;
+	}
+
+
+	
+	
+	private String nas_port_id;
+	@Column(nullable = false, length = 200)
+	public String getNas_port_id() {
+		return nas_port_id;
+	}
+
+
+	public void setNas_port_id(String nas_port_id) {
+		this.nas_port_id = nas_port_id;
+	}
+
+
+	
+	
+	private String location;
+	@Column(nullable = false, length = 100)	
+	public String getLocation() {
+		return location;
+	}
+
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+
+	private String ap_name;
+	@Column(nullable = false, length = 50)
+	public String getAp_name() {
+		return ap_name;
+	}
+
+
+	public void setAp_name(String ap_name) {
+		this.ap_name = ap_name;
+	}
+	
+	
+	
+}

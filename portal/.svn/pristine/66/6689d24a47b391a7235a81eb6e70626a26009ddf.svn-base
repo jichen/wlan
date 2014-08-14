@@ -1,0 +1,52 @@
+package com.cmct.portal.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cmct.portal.dao.ACDao;
+import com.cmct.portal.dao.CustomerDao;
+import com.cmct.portal.po.ACPO;
+import com.cmct.portal.po.CustomerPO;
+
+
+@Service
+public class CustomerService  {
+	@Autowired
+	private CustomerDao customerDao;
+	
+	public List<CustomerPO> getAll(){
+		return customerDao.findAll();
+		
+	} 
+	public List<CustomerPO> findByLogin(Map login){
+		List<CustomerPO> list=customerDao.find(login);
+		return list;
+	}
+	
+	public void saveCustomer(CustomerPO entity){
+		customerDao.save(entity);
+	} 
+	
+	public void updateCustomer(CustomerPO entity){
+		customerDao.update(entity);
+	} 
+	
+	//查询记录数
+	public Integer countRow() {
+		String sql=" from CustomerPO ";
+		return customerDao.getCount(sql);
+
+	} 
+	
+	//查询记录数
+	public CustomerPO findOne(Integer id) {
+		return customerDao.get(id);
+
+	} 
+	
+	
+	
+}

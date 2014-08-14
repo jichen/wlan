@@ -1,0 +1,154 @@
+package com.cmct.portal.po;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+
+@Entity
+@Table(name = "T_TEMPLATE_PAGE")
+public class TemplatePagePO {
+	//主键
+	private Integer id;
+	//保留字段
+	private String type;
+	//模板显示名称
+	private String templatename;
+	//模板地址
+	private String templatelocal;
+	//模板真实名称
+	private String pagename;
+	//允许上传css数量(对应单个终端)
+	private String csscount;
+	//允许上传image数量
+	private String imagecount;
+	//允许设置文字数量
+	private String textcount;
+	//是否启用
+	private String isdelete;
+	
+	private String createusername;
+	
+	private Date createtime;
+
+	private String updateusername;
+	
+	private Date updatetime;
+	
+	
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	@Column(nullable = true, length = 10)
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	@Column(nullable = false, length = 50)
+	public String getTemplatename() {
+		return templatename;
+	}
+	public void setTemplatename(String templatename) {
+		this.templatename = templatename;
+	}
+	
+	@Column(nullable = false, length = 255)
+	public String getTemplatelocal() {
+		return templatelocal;
+	}
+	public void setTemplatelocal(String templatelocal) {
+		this.templatelocal = templatelocal;
+	}
+	
+	@Column(nullable = false, length = 255)
+	public String getPagename() {
+		return pagename;
+	}
+	public void setPagename(String pagename) {
+		this.pagename = pagename;
+	}
+
+	
+	@Column(nullable = false, length = 10)
+	public String getCsscount() {
+		return csscount;
+	}
+	public void setCsscount(String csscount) {
+		this.csscount = csscount;
+	}
+	
+	@Column(nullable = false, length = 10)
+	public String getImagecount() {
+		return imagecount;
+	}
+	public void setImagecount(String imagecount) {
+		this.imagecount = imagecount;
+	}
+
+	@Column(nullable = false, length = 10)
+	public String getTextcount() {
+		return textcount;
+	}
+	public void setTextcount(String textcount) {
+		this.textcount = textcount;
+	}
+	
+	@Column(nullable = false, length = 1)
+	public String getIsdelete() {
+		return isdelete;
+	}
+	public void setIsdelete(String isdelete) {
+		this.isdelete = isdelete;
+	}
+	
+	@Column(nullable = false, length = 20)
+	public String getCreateusername() {
+		return createusername;
+	}
+	public void setCreateusername(String createusername) {
+		this.createusername = createusername;
+	}
+	
+	@Column(nullable = true, length = 20)
+	public String getUpdateusername() {
+		return updateusername;
+	}
+	public void setUpdateusername(String updateusername) {
+		this.updateusername = updateusername;
+	}	
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = false)
+	public Date getCreatetime() {
+		return createtime;
+	}
+	public void setCreatetime(Date createtime) {
+		this.createtime = createtime;
+	}
+	
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(nullable = true)
+	public Date getUpdatetime() {
+		return updatetime;
+	}
+	public void setUpdatetime(Date updatetime) {
+		this.updatetime = updatetime;
+	}
+}

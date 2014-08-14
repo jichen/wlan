@@ -1,0 +1,38 @@
+package com.cmct.portal.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cmct.portal.dao.RoleDao;
+import com.cmct.portal.po.APPO;
+import com.cmct.portal.po.RolePO;
+
+
+@Service
+public class RoleService {
+	@Autowired
+	private RoleDao roleDao;
+	
+	public void save(RolePO entity){
+		roleDao.save(entity);
+	}
+	
+	public List<RolePO> findPages_sql(String sql,Map propertiesMap,Integer start,Integer limit){
+		List<RolePO> list=roleDao.pageQuery(sql, propertiesMap, start, limit);
+		return list;
+	}	
+	
+	
+	public List<RolePO> findPages(Map propertiesMap,Integer start,Integer limit){
+		List<RolePO> list=roleDao.find(propertiesMap, start, limit);
+		return list;
+	}
+	
+	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+		return roleDao.getTotalCount(sql, propertiesMap);
+	} 
+	
+}

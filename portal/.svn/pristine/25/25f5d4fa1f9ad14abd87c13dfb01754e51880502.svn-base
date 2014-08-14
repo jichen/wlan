@@ -1,0 +1,42 @@
+package com.cmct.common;
+
+/**
+ * 
+ * @title
+ * @description 该类主要用于定义所用在系统中需要定义的常量
+ * @usage
+ * @copyright Copyright 2011 SHCMCT Corporation. All rights reserved.
+ * @company 上海中移通信技术工程有限公司
+ * @author John.Yao
+ * @create 2012-3-27 下午3:07:49
+ */
+public interface Constants {
+
+	public final static String PORTAL_LOGIN_USER = "PORTAL_LOGIN_USER";//系统登录用户
+	
+
+	
+
+	/*
+	 * Funtion
+	 */
+	public final static String Funtion_Login="Funtion_Login";
+	public final static String Funtion_Add = "Funtion_Add";
+	public final static String Funtion_Delete = "Funtion_Delete";
+	public final static String Funtion_Update = "Funtion_Update";
+	public final static String Funtion_View = "Funtion_View";	
+	
+	/*
+	 * MODULE
+	 */
+	public final static String MODULE_LOGIN_SYSTEM="登录系统";
+	public final static String MODULE_AUTH_RULE = "认证规则设置";
+	public final static String MODULE_BLACKLIST = "黑名单管理";
+	public final static String MODULE_AP = "AP位置信息管理";
+	public final static String MODULE_AC = "AC管理";
+	public final static String MODULE_CUSTOMER = "企业管理";
+	
+	
+
+
+}

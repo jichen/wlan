@@ -1,0 +1,80 @@
+<%@page contentType="text/html;charset=UTF-8" 	trimDirectiveWhitespaces="true"%>
+<%@include file="/include.inc.jsp" %>
+<script type="text/javascript">
+function preview_action(form, callback) {
+	//获取表单
+	var $form = $(form);
+	//定义submit
+	var _submitFn = function() {
+		$.ajax({
+			type : form.method || 'POST',
+			url : "${ctx }/template/preview",
+			data : $form.serializeArray(),
+			dataType : "json",
+			cache : false,
+			success : callback || DWZ.ajaxDone,
+			error : DWZ.ajaxError
+		});
+	}
+}
+
+//给文本框赋值
+function filetohidden(file,hfile){
+	var filename=file.value;
+	hfile.value=file.value;
+	
+}
+
+</script>
+<form action="${ctx }/templatemap/authmap/tMupdate" method="post" class="pageForm required-validate" 
+	enctype="multipart/form-data" onsubmit="return validateCallback(this, navTabAjaxDone);" >
+	
+	<input type=hidden name="id" value="${bean.id}"/>
+	<div class="pageFormContent" layoutH="56" align="left">
+		<div>
+			<p style="width: 250px">
+				<label style="width: 80px">模板名称:</label><label style="width: 80px">${bean.templatename}</label><input type="hidden" name="template_id"  value="${bean.id}" class="digits" readonly="readonly"/>
+			</p><p></p><p></p>
+			<p style="width: 300px">
+				<label style="width: 80px">终端类型:</label>
+				<input type="checkbox" name="pc"  value="Y" <c:if test="${pc== 'Y'}">checked</c:if> class="textInput"><label style="width: 20px">PC</label>
+				<input type="checkbox" name="mobile"  value="Y" <c:if test="${mobile=='Y'}">checked</c:if> class="textInput"><label style="width: 60px">移动终端</label>
+			</p><p></p><p></p>
+			<c:forEach var="css" items="${list_css}"  varStatus="status">
+				<p style="width: 600px">
+					<label style="width: 80px">式样${css.value_name}:</label>
+					<input id="${css.value_name }_file" name="${css.value_name }_file" type="file" value="${css.value }" onchange="filetohidden(${css.value_name }_file,${css.value_name })"/>
+					使用中：${css.teminal_type }
+					<input name="${css.value_name }" type="hidden" value="${css.value }" >
+				</p><p style="width: 20px"></p><p style="width: 20px"></p>
+			</c:forEach>
+			<c:forEach var="image" items="${list_image}"  varStatus="status">
+				<p style="width: 600px">
+					<label style="width: 80px">图片${image.value_name}:</label>
+					<input id="${image.value_name }_file" name="${image.value_name }_file" type="file" value="${image.value}" onchange="filetohidden(${image.value_name }_file,${image.value_name })"/>
+					使用中：${image.teminal_type }
+					<input name="${image.value_name }" type="hidden" value="${image.value }" >
+				</p><p style="width: 5px"></p><p style="width: 5px"></p>
+			</c:forEach>
+			<c:forEach var="text" items="${list_text}" varStatus="status">
+				<p style="width: 600px">
+					<label style="width: 80px">文本${text.value_name}:</label>
+					<input id="${text.value_name }_file" name="${text.value_name }" type="text" value="${text.value }"  class="required"  size="80" maxlength="255"/>
+					<input name="${text.value_name }" type="hidden" value="${text.value }" >
+				</p><p style="width: 5px"></p><p style="width: 5px"></p>
+			</c:forEach>		
+			<input type="hidden" value="${bean.textcount}" name="textcount" >
+			<input type="hidden" value="${bean.imagecount}" name="imagecount" >
+			<input type="hidden" value="${bean.csscount}" name="csscount" >
+		</div>
+			
+	
+	</div>
+	<div class="formBar">
+		<ul>
+			<li><div class="buttonActive"><div class="buttonContent"><button type="submit">确定</button></div></div></li>
+			<li><div class="button"><div class="buttonContent"><button type="button" class="close">关闭</button></div></div></li>
+		</ul>
+	</div>
+</table>
+</form>

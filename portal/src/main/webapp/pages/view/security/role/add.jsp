@@ -1,0 +1,162 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
+<%@page import="com.cmct.portal.po.ModulePO"%>
+<%@include file="/include.inc.jsp"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions"prefix="fn" %>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
+<script type="text/javascript">
+ 	function securityName(obj) {
+		$.ajax({
+			type : "post",
+			url : "${ctx}/security/role/ajaxName",
+			data : {'roleName' : $(obj).val()},
+			success : function(data) {
+				if(data='0'){
+					$("#roleMsgName").html("<span class='required'>该角色名称已存在</span>");
+				}
+			},
+			error : function(data){
+				$("#roleMsgName").html("<span class='required'>该角色名称已存在</span>");
+			}
+		});
+ 	}
+		
+	function securityCode(obj) {
+		$.ajax({
+			type : "post",
+			url : "${ctx}/security/role/ajaxCode",
+			data : {'roleCode' : $(obj).val()},
+			success : function(data) {
+				if(data='0'){
+					$("#roleMsgCode").html("<span class='required'>该角色编号已存在</span>");
+				}
+			},
+			error : function(data){
+				$("#roleMsgCode").html("<span class='required'>该角色编号已存在</span>");
+			}
+		}); 
+	}
+	
+	//遍历被选中CheckBox元素的集合 得到Value值
+	function kkk() {
+		
+	 var firstlist = ""; // 第一级选中项集合，以逗号相隔。
+	 var secondlist = ""; //第二级选中项集合集合。
+	//jquery循环tt下的所有选中的复选框
+	
+	$('input:checkbox[name="name"]:checked').each(function(i,a){
+	    
+		alert(a.value); 
+	    alert(a.name);
+	  if (a.name == "name") {
+	        firstlist += a.value + ",";
+	      }
+	     /*  else if (a.name == "second") {
+	        secondlist += a.value + ",";
+	      } */
+	      });
+	   		alert(firstlist);
+	   //alert(secondlist );
+	  $("#resultBox").html(firstlist.substring(0,firstlist.length-1));
+	  //$("#Chosesecond").val(secondlist .substring(0, secondlist .length - 1));
+	}
+</script>
+<h2 class="contentTitle">添加角色</h2>
+<form method="post" action="${ctx }/security/role/add" class="required-validate pageForm" onsubmit="return validateCallback(this, dialogAjaxDone);">
+	<div class="pageFormContent" layoutH="97">
+	<dl style="width:600px;">
+		<dt>角色编号：</dt>
+		<dd>
+			<input type="text" onblur="securityCode(this)" name="code" class="required" size="30" maxlength="32" alt="请输入角色编号"/>
+		</dd>
+		<dd id="roleMsgCode"></dd>
+	</dl>
+	<dl style="width:600px;">
+		<dt>角色名称：</dt>
+		<dd>
+			<input type="text" onblur="securityName(this)" name="name" class="required" size="30" maxlength="32" alt="请输入角色名称"/>
+		</dd>
+		<dd id="roleMsgName"></dd>
+	</dl>
+	<dl class="nowrap" style="width:600px;">
+		<dt>角色权限点描述：</dt>
+		<dd>
+			<textarea name="description" cols="91" rows="2">${role.description}</textarea>
+		</dd>
+	</dl>
+	<div style=" display:block; margin:10px; width:400px; height:300px; border:solid 1px #CCC; line-height:21px; background:#FFF;">
+		请选择该角色所具有的权限
+		 <ul class="tree treeFolder treeCheck expand" >
+			<c:set var="ind" value="${0}"/>
+			<li><a  tname="permissionList[${ind  }]" tvalue="${module.sn }" checked="true">${module.name }</a>
+			<ul>
+			<c:forEach var="m1" items="${module.children }" varStatus="m1ind">
+			<c:set var="ind" value="${1}"/>
+				<li><a  tname="permissionList[${ind  }]" tvalue="${m1.sn }" checked="true">${m1.name }</a>
+					<ul>
+						<c:forEach var="m2" items="${m1.children }" varStatus="m2ind">
+						<c:set var="ind" value="${ind + 1 }"/>
+						<c:choose>
+							<c:when test="${m2.priority} == 50">
+								<li><a tname="permissionList[${ind }]" tvalue="${m2.sn }" checked="true">${m2.name }</a></li>
+							</c:when>
+							<c:otherwise>
+								<li><a tname="permissionList[${ind }]" tvalue="${m2.sn }" checked="true">${m2.name }</a>
+							<ul>
+								<c:forEach var="m3" items="${m2.children }" varStatus="m3ind">
+								<c:set var="ind" value="${ind + 2 }"/>
+								<c:choose>
+									<c:when test="${m3.priority == 50}">
+										<li><a tname="permissionList[${ind }]" tvalue="${m3.sn }" checked="true">${m3.name }</a></li>
+									</c:when>
+									<c:otherwise>
+										<li><a tname="permissionList[${ind }]" tvalue="${m3.sn }" checked="true">${m3.name }</a>
+										<ul>
+											<c:forEach var="m4" items="${m3.children }" varStatus="m4ind">
+											<c:set var="ind" value="${ind + 3 }"/>
+											<c:choose>
+												<c:when test="${m4.priority == 50}">
+													<li> <a tname="permissionList[${ind }]" tvalue="${m4.sn }" checked="true">${m4.name }</a>
+												</c:when>
+												<c:otherwise>
+													<li> <a tname="permissionList[${ind }]" tvalue="${m4.sn }" checked="true">${m4.name }</a> 
+														<ul>
+															<c:forEach var="m5" items="${m4.children }" varStatus="m5ind">
+															<c:set var="ind" value="${ind + 4 }"/>
+															<li> <a tname="permissionList[${ind }]" tvalue="${m5.sn }" checked="true">${m5.name }</a></li>
+															</c:forEach>
+														</ul>
+											
+													</li>
+												</c:otherwise>
+											</c:choose>
+										
+											</c:forEach>
+										</ul>
+									
+									</li>
+       								</c:otherwise>
+								</c:choose>
+									
+								</c:forEach>
+							</ul>
+						</li>
+							</c:otherwise>
+						</c:choose>
+						
+						</c:forEach>
+					</ul>
+				</li>
+			</c:forEach>
+			</ul>
+			</li>
+				
+		</ul> 
+	</div>
+	</div>
+	<div class="formBar">
+		<ul>
+			<li><div class="buttonActive"><div class="buttonContent"><button type="submit">确定</button></div></div></li>
+			<li><div class="button"><div class="buttonContent"><button type="button" class="close">关闭</button></div></div></li>
+		</ul>
+	</div>
+</form>

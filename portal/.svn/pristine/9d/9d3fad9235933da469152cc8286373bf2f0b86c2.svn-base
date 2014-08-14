@@ -1,0 +1,119 @@
+package com.cmct.portal.sysmanagement;
+
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.cmct.common.util.AbstractController;
+import com.cmct.portal.po.APPO;
+import com.cmct.portal.service.APService;
+
+
+@Controller
+@RequestMapping("/sysmanagement/ap")
+public class APController extends AbstractController {
+	
+	private static String REL_ID = "apList";
+	
+	@Autowired
+	private APService apService;
+
+	/**
+	 * 预添加
+	 */
+	@RequestMapping(value = "/preadd")
+	public ModelAndView preAdd() throws Exception {
+		ModelAndView mav = new ModelAndView("pages/view/sysmanagement/ap/add");
+		return mav;
+	}
+
+	/**
+	 * 添加规则
+	 */
+	@RequestMapping(value = "/add")
+	@ResponseBody
+	public String add(APPO bean,HttpServletRequest request){
+
+		System.out.println(request.getContentType());
+		System.out.println(request.getContextPath());
+		System.out.println(request.getCharacterEncoding());
+		System.out.println(bean.getAp_name());
+		System.out.println(bean.getLocation());
+		System.out.println(bean.getNas_port_id());
+		System.out.println(bean.getRemark());
+		System.out.println(bean.getAc_id());
+		
+		bean.setIsdelete("N");
+		apService.saveAP(bean);
+		return ajaxDoneSuccess(" ",true,REL_ID);
+	}
+	/**
+	 * 
+	 */
+	@RequestMapping(value = "/list")
+	public ModelAndView list(HttpServletRequest req) throws Exception {
+		Collection<APPO> list=apService.getAll();
+		List<APPO> aps=new ArrayList<APPO>();
+		APPO ap;
+		for(APPO apPO:list){
+			ap=new APPO();
+			ap.setId(apPO.getId());
+			ap.setAp_name(apPO.getAp_name());
+			ap.setNas_port_id(apPO.getNas_port_id());
+			ap.setLocation(apPO.getLocation());
+			ap.setAc_id(apPO.getAc_id());
+			ap.setRemark(apPO.getRemark());
+			ap.setIsdelete(apPO.getIsdelete());
+			aps.add(ap);
+		}
+		Map mp=new HashMap();
+		mp.put("list",aps);
+		return new ModelAndView("/pages/view/sysmanagement/ap/list",mp);
+	}
+	/**
+	 * 预编辑
+	 */
+	@RequestMapping(value = "/preUpdate/{id}")
+	public ModelAndView preUpdate(@PathVariable("id") Integer id) throws Exception {
+		APPO bean = apService.findOne(id);
+		ModelAndView mav = new ModelAndView("/pages/view/sysmanagement/ap/update");
+		mav.addObject("bean", bean);
+		return mav;
+	}
+	
+	/**
+	 * 预编辑
+	 */
+	@RequestMapping(value = "/update")
+	@ResponseBody
+	public String update(APPO bean,HttpServletRequest request) throws Exception {
+		//更新数据 
+		apService.updateAP(bean);
+
+		return ajaxDoneSuccess(" ",true,REL_ID);
+	}
+	
+	/**
+	 * 删除
+	 */
+	@RequestMapping(value = "/delete/{id}")
+	@ResponseBody
+	public String delete(@PathVariable("id") Integer id) throws Exception {
+		APPO bean = apService.findOne(id);
+		bean.setIsdelete("Y");
+		apService.updateAP(bean);
+		return ajaxDoneSuccess("删除成功！", false, REL_ID);
+	}
+}

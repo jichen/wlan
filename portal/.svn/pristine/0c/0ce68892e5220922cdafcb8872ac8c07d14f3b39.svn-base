@@ -1,0 +1,216 @@
+package com.cmct.portal.interfaces.model;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 
+ * @title Portal协议客户端,用于发送和接收数据报文		
+ * @description	
+ * @usage		
+ * @copyright	Copyright 2011  SHCMCT Corporation. All rights reserved.
+ * @company		上海中移通信技术工程有限公司
+ * @author		jichen
+ * @create		2014-3-19 下午2:03:05
+ */
+public class PortalClient {
+
+	/**
+	 * IP地址
+	 */
+    private String hostName;
+    
+    /**
+     * 端口
+     */
+    private int port;
+    
+    /**
+     * UDP发送延迟
+     */
+    private int timeout;
+    
+    /**
+     * UDP重发次数
+     */
+    private int retryCount;
+
+    
+	public int getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
+	}
+
+	public int getRetryCount() {
+		return retryCount;
+	}
+
+	public void setRetryCount(int retryCount) {
+		this.retryCount = retryCount;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+    
+    public PortalClient(String hostName,int port,int timeout,int retryCount) {
+    	this.hostName = hostName;
+    	this.port = port;
+    	this.timeout = timeout;
+    	this.retryCount = retryCount;
+    }
+   
+    /**
+     * 
+     * @param data
+     * @return
+     * @throws IOException
+     */
+    private byte[] encode(PortalData data) throws IOException {
+    	ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    	DataOutputStream dos = new DataOutputStream(bos);
+    	dos.writeByte((byte) data.getVersion());
+    	dos.writeByte((byte) data.getType());
+    	dos.writeByte((byte) data.getAuthType());
+    	dos.writeByte((byte) data.getRsv());
+    	dos.write(intToByteArray(data.getSerialNo()));
+    	dos.write(intToByteArray(data.getReqId()));
+    	InetAddress address = InetAddress.getByName(data.getIp());
+    	dos.write(address.getAddress());
+    	dos.write(intToByteArray(data.getPort()));
+    	dos.writeByte((byte) data.getErrorCode());
+    	dos.writeByte((byte) data.getAttrNum());
+    	
+    	List<Attribute> attributes = new ArrayList<Attribute>();
+    	for (Attribute attr : attributes) {
+    		dos.writeByte(attr.getAttrType());
+    		dos.writeByte(attr.getAttrLength());
+    		dos.write(attr.getValue().getBytes());
+    	}
+    	dos.flush();
+    	return bos.toByteArray();
+    }
+    
+    public PortalData challengeRequest(PortalData challengeReq) throws IOException {
+    	InetAddress udpServerAddress = InetAddress.getByName(hostName);
+    	byte[] sendData = encode(challengeReq);
+    	DatagramPacket packet = new DatagramPacket(sendData, sendData.length,udpServerAddress,port);
+    	DatagramSocket socket = new DatagramSocket();
+    	DatagramPacket packetIn = new DatagramPacket(new byte[2048],2048);
+    	socket.setSoTimeout(timeout);
+    	for (int i = 0;i < retryCount;i++) {
+    		try {
+    			socket.send(packet);
+            	socket.receive(packetIn);
+            	return getPortalData(packetIn);
+    		} catch(Exception e) {
+    		   e.printStackTrace();	
+    		}
+       	}
+    	return null;
+    }
+    
+    
+    public PortalData decode(byte[] data) throws Exception {
+    	ByteArrayInputStream bis = new ByteArrayInputStream(data);
+    	// 报文固定前十六字节数据
+       	byte[] dataFix = new byte[16];
+       	
+       	//报文不定长属性数据
+    	byte[] dataUnFix = new byte[data.length - 16];
+    	
+    	bis.read(dataFix, 0, 16);
+    	bis.read(dataUnFix);
+    	
+    	if (dataFix[0] == 0x00) {
+    		throw new Exception("invalid data");
+    	}
+    	
+       	PortalData receiveData = new PortalData();
+    	receiveData.setVersion(dataFix[0]);
+    	receiveData.setType(dataFix[1]);
+    	receiveData.setAuthType(dataFix[2]);
+    	receiveData.setRsv(dataFix[3]);
+    	receiveData.setSerialNo(byteArrayToInt(new byte[]{0,0,dataFix[4],dataFix[5]}));
+    	receiveData.setSerialNo(byteArrayToInt(new byte[]{0,0,dataFix[6],dataFix[7]}));
+    	receiveData.setIp(InetAddress.getByAddress(new byte[]{dataFix[8],dataFix[9],dataFix[10],dataFix[11]}).getHostAddress());
+    	receiveData.setPort(byteArrayToInt(new byte[]{0,0,dataFix[12],dataFix[13]}));
+    	receiveData.setErrorCode(dataFix[14]);
+    	int attrNum = dataFix[15];
+    	receiveData.setAttrNum(attrNum);
+    	int offSet = 0;
+    	List<Attribute> attributes = new ArrayList<Attribute>();
+    	for (int i = 0; i < attrNum; i++) {
+    		Attribute attr = new Attribute();
+    		int lengthPosition = offSet + 2;
+    		attr.setAttrType(dataUnFix[lengthPosition - 2]);
+    		int attrLength = dataUnFix[lengthPosition - 1];
+    		int valueLength = attrLength - 2;
+    		attr.setAttrLength(attrLength);
+    		byte[] valueArray = new byte[valueLength];
+    		for (int j = 0; j < valueLength; j++) {
+    			valueArray[j] = dataUnFix[lengthPosition + j];
+    		}
+    		attr.setValue(new String(valueArray));
+    		attributes.add(attr);
+    		offSet = offSet + attrLength;
+    	}
+    	receiveData.setAttributes(attributes);
+    	return receiveData;
+    }
+    
+    public PortalData getPortalData(DatagramPacket packetIn) throws Exception {
+    	byte[] data = packetIn.getData();
+    	return decode(data);
+    }
+	 
+    
+ 
+    
+    private static byte[] intToByteArray(int num) {
+    	byte[] b = new byte[2];
+    	for (int i = 0; i < 4; i++) {
+    		if (i > 1) {
+    			b[i - 2] = (byte) (num >>> (24 - i * 8));
+    		}
+    	}
+    	return b;
+    }
+    
+    private static int byteArrayToInt(byte[] b) {
+    	int value = 0;
+    	for (int i = 0; i < b.length; i++) {
+    		value+= (b[i] & 0xFF) << (8 * (3 - i));
+    	}
+    	return value;
+    }
+    
+    public static void main(String[] args) {
+    	int i = 65535;
+    	byte[] b = intToByteArray(i);
+    	System.out.println(byteArrayToInt(new byte[]{0,0,b[0],b[1]}));
+    }
+
+}

@@ -1,0 +1,74 @@
+<%@page contentType="text/html;charset=UTF-8"%>
+<%@include file="/include.inc.jsp"%>
+<div class="pageHeader">
+	<form onsubmit="return dwzSearch(this,'dialog');" rel="pagerForm" id="pagerForm" action="${ctx}/sysmanagement/ac/lookUp"
+		method="post">
+		<c:choose>
+			<c:when test="${pageForm.pageNum==null}">
+				<input type="hidden" name="pageNum" value="1" />
+			</c:when>
+			<c:otherwise>
+				<input type="hidden" name="pageNum" value="${pageForm.pageNum}" />
+			</c:otherwise>
+		</c:choose>
+		<input type="hidden" name="numPerPage" value="10" /> 
+	<div class="searchBar">
+		<table class="searchContent"  align="left" >
+			<tr>
+				<td>&nbsp;AC名称：</td>
+				<td><input name="name" type="text" value="${pageForm.name}"></td>
+				<td>&nbsp;IP地址：</td>
+				<td><input name="ip" type="text" value="${pageForm.ip}"></td>
+				<td>&nbsp;安装位置：</td>
+				<td><input name="location" type="text" value="${pageForm.location}"></td>
+			</tr>
+			<tr>
+				<td>&nbsp;所属企业：</td>
+				<td><input name="cust_name" type="text" value="${pageForm.cust_name}"></td>				
+				<td></td><td></td><td></td><td>
+				<div class="subBar">
+					<ul>
+						<li><div class="buttonActive"><div class="buttonContent"><button type="submit">查询</button></div></div></li>
+					</ul>
+				</div>
+				</td>
+			</tr>
+		</table>
+
+	</div>
+	</form>
+</div>
+<div class="pageContent">
+	<table class="table"  width="100%" layoutH="138" targetType="dialog">
+		<thead>
+			<tr>
+				<th width="40" >序号</th>
+				<th width="120" >AC名称</th>
+				<th width="120" >IP地址</th>
+				<th width="150" >安装位置</th>
+				<th width="150" >所属企业</th>
+				<th width="80">查找带回</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="acs" items="${list}"  varStatus="status" >
+			<tr target="slt_uid" rel="${acs.id}">
+				<td>${status.index+1}</td>
+				<td>${acs.ac_name}</td>
+				<td>${acs.ip}</td>
+				<td>${acs.location}</td>
+				<td>${acs.cust_name}</td>
+				<td width="120"><a class="btnSelect"
+						href="javascript:$.bringBack({ac_id:'${acs.id}',ac_name:'${acs.ac_name}'})"
+						title="查找带回">查找带回</a></td>
+			</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+	<div class="panelBar">
+		<div class="pages">
+			<span>显示10条，共${page.totalCount}条</span>
+		</div>
+		<div class="pagination" targetType="navTab" totalCount="${page.totalCount}" numPerPage="${page.numPerPage}" pageNumShown="10" currentPage="${page.pageNum}"></div>
+	</div>
+</div>

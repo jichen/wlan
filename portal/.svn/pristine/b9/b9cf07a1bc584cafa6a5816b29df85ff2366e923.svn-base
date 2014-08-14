@@ -1,0 +1,14 @@
+dataSource.driver=com.mysql.jdbc.Driver
+dataSource.url=jdbc:mysql://192.168.49.66:3306/portal?useUnicode=true&characterEncoding=UTF-8
+dataSource.username=portal
+dataSource.password=portal
+
+
+#hibernate config
+hibernate.dialect=org.hibernate.dialect.MySQLDialect
+hibernate.show_sql=true
+hibernate.generate_statistics=true
+hibernate.connection.release_mode=auto
+hibernate.autoReconnect=true
+hibernate.format_sql=false
+hibernate.hbm2ddl.auto=update

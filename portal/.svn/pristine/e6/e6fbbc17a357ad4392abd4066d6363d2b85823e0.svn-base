@@ -1,0 +1,25 @@
+package com.cmct.portal.login.controller;
+
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping(value = "/login")
+public class LoginController {
+	/**
+	 * 登录引导页
+	 * @return
+	 */
+	@RequestMapping(value = "/submit")
+	public String submit(HttpServletRequest request) {
+		
+		System.out.println(request.getParameter("username"));
+		System.out.println(request.getParameter("password"));
+
+		return "/pages/view/index";
+		
+	}
+}

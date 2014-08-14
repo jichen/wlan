@@ -1,0 +1,22 @@
+package com.cmct.portal.authenticate.controller;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping(value = "/authenticate")
+public class AuthController {
+
+	@RequestMapping(value = "/authPage")
+	public String createPage(HttpServletRequest request) {
+		//
+		String userAgent = request.getHeader("user-agent");
+		if (userAgent.contains("iphone") || userAgent.contains("ipad") || userAgent.contains("android")) {
+			return "/pages/authenticate/mobileAuth";
+		} else {
+			return "/pages/authenticate/pcAuth";
+		}
+	}
+}

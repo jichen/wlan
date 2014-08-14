@@ -1,0 +1,191 @@
+package com.cmct.portal.authenticate.controller;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.cmct.portal.po.AuthRulePO;
+import com.cmct.portal.service.AuthRuleService;
+import com.cmct.portal.service.BLackListService;
+import com.cmct.portal.service.UserService;
+import com.cmct.portal.interfaces.exception.PortalException;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+
+
+@Controller
+@RequestMapping(value = "/authenticate")
+public class AuthController {
+
+	@Autowired
+	private AuthRuleService authRuleService;
+	
+	@Autowired
+	private BLackListService blackListService;
+			
+	@RequestMapping(value = "/authPage")
+	public String createPage(HttpServletRequest request,HttpServletResponse resp) throws IOException, TemplateException {
+		String userAgent = request.getHeader("user-agent").toLowerCase();
+		if (userAgent.contains("iphone") || userAgent.contains("ipad") || userAgent.contains("android")) {
+			return "/pages/authenticate/mobileAuth";
+		} else {
+			return "/pages/authenticate/pcAuth";
+		}
+	}
+	
+	@RequestMapping(value = "/dynamic")
+	public void dynamic(HttpServletRequest request,HttpServletResponse response,String username) throws HttpException, IOException {
+
+		String ajaxDate="N";
+		PrintWriter pw=null;
+		pw=response.getWriter();
+		//判断用户是否存在于黑名单中
+		if(blackUser(username)){
+			ajaxDate="F";
+		}else{
+			//获取认证的规则，以后要修改的			
+			List<AuthRulePO> list=authRuleService.getAll();
+			AuthRulePO arPO=list.get(0);
+			//申请动态密码
+			HttpClient client = new HttpClient();
+			PostMethod pm = new PostMethod("http://127.0.0.1:8081/radius/dinamicPwd/fetch");
+			//密码有效期
+			String validtime=arPO.getTime().toString();
+			NameValuePair[] vp = {
+					new NameValuePair("username",username),
+					new NameValuePair("validtime",validtime),
+				};		
+			pm.addParameters(vp);
+			/*
+			 *  一个参数
+			 * 		 
+			NameValuePair vp = new NameValuePair();
+			vp.setName("username");
+			vp.setValue(username);
+			pm.setQueryString(new NameValuePair[]{vp});
+			*/			
+			int Status=client.executeMethod(pm);
+			//判断密码是否申请成功
+			if(Status==HttpStatus.SC_OK){
+				ajaxDate=arPO.getAuth_interval().toString();
+				//记录成功的log
+			}else{
+				
+				//记录失败的log
+			}
+		}
+		pw.write(ajaxDate);
+		pw.close();
+	}
+	
+
+	//联网登录验证 
+	@RequestMapping(value = "/overdue")
+	@ResponseBody
+	public Map<String,Object> isoverdue(String username,String password,String userip,
+			HttpServletRequest request,HttpServletResponse response,HttpSession session) throws HttpException, IOException {
+		Map<String,Object> rs = new HashMap<String,Object>();
+		//对用户名进行判断是否存在于黑白名单中
+		if(blackUser(username)){
+			rs.put("status","2");
+			rs.put("msg", "您没有任何权限登录。");
+			return rs;
+		}
+		//进入认证流程
+		try {
+			Map<String,Object> result=new HashMap<String, Object>();
+			/*
+			if(userip==null || userip.equals("null") || userip.equals("")){
+				userip=request.getRemoteAddr();
+			}*/
+			
+			result=com.cmct.portal.interfaces.radius.PortaltoRadius.wlanLogin(null,userip,username,password);
+			//对result进行判断时候成功，以及添加log
+			
+			//将数据放入session中
+			session.setAttribute("username", username);
+			session.setAttribute("password", password);				
+			session.setAttribute("userip", result.get("userip"));
+			session.setAttribute("serialNo", result.get("serialNo"));
+			session.setAttribute("reqID", result.get("reqID"));
+			rs.put("status","0");
+			rs.put("msg", "登陆成功");
+			return rs;
+		} catch (PortalException e) {
+			e.printStackTrace();
+			rs.put("status","1");
+			rs.put("msg", "密码过期，请重新获取");
+			return rs;
+		}
+	}
+	
+	//联网退出
+	@RequestMapping(value = "/wLanExit")
+	@ResponseBody
+	public Map<String,Object> wLanExit(HttpServletRequest request,HttpServletResponse response,
+			HttpSession session,String userip) throws HttpException, IOException {
+		Map<String,Object> rs = new HashMap<String,Object>();
+		if(session!=null){
+			try {
+				String userIP=(String) session.getAttribute("userip");
+				Map<String,Object> result=new HashMap<String, Object>();
+				result=com.cmct.portal.interfaces.radius.PortaltoRadius.wlanExit(null, userIP);
+				//判断返回值
+				String code=(String) result.get("code");
+				if(code.equals("0")){
+					rs.put("status","0");
+					rs.put("msg", "下线成功。");
+				}else if(code.equals("1")){
+					rs.put("status","1");
+					rs.put("msg", "下线被系统拒绝。");
+				}else if(code.equals("2")){
+					rs.put("status","2");
+					rs.put("msg", "下线失败。");
+				}else if(code.equals("3")){
+					rs.put("status","3");
+					rs.put("msg", "系统异常请尽快联系服务方。");
+				}
+				return rs;
+			} catch (PortalException e) {
+				e.printStackTrace();
+				rs.put("status","3");
+				rs.put("msg", "系统异常请尽快联系服务方。");
+				return rs;
+			}
+		}else{
+			rs.put("status","3");
+			rs.put("msg","系统异常请尽快联系服务方。");
+			return rs;
+			
+		}
+	}
+	
+	//判断是否存在黑名单中
+	public Boolean blackUser(String username){
+		if(username != null && username.trim()!=""){
+			return blackListService.findOneofUsername(username.trim());
+		}else{
+			//用户名为null或是不合法
+			return true;
+		}
+	}
+	
+}

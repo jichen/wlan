@@ -1,0 +1,30 @@
+@charset "utf-8";
+*{margin:0 auto; padding:0px;}
+body { font-family: Arial, Helvetica, sans-serif; background:#016aa9; font-size:12px; color:#fff;}
+img{border:0px;}
+form{margin:0px; display:inline; color:#000; font-weight:800;}
+input{height:20px; background:#292929; border:1px #7fbed9 solid;}
+
+.main{width:919px; height:501px; margin-top:30px; background: url(../images/login_bg.gif) #016aa9 repeat-x; padding-top:109px!important; padding-top:110px; padding-left:0px!important; padding-left:26px;}
+
+.login_main{width:428px; height:315px; background:url(../images/login_main.png) no-repeat; padding-top:10px;}
+
+.login_home{height:20px; padding-top:8px; font-weight:800; padding-left:35px;}
+.login_title{height:40px; padding-left:20px;}
+
+.big_title{ font-size:28px; width:400px !important; width:160px; padding-top:10px; padding-left:15px; font-weight:800; float:left;}
+.login_system{width:150px!important; width:130px; float:right; color:#999; text-align:right; padding-right:20px; padding-top:10px;}
+
+.login_body{ width:428px; height:150px; padding:20px 20px 0 40px;}
+
+.login_frist{width:428px; clear:both}
+.login_username{float:left; width:200px; font-weight:800}
+.login_username input{width:120px;}
+.login_code{width:150px; float:left; text-align:left}
+.login_code input{width:90px;}
+.login_secred{width:428px; clear:both}
+.login_password {padding-top:15px;width:200px; float:left}
+.login_password input{width:120px;}
+.login_sub{width:146px; padding-top:15px; text-align:left; padding-left:45px;float:left }
+.login_sub_1{width:300px;  float:left; padding-top:15px; padding-left:115px; }
+.login_sub input{width:50px; color:#FFF;}

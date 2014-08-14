@@ -1,0 +1,90 @@
+#error{
+	width:468px;
+	height:322px;
+	background:url(images/error_bg.png) no-repeat;
+	left:50%;
+	top:50%;
+	margin:-161px 0 0 -234px;
+	position:absolute;
+}
+
+.leftbar {
+	padding-top: 20px;
+	padding-left: 20px;
+	float: left;
+	display: block;
+	height: 212px;
+	width: 175px;
+}
+.error_word {
+	float: left;
+	padding-top: 40px;
+	padding-left: 15px;
+	padding-right: 15px;
+	display: block;
+	width: 230px;
+}
+.error_word p {
+	color: #666;
+	font-size: 18px;
+	font-weight: bold;
+	line-height: 28px;
+	font-family: Verdana, Geneva, sans-serif;
+}
+.button {
+	margin-top: 25px;
+	margin-right: 20px;
+	float: left;
+	height: 100px;
+	width: 210px;
+}
+.button a {
+	text-decoration: none;
+	color: #FFF;
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+	padding-top: 22px;
+	background-image: url(images/button2.png);
+	background-repeat: no-repeat;
+	height: 107px;
+	float: left;
+	width: 145px;
+	margin-right: 10px;
+	margin-left: 7px;
+	display: block;
+}
+.error_title {
+	color: #ff7700;
+	font-size: 24px;
+	font-weight: bold;
+	margin-top: 20px;
+	margin-left: 30px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #CCC;
+	padding-bottom: 15px;
+	margin-right: 20px;
+}
+.right {
+	margin-left: 25px;
+	display: block;
+	width: 260px;
+	float: left;
+	margin-top: 20px;
+}
+.right p {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 18px;
+	line-height: 28px;
+	font-weight: bold;
+	color: #666;
+}
+
+.left_img {
+	width: 96px;
+	float: left;
+	margin-left: 35px;
+	height: 96px;
+	margin-top: 20px;
+}

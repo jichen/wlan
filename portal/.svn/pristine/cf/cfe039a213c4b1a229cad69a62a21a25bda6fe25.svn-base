@@ -1,0 +1,85 @@
+*{
+	margin:0;
+	padding:0;
+}
+body{
+	background:url(images/bg.jpg) repeat-x;
+	width:100%;
+	height:100%;
+	font-family:"微软雅黑","Arial";
+	
+}
+
+#login{
+	width:468px;
+	height:322px;
+	background:url(images/login.png) no-repeat;
+	left:50%;
+	top:50%;
+	margin:-161px 0 0 -234px;
+	position:absolute;
+}
+.title{
+	font-size:16px;
+	font-weight:bold;
+	color:#1f5b9a;
+	padding:8px 5px 7px 10px;
+}
+.login_content{
+	padding:17px 0 0 200px;
+	width:260px;
+	height:284px;
+}
+.tb{
+	font-size:16px;
+	font-weight:bold;
+	color:#1f5b9a;
+	height:28px;
+	vertical-align: middle;	
+	margin:5px 0;
+}
+.username,.keyword{
+	width:178px;
+	height:24px;
+	border:1px solid #315e79;
+}
+.keyword{
+	margin-left:1px;
+}
+.yz{
+	width:93px;
+	height:24px;
+	border:1px solid #315e79;
+}
+.log{
+	height:24px;
+	width:73px;
+	border:1px solid #999;
+	background:#d9d9d9;
+	margin-left:3px;
+	color:#000;
+	font-family:"MV Boli";
+	font-size:14px;
+	margin-top:3px;
+}
+.user {
+	margin-top: 13px;
+}
+.button{
+	margin:15px 0 0 20px;
+}
+.J_Submit,.J_Reset{
+	width:88px;
+	height:31px;
+	display:block;
+	float:left;
+	background:url(images/nav_bg.jpg) no-repeat;
+	margin:15px 10px;
+	text-align:center;
+	color:#eef4f5;
+	font-size:15px;
+	font-weight:bold;
+	cursor:pointer;
+	border:none;
+	font-family:"宋体";
+}

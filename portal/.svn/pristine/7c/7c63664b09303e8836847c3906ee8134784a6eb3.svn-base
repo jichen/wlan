@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台登录页面</title>
+<link rel="stylesheet" href="style.css"/>
+</head>
+
+<body>
+<div id="login">
+    <div class="title">ICT管理系统登录</div>
+    <div class="login_content">
+       <form action="" method="get" class="login2">
+          <div class="user">
+            <lable class="tb">用户名：</lable>
+            <input name="" type="text" / class="username">
+          </div>
+          <div class="user">
+            <lable class="tb">密&nbsp;&nbsp;&nbsp;码：</lable>
+            <input name="" type="password" / class="keyword">
+          </div>
+          <div class="user">
+            <lable class="tb">验证码：</lable>
+            <input name="" type="text" / class="yz">
+            <input name="" type="text" value="AXdy"  class="log"/>
+          </div>
+          <div class="clear"></div>
+          <div class="button">
+             <button type="submit" class="J_Submit" id="J_SubmitStatic">登录</button>
+             <button type="reset" class="J_Reset" id="J_ResetStatic">重置</button>
+          </div>
+       </form>
+    </div>
+</div>
+</body>
+</html>

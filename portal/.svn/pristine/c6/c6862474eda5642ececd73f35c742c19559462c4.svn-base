@@ -1,0 +1,32 @@
+package com.cmct.portal.dao;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.stereotype.Repository;
+import com.cmct.portal.po.UserPO;
+
+
+@SuppressWarnings("all")
+@Repository("userDao")
+public class UserDao extends HibernateDao<UserPO,Integer> {
+	private String msg;
+	public String getMsg(){
+		return msg;
+		
+	}
+	public void setMsg(String msg){
+		this.msg=msg;
+		
+	}
+	public Collection<UserPO> doquery(){
+		
+		return this.findAll();
+		
+	}
+	
+}

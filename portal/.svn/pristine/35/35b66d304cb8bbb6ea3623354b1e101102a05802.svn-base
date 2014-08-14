@@ -1,0 +1,28 @@
+package com.cmct.portal.security.controller;
+
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+
+
+
+@Controller
+@RequestMapping("security/role")
+public class RoleController{
+
+	private static final Logger logger = LoggerFactory.getLogger(RoleController.class);
+
+	@RequestMapping(value = "/list")
+	public String role_List(HttpServletRequest request) {
+
+		return "/pages/view/security/role/list";
+		
+	}
+
+}

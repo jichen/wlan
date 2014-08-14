@@ -1,0 +1,99 @@
+package com.cmct.common.util.ui;
+
+public class PageFormModel {
+	/**
+	 * ��ǰҳ��
+	 */
+	
+	
+	private int pageNum ;
+	
+	private String name;
+
+	private String isdelete;
+
+	private String location;
+
+	private String ac_id;
+	
+	private String contact;//jϵ��
+
+	private String phone;//jϵ��ʽ
+	
+	private String ip;//ip
+	
+	private String cust_name;//��ҵ���
+	
+	private Integer cust_id;//��ҵid
+
+
+	
+	public Integer getCust_id() {
+		return cust_id;
+	}
+	public void setCust_id(Integer cust_id) {
+		this.cust_id = cust_id;
+	}
+	public String getCust_name() {
+		return cust_name;
+	}
+	public void setCust_name(String cust_name) {
+		this.cust_name = cust_name;
+	}	
+	
+	public String getIp() {
+		return ip;
+	}
+	public void setIp(String ip) {
+		this.ip = ip;
+	}	
+	
+	
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	public String getContact() {
+		return contact;
+	}
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+	
+	public String getAc_id() {
+		return ac_id;
+	}
+	public void setAc_id(String ac_id) {
+		this.ac_id = ac_id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getIsdelete() {
+		return isdelete;
+	}
+	public void setIsdelete(String isdelete) {
+		this.isdelete = isdelete;
+	}
+	public String getLocation() {
+		return location;
+	}
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	
+	public int getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
+	}
+
+}

@@ -1,0 +1,100 @@
+<%@page contentType="text/html;charset=UTF-8"%>
+<%@include file="/include.inc.jsp" %>
+<div class="pageHeader">
+<form onsubmit="return navTabSearch(this);" rel="pagerForm"  id="pagerForm" action="${ctx}/sysmanagement/ap/list" method="post">
+		<c:choose>
+			<c:when test="${pageForm.pageNum==null}">
+				<input type="hidden" name="pageNum" value="1" />
+			</c:when>
+			<c:otherwise>
+				<input type="hidden" name="pageNum" value="${pageForm.pageNum}" />
+			</c:otherwise>
+		</c:choose>
+		
+		<input type="hidden" name="numPerPage" value="10" /> 
+		<input type="hidden" name="orderField" value="" /> 
+		<input type="hidden" name="orderDirection" value="" />
+	<div class="searchBar">
+		<table class="searchContent">
+			<tr>
+				<td>
+					名称:
+				</td>
+				<td>
+					<input name="name" type="text" value="${pageForm.name}">
+				</td>
+				<td>
+					位置:
+				</td>
+				<td>
+					<input name="location" type="text" value="${pageForm.location}">
+				</td>
+				<td>
+					AC:
+				</td>
+				<td>
+					<input name="ac_id" type="text" value="${pageForm.ac_id}">
+				</td>
+				<td>
+					状态:
+				</td>
+				<td>
+					<input name="isdelete" type="text" value="${pageForm.isdelete}">
+				</td>
+		</table>
+		<div class="subBar">
+			<ul>
+				<li><div class="buttonActive"><div class="buttonContent"><button type="submit">查询</button></div></div></li>
+			</ul>
+		</div>
+	</div>
+</form>
+</div>
+<div class="pageContent">
+	<div class="panelBar">
+		<ul class="toolBar">
+			<li><a class="add"    href="${ctx}/sysmanagement/ap/preadd" target="navTab" rel="apadd"><span>新增AP</span></a></li>
+			<li><a class="edit"   href="${ctx}/sysmanagement/ap/preUpdate/{slt_uid}" target="navTab" rel="UserUpdate"><span>编辑AP</span></a></li>
+			<li><a class="delete" href="${ctx}/sysmanagement/ap/delete/{slt_uid}" target="ajaxTodo" title="确认要删除该设置{slt_uid}?"><span>删除AP</span></a></li>
+		</ul>
+	</div>
+	<table class="table" het width="100%">
+		<thead>
+			<tr>
+				<th width="20" >序号</th>
+				<th width="100" >AP名称</th>
+				<th width="100" >位置</th>
+				<th width="100" >Nas-Port-ID</th>
+				<th width="100" >AC</th>
+				<th width="250" >备注</th>
+				<th width="50" >状态</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="aps" items="${list}" varStatus="temStatus">
+			<tr target="slt_uid" rel="${aps.id}">
+				<td>${aps.id}</td>
+				<td>${aps.ap_name}</td>
+				<td>${aps.location}</td>
+				<td>${aps.nas_port_id}</td>
+				<td>${aps.ac_id}</td>
+				<td>${aps.remark}</td>
+				<c:choose>
+					<c:when test="${aps.isdelete=='Y'}">
+						<td>已删除</td>
+					</c:when>
+					<c:otherwise>
+						<td>使用中</td>
+					</c:otherwise>
+				</c:choose>
+			</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+	<div class="panelBar">
+		<div class="pages">
+			<span>显示10条，共${page.totalCount}条</span>
+		</div>
+		<div class="pagination" targetType="navTab" totalCount="${page.totalCount}" numPerPage="10" pageNumShown="10" currenPage="${pagerForm.pageNum}"></div>
+	</div>
+</div>

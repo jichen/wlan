@@ -1,0 +1,146 @@
+package com.cmct.portal.security.controller;
+
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.cmct.common.util.AbstractController;
+import com.cmct.common.util.DateUtil;
+import com.cmct.common.util.ui.PageFormModel;
+import com.cmct.common.util.ui.Page;
+import com.cmct.portal.po.LoginLogPO;
+import com.cmct.portal.po.OperateLogPO;
+import com.cmct.portal.service.LoginLogService;
+import com.cmct.portal.service.OperateLogService;
+
+
+@Controller
+@RequestMapping("/security/log")
+public class SystemLogController extends AbstractController {
+
+	@Autowired
+	private OperateLogService operateLogService;
+	
+	@Autowired
+	private LoginLogService loginLogService;
+
+	
+	/**
+	 *输出列表 
+	 */
+	@RequestMapping(value = "/loginlist")
+	public ModelAndView loginlist(Page page,PageFormModel pageForm,HttpServletRequest req) throws Exception {	
+		Map propertiesMap =new HashMap();
+		Map mp=new HashMap();
+		//设置显示数量
+		Integer start = 0;
+		Integer limit=page.getNumPerPage();
+		if(pageForm.getPageNum()>0){
+			start=(Integer.valueOf(pageForm.getPageNum())-1)*page.getNumPerPage();
+		}		
+		//查询语句
+		String sqlCount="select count(*) from LoginLogPO where 1=1 ";
+		String sql="from LoginLogPO where 1=1 ";
+		String whereSql="";
+		if(pageForm.getName()!=null){
+			if(pageForm.getName().trim().length()>0){
+				propertiesMap.put("username", pageForm.getName().trim());
+				whereSql=whereSql+" and username = :username";
+			}
+		}
+		if(pageForm.getStartTime()!=null){
+			propertiesMap.put("start_time", pageForm.getStartTime());
+			whereSql=whereSql+" and login_time >= :start_time";
+			mp.put("start_time",DateUtil.getFormatStringDate(pageForm.getStartTime(), DateUtil.DATE_FORMAT));
+		}
+		if(pageForm.getEndTime()!=null){
+			//结束时间是当日的晚上23:59:59
+			pageForm.setEndTime(new Date(pageForm.getEndTime().getTime()+86400000-1000));
+			propertiesMap.put("end_time", pageForm.getEndTime());
+			whereSql=whereSql+" and login_time <= :end_time ";
+			mp.put("end_time",DateUtil.getFormatStringDate(pageForm.getEndTime(), DateUtil.DATE_FORMAT));
+		}
+		sql=sql+whereSql;
+		sqlCount=sqlCount+whereSql;
+		//获取列表
+		List<LoginLogPO> LoginLogs=loginLogService.pageQuery(sql,propertiesMap, start, limit);
+		//计算符合条件的行数，分页需要
+		page.setTotalCount(loginLogService.getTotalCount_where(sqlCount, propertiesMap));
+		mp.put("list",LoginLogs);
+		mp.put("page",page);
+		mp.put("pageForm",pageForm);
+		return new ModelAndView("pages/view/security/log/loginlist",mp);
+	}
+	
+	/**
+	 *输出列表 
+	 */
+	@RequestMapping(value = "/operationlist")
+	public ModelAndView operationlist(Page page,PageFormModel pageForm,HttpServletRequest req) throws Exception {	
+		Map propertiesMap =new HashMap();
+		Map mp=new HashMap();
+		//设置显示数量
+		Integer start = 0;
+		Integer limit=page.getNumPerPage();
+		if(pageForm.getPageNum()>0){
+			start=(Integer.valueOf(pageForm.getPageNum())-1)*page.getNumPerPage();
+		}		
+		//查询语句
+		String sqlCount="select count(*) from OperateLogPO where 1=1 ";
+		String sql=" from OperateLogPO where 1=1 ";
+		String whereSql="";
+		if(pageForm.getName()!=null){
+			if(pageForm.getName().trim().length()>0){
+				propertiesMap.put("username", pageForm.getName().trim());
+				whereSql=whereSql+" and username = :username";
+			}
+		}
+		if(pageForm.getModule()!=null){
+			if(pageForm.getModule().trim().length()>0){
+				propertiesMap.put("operate", "%"+pageForm.getModule().trim()+"%");
+				whereSql=whereSql+" and operate like :operate";
+			}
+		}
+		if(pageForm.getFunction_name()!=null){
+			if(pageForm.getFunction_name().trim().length()>0){
+				propertiesMap.put("function_name", pageForm.getFunction_name().trim());
+				whereSql=whereSql+" and function_name = :function_name";
+			}
+		}
+		if(pageForm.getStartTime()!=null){
+			propertiesMap.put("start", pageForm.getStartTime());
+			whereSql=whereSql+" and operatetime>= :start";
+			mp.put("start_time",DateUtil.getFormatStringDate(pageForm.getStartTime(), DateUtil.DATE_FORMAT));
+		}
+		if(pageForm.getEndTime()!=null){
+			//结束时间是当日的晚上23:59:59
+			pageForm.setEndTime(new Date(pageForm.getEndTime().getTime()+86400000-1000));
+			propertiesMap.put("end", pageForm.getEndTime());
+			whereSql=whereSql+" and operatetime <= :end";
+			mp.put("end_time",DateUtil.getFormatStringDate(pageForm.getEndTime(), DateUtil.DATE_FORMAT));
+		}
+		sql=sql+whereSql;
+		sqlCount=sqlCount+whereSql;
+		//获取列表
+		List<OperateLogPO> OperateLogs=operateLogService.pageQuery(sql,propertiesMap, start, limit);
+		//计算符合条件的行数，分页需要
+		page.setTotalCount(operateLogService.getTotalCount_where(sqlCount, propertiesMap));
+
+		mp.put("list",OperateLogs);
+		mp.put("page",page);
+		mp.put("pageForm",pageForm);
+		return new ModelAndView("pages/view/security/log/operationlist",mp);
+	}
+
+
+	
+}

@@ -1,0 +1,63 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
+<%@include file="/include.inc.jsp"%>
+<script type="text/javascript">
+function username_validateCallback(form, callback){
+	//获取表单
+	var $form = $(form);
+	//定义submit
+	var _submitFn = function() {
+		$.ajax({
+			type : form.method || 'POST',
+			url : $form.attr("action"),
+			data : $form.serializeArray(),
+			dataType : "json",
+			cache : false,
+			success : callback || DWZ.ajaxDone,
+			error : DWZ.ajaxError
+		});
+	}
+	var username=$("input[name='username']").val();
+	alert(username);
+	$.ajax({
+		type : "post",
+		url : "${ctx}/security/user/ajaxuserName",
+		data : {'username' : username},
+		success : function(data) {
+			if(data=='1'){
+				$("#userName").html("<span class='required'>该用户名已存在</span>");				
+			}else{
+				_submitFn();
+			}
+		},
+		error : function(data){
+			return false;
+		}
+	});
+	return false;
+}
+</script>
+
+
+<form method="post" action="${ctx }/security/user/add" class="pageForm required-validate" onsubmit="return username_validateCallback(this, navTabAjaxDone);">
+	<div class="pageFormContent" layoutH="97">
+	<dl style="width:600px;">
+		<dt>登录名称：</dt>
+		<dd>
+			<input type="text" name="username" class="required" size="10" maxlength="20"/>
+		</dd>
+		<dd id="userName"></dd>
+	</dl>
+	<dl style="width:600px;">
+		<dt>登录密码：</dt>
+		<dd><input type="text" name="pwd" class="required" size="10" minlength="6" maxlength="20" value="123456" alt="字母、数字、下划线 6-20位"/>
+		</dd>
+		<dd>默认密码为：123456</dd>
+	</dl>
+	</div>
+	<div class="formBar">
+		<ul>
+			<li><div class="buttonActive"><div class="buttonContent"><button type="submit">确定</button></div></div></li>
+			<li><div class="button"><div class="buttonContent"><button type="button" class="close">关闭</button></div></div></li>
+		</ul>
+	</div>
+</form>

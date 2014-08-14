@@ -1,0 +1,42 @@
+package com.cmct.portal.template.controller;
+
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
+@Controller
+@RequestMapping(value = "/template")
+public class TemplateController {
+
+	@RequestMapping(value = "/execute")
+	public String execute(HttpServletRequest request,HttpServletResponse response) throws Exception {
+	   Configuration cfg = new Configuration();
+	   
+	   //确定模板
+	   cfg.setServletContextForTemplateLoading(request.getSession().getServletContext(), "WEB-INF/templates");
+	   Template t = cfg.getTemplate("2.html");
+	   response.setContentType("text/html;charset=UTF-8");
+	   //显示
+	   Map<String,Object> dataMap = new HashMap<String,Object>();
+	   dataMap.put("message", "First step for freemarker template");
+	   dataMap.put("css", "/portal/static/css.css");
+	   dataMap.put("title", "管理员登录"); 
+	   dataMap.put("content1", "管理员登录"); 
+	   dataMap.put("content2", "用户名"); 
+	   dataMap.put("content3", "密    码"); 
+	   dataMap.put("image1", "/portal/static/111.png"); 
+	   //写出去
+	   PrintWriter out = response.getWriter();
+	   t.process(dataMap, out);
+	   return "";
+	}	
+}

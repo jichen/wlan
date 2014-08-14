@@ -1,0 +1,217 @@
+package com.cmct.common.shiro;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
+import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.realm.AuthorizingRealm;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.apache.shiro.util.ByteSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springside.modules.security.utils.Digests;
+import org.springside.modules.utils.Encodes;
+
+import com.cmct.portal.service.UserService;
+import com.cmct.portal.service.UserRoleService;
+import com.cmct.portal.po.UserPO;
+import com.cmct.portal.po.UserRolePO;
+
+public class ShiroDbRealm extends AuthorizingRealm {
+	// 日志
+	private static Logger logger = LoggerFactory.getLogger(URLAuthorizationFilter.class);
+	private static final int INTERATIONS = 1024;
+	private static final int SALT_SIZE = 8;
+	private static final String ALGORITHM = "SHA-1";
+	
+	
+	@Autowired
+	protected UserService userService;
+	@Autowired
+	protected UserRoleService userRoleService;
+	
+	/**
+	 * 给ShiroDbRealm提供编码信息，用于密码密码比对
+	 * 描述
+	 */	
+	public ShiroDbRealm() {
+		super();
+		HashedCredentialsMatcher matcher = new HashedCredentialsMatcher(ALGORITHM);
+		matcher.setHashIterations(INTERATIONS);
+		setCredentialsMatcher(matcher);
+	}
+	
+	/**
+	 * 认证回调函数, 登录时调用.
+	 */
+	@Override
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
+		UsernamePasswordToken token = (UsernamePasswordToken)authcToken;
+		UserPO user = userService.findOne(token.getUsername());
+		if (user != null) {
+			byte[] salt = Encodes.decodeHex(user.getSalt());
+			ShiroUser shiroUser = new ShiroUser(user.getUserid(), user.getUsername(), user);
+			return new SimpleAuthenticationInfo(user.getUsername(), user.getPwdEncryption(), ByteSource.Util.bytes(salt), getName());
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * 授权查询回调函数, 进行鉴权但缓存中无用户的授权信息时调用.
+	 */
+	@Override
+	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+		ShiroUser shiroUser = null;
+		Object obj = principals.fromRealm(getName()).iterator().next();
+		if (obj instanceof String) {
+			UserPO user = userService.findOne((String) obj);
+			shiroUser = new ShiroUser(user.getUserid(),user.getUsername(),user);
+		}else if(obj instanceof ShiroUser){
+			shiroUser = (ShiroUser)obj;
+		}
+		List<UserRolePO> userRoles = userRoleService.find(shiroUser.getId());
+		shiroUser.getUser().setUserRoles(userRoles);
+		if (userRoles!=null && !userRoles.isEmpty()) {
+			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+			// SN权限
+			 
+			
+			Set<String> perm = userRoleService.findPermbyUser(shiroUser.getId());
+			info.addStringPermissions(perm);
+			Set<String> urls = userRoleService.findUrlsByUser(shiroUser.getId());
+			logger.debug("*****************************************");
+			logger.debug(perm.toString());
+			logger.debug("*****************************************");
+			logger.debug("*****************************************");
+			logger.debug(urls.toString());
+			logger.debug("*****************************************");
+			info.addStringPermissions(urls);
+			 
+			return info;
+		} else {
+			return null;
+		}
+	}
+	
+	public static class HashPassword {
+		public String salt;
+		public String password;
+	}
+	
+	public HashPassword encrypt(String plainText) {
+		HashPassword result = new HashPassword();
+		byte[] salt = Digests.generateSalt(SALT_SIZE);
+		result.salt = Encodes.encodeHex(salt);
+
+		byte[] hashPassword = Digests.sha1(plainText.getBytes(), salt, INTERATIONS);
+		result.password = Encodes.encodeHex(hashPassword);
+		return result;
+
+	}
+
+	/**
+	 * 更新用户授权信息缓存.
+	 */
+	public void clearCachedAuthorizationInfo(String principal) {
+		SimplePrincipalCollection principals = new SimplePrincipalCollection(principal, getName());
+		clearCachedAuthorizationInfo(principals);
+	}
+
+	/**
+	 * 清除所有用户授权信息缓存.
+	 */
+	public void clearAllCachedAuthorizationInfo() {
+		Cache<Object, AuthorizationInfo> cache = getAuthorizationCache();
+		if (cache != null) {
+			for (Object key : cache.keys()) {
+				cache.remove(key);
+			}
+		}
+	}
+
+	public void setUserService(UserService userService) {
+		this.userService = userService;
+	}
+	
+	/**  
+	 * 设置 userRoleService 的值  
+	 * @param userRoleService
+	 */
+	public void setUserRoleService(UserRoleService userRoleService) {
+		this.userRoleService = userRoleService;
+	}
+
+	/**
+	 * 自定义Authentication对象，使得Subject除了携带用户的登录名外还可以携带更多信息.
+	 */
+	public static class ShiroUser implements Serializable {
+
+		private static final long serialVersionUID = -1748602382963711884L;
+		private Integer id;
+		private String loginName;
+		private UserPO user;
+		
+		public ShiroUser() {
+			
+		}
+		
+		/**  
+		 * 构造函数
+		 * @param id
+		 * @param loginName
+		 * @param email
+		 * @param createTime
+		 * @param status  
+		 */ 
+		public ShiroUser(Integer id, String loginName, UserPO user) {
+			this.id = id;
+			this.loginName = loginName;
+			this.user = user;
+		}
+
+		/**  
+		 * 返回 id 的值   
+		 * @return id  
+		 */
+		public Integer getId() {
+			return id;
+		}
+
+		/**  
+		 * 返回 loginName 的值   
+		 * @return loginName  
+		 */
+		public String getLoginName() {
+			return loginName;
+		}
+
+		/**  
+		 * 返回 user 的值   
+		 * @return user  
+		 */
+		public UserPO getUser() {
+			return user;
+		}
+
+		/**
+		 * 本函数输出将作为默认的<shiro:principal/>输出.
+		 */
+		@Override
+		public String toString() {
+			return loginName;
+		}
+	}
+}

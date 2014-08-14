@@ -1,0 +1,87 @@
+package com.cmct.portal.po;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "T_CUSTOMER")
+public class CustomerPO {
+	private Integer id;
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	private String cust_name;
+	@Column(nullable = false, length = 200)
+	public String getCust_name() {
+		return cust_name;
+	}
+	public void setCust_name(String cust_name) {
+		this.cust_name = cust_name;
+	}
+	
+	
+	private String contact;
+	@Column(nullable = false, length = 100)
+	public String getContact() {
+		return contact;
+	}
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+
+	private String address;
+	@Column(nullable = false, length = 200)
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}	
+	
+	
+	
+	private String phone;
+	@Column(nullable = false, length = 50)
+	public String getPhone() {
+		return address;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+	
+	
+	private String remark;
+	
+	@Column(columnDefinition="TEXT", nullable = true)
+	public String getRemark() {
+		return remark;
+	}
+
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	private String isdelete;
+	@Column(nullable = false, length = 1)
+	public String getIsdelete() {
+		return isdelete;
+	}
+
+
+	public void setIsdelete(String isdelete) {
+		this.isdelete = isdelete;
+	}
+}

@@ -1,0 +1,84 @@
+package com.cmct.portal.portalmanagement.controller;
+
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.cmct.portal.po.AuthRulePO;
+import com.cmct.portal.service.AuthRuleService;
+import com.cmct.common.util.AbstractController;
+import com.cmct.common.util.ui.DwzAJaxRsp;
+
+
+
+@Controller
+@RequestMapping("/portalmanagement/rules")
+public class RulesController extends AbstractController {
+	
+	private static String REL_ID = "ruleadd";
+	
+	@Autowired
+	private AuthRuleService authRuleService;
+
+	/**
+	 * 预添加
+	 */
+	@RequestMapping(value = "/preadd")
+	public ModelAndView preAdd() throws Exception {
+		Collection<AuthRulePO> list=authRuleService.getAll();
+		AuthRulePO ar=null;
+		for(AuthRulePO arPO:list){
+			ar=new AuthRulePO();
+			ar.setId(arPO.getId());
+			ar.setAuth_interval(arPO.getAuth_interval());
+			ar.setIs_only_client(arPO.getIs_only_client());
+			ar.setTime(arPO.getTime());
+		}
+		
+		ModelAndView mav = new ModelAndView("pages/view/portalmanagement/rules/add");
+		mav.addObject("bean", ar);
+		return mav;
+	}
+
+	/**
+	 * 添加规则
+	 */
+	@RequestMapping(value = "/add")
+	@ResponseBody
+	public String add(AuthRulePO bean,HttpServletRequest request){
+		//0:未勾选,1:勾选
+		if(!(bean.getIs_only_client()==null))
+			bean.setIs_only_client("1");
+		else
+			bean.setIs_only_client("0");
+		
+		//判断是否是新增还是更新
+		
+		//ajax返回json有乱码
+		int i=authRuleService.countRow();
+		if(i>0){
+			authRuleService.updateAuthRule(bean);
+			return ajaxDoneSuccess(" ", false, REL_ID);
+		}else{
+			authRuleService.saveAuthRule(bean);
+			return ajaxDoneSuccess(" ", false, REL_ID);
+		}
+		
+	}
+
+
+}

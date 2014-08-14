@@ -1,0 +1,104 @@
+<%@page contentType="text/html;charset=UTF-8"%>
+<%@include file="/include.inc.jsp" %>
+<div class="pageHeader">
+<form onsubmit="return navTabSearch(this);" rel="pagerForm"  id="pagerForm" action="${ctx}/portallog/list" method="post">
+		<c:choose>
+			<c:when test="${pageForm.pageNum==null}">
+				<input type="hidden" name="pageNum" value="1" />
+			</c:when>
+			<c:otherwise>
+				<input type="hidden" name="pageNum" value="${pageForm.pageNum}" />
+			</c:otherwise>
+		</c:choose>
+		<input type="hidden" name="numPerPage" value="10" /> 
+		<input type="hidden" name="orderField" value="" /> 
+		<input type="hidden" name="orderDirection" value="" />
+	<div class="searchBar">
+		<table class="searchContent"  align="left" >
+			<tr>
+				<td>
+					&nbsp;&nbsp;用&nbsp;户&nbsp;名&nbsp;：
+				</td>
+				<td align="left">
+					<input name="name" type="text" size="30" value="${pageForm.name}">
+				</td>
+				<td>
+					登录的AP：
+				</td>
+				<td align="left">
+					<input name="ap_name" type="text" size="30" value="${pageForm.ap_name}">
+					<input name="ap_id" type="hidden" value="${pageForm.ap_id}">
+				</td>
+				<td>
+					 
+				</td>
+				<td align="left">
+					 
+				</td>					
+			</tr>
+			<tr>
+				<td>
+					认证时间：&nbsp;
+				</td>
+				<td>
+					<input name="auth_time1"  class="date textInput" type="text" size="10" value="${authtime1}" readonly="readonly"><a href="javascript:;"></a>
+					至
+					<input name="auth_time2"  class="date textInput" type="text" size="10" value="${authtime2}"  readonly="readonly"/><a href="javascript:;"></a>
+				</td>
+				<td>
+					下线时间：&nbsp;
+				</td>
+				<td>
+					<input name="exit_time1"  class="date textInput" type="text" size="10" value="${exittime1}" readonly="readonly"><a href="javascript:;"></a>
+					至
+					<input name="exit_time2"  class="date textInput" type="text" size="10" value="${exittime2}"  readonly="readonly"/><a href="javascript:;"></a>
+				</td>				
+				<td>
+				<div class="subBar">
+					<ul>
+						<li><div class="buttonActive"><div class="buttonContent"><button type="submit">查询</button></div></div></li>
+					</ul>
+				</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</form>
+</div>
+<div class="pageContent">
+	<div class="panelBar">
+	</div>
+	<table class="table"  layoutH="145"  width="100%" >
+		<thead>
+			<tr>
+				<th width="30" >序号</th>
+				<th width="100" >用户名</th>
+				<th width="100" >IP地址</th>
+				<th width="100" >认证时间</th>
+				<th width="100" >下线时间</th>
+				<th width="100" >在线时长</th>
+				<th width="100" >AP</th>
+				
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="logs" items="${list}" varStatus="status">
+			<tr target="slt_uid" rel="${logs.id}">
+				<td>${status.index+1}</td>
+				<td>${logs.username}</td>
+				<td>${logs.userip}</td>
+				<td>${logs.authtime}</td>
+				<td>${logs.exittime}</td>
+				<td>${logs.onlinetime}</td>
+				<td>${logs.apid}</td>
+			</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+	<div class="panelBar">
+		<div class="pages">
+			<span>显示10条，共${page.totalCount}条</span>
+		</div>
+		<div class="pagination" targetType="navTab" totalCount="${page.totalCount}" numPerPage="10" pageNumShown="10" currentPage="${page.pageNum}"></div>
+	</div>
+</div>

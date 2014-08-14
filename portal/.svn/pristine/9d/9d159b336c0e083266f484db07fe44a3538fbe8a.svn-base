@@ -1,0 +1,110 @@
+package com.cmct.portal.sysmanagement;
+
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.cmct.common.util.AbstractController;
+import com.cmct.portal.po.ACPO;
+import com.cmct.portal.service.ACService;
+
+
+@Controller
+@RequestMapping("/sysmanagement/ac")
+public class ACController extends AbstractController {
+	
+	private static String REL_ID = "acList";
+	
+	@Autowired
+	private ACService acService;
+
+	/**
+	 * 预添加
+	 */
+	@RequestMapping(value = "/preadd")
+	public ModelAndView preAdd() throws Exception {
+		ModelAndView mav = new ModelAndView("pages/view/sysmanagement/ac/add");
+		return mav;
+	}
+
+	/**
+	 * 添加规则
+	 */
+	@RequestMapping(value = "/add")
+	@ResponseBody
+	public String add(ACPO bean,HttpServletRequest request){
+	
+		bean.setIsdelete("N");
+		acService.saveAC(bean);
+		return ajaxDoneSuccess(" ",true,REL_ID);
+	}
+	/**
+	 * 
+	 */
+	@RequestMapping(value = "/list")
+	public ModelAndView list(HttpServletRequest req) throws Exception {
+		Collection<ACPO> list=acService.getAll();
+		List<ACPO> acs=new ArrayList<ACPO>();
+		ACPO ac;
+		for(ACPO acPO:list){
+			ac=new ACPO();
+			ac.setId(acPO.getId());
+			ac.setAc_name(acPO.getAc_name());
+			ac.setCust_id(acPO.getCust_id());
+			ac.setIp(acPO.getIp());
+			ac.setLocation(acPO.getLocation());
+			ac.setRemark(acPO.getRemark());
+			ac.setIsdelete(acPO.getIsdelete());
+			acs.add(ac);
+		}
+		Map mp=new HashMap();
+		mp.put("list",acs);
+		return new ModelAndView("/pages/view/sysmanagement/ac/list",mp);
+	}
+	/**
+	 * 预编辑
+	 */
+	@RequestMapping(value = "/preUpdate/{id}")
+	public ModelAndView preUpdate(@PathVariable("id") Integer id) throws Exception {
+		ACPO bean = acService.findOne(id);
+		ModelAndView mav = new ModelAndView("/pages/view/sysmanagement/ac/update");
+		mav.addObject("bean", bean);
+		return mav;
+	}
+	
+	/**
+	 * 更新
+	 */
+	@RequestMapping(value = "/update")
+	@ResponseBody
+	public String update(ACPO bean,HttpServletRequest request) throws Exception {
+		//更新数据 
+		acService.updateAC(bean);
+
+		return ajaxDoneSuccess(" ",true,REL_ID);
+	}
+	
+	/**
+	 * 删除
+	 */
+	@RequestMapping(value = "/delete/{id}")
+	@ResponseBody
+	public String delete(@PathVariable("id") Integer id) throws Exception {
+		ACPO bean = acService.findOne(id);
+		bean.setIsdelete("Y");
+		acService.updateAC(bean);
+		return ajaxDoneSuccess("删除成功！", false, REL_ID);
+	}
+}

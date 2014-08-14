@@ -1,0 +1,138 @@
+package com.cmct.common.aspect;
+
+import java.util.Date;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.util.WebUtils;
+
+
+import com.cmct.portal.service.LoginLogService;
+import com.cmct.portal.service.OperateLogService;
+import com.cmct.portal.po.LoginLogPO;
+import com.cmct.portal.po.OperateLogPO;
+import com.cmct.portal.po.UserPO;
+
+import com.cmct.common.util.LogLocalContext;
+
+import com.cmct.common.Constants;
+import com.cmct.common.annotation.Log;
+
+/**
+ * @title 		日志切面
+ * @description	
+ * @usage		
+ * @copyright	Copyright 2011  SHCMCT Corporation. All rights reserved.
+ * @company		上海中移通信技术工程有限公司
+ * @author		hx_zhuc
+ * @create		2012-8-20上午11:27:26
+ */
+@Aspect
+@Component
+public class LogAspect {
+
+	private static Logger logger = LoggerFactory.getLogger(LogAspect.class);
+
+	@Autowired
+	private OperateLogService operateLogService;
+
+	@Autowired
+	private LoginLogService loginLogService;
+
+	/**
+	 * @param jp
+	 * @param log
+	 * @param obj
+	 *            方法返回的对象
+	 */
+	@AfterReturning(value = "@annotation(log)", returning = "obj")
+	public void addLogAfterActionDone(JoinPoint jp, Log log, Object obj) {
+		if (log.isSign()) {
+			this.doSignLog(jp, log); // 登录登出操作
+		} else {
+			this.doOpLog(jp, log, obj); // 一般操作
+		}
+	}
+
+	/**
+	 * 处理登录日志
+	 * 
+	 * @param jp
+	 * @param log
+	 * @param obj
+	 */
+	private void doSignLog(JoinPoint jp, Log log) {
+		HttpServletRequest request = null;
+		LoginLogPO context = LogLocalContext.getLoginLogPO();
+
+		try {
+			for (Object args : jp.getArgs()) {
+				if (args instanceof HttpServletRequest) {
+					request = (HttpServletRequest) args;
+					break;
+				}
+			}
+
+			LoginLogPO loginLogPO = new LoginLogPO();
+			if (null != request) {
+				if (Constants.Funtion_Login.equals(log.function())) {
+					loginLogPO.setUsername(request.getParameter("username"));
+				} else {
+					loginLogPO.setUsername(context.getUsername());
+				}
+				loginLogPO.setIp(request.getRemoteAddr());
+			}
+			Date date=new Date();
+			loginLogPO.setLogin_time(date);
+			loginLogService.save(loginLogPO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("创建登录登出日志报错", e);
+		}
+	}
+
+	/**
+	 * 处理操作日志
+	 * 
+	 * @param jp
+	 * @param log
+	 * @param obj
+	*/
+	@SuppressWarnings("unchecked")
+	private void doOpLog(JoinPoint jp, Log log, Object obj) {
+		HttpServletRequest request = null;
+		try {
+			for (Object args : jp.getArgs()) {
+				if (args instanceof HttpServletRequest) {
+					request = (HttpServletRequest) args;
+					break;
+				}
+			}
+			OperateLogPO operateLogPO = new OperateLogPO();
+			operateLogPO.setOperate(log.module());
+			operateLogPO.setFunction_name(log.function());
+			operateLogPO.setIp(request.getRemoteAddr());
+			Date date = new Date();
+			operateLogPO.setOperatetime(date);
+
+			UserPO user = (UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
+	
+			
+			operateLogPO.setUsername(user.getUsername());
+			operateLogService.save(operateLogPO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error("创建操作日志报错", e);
+		}
+	}
+
+}

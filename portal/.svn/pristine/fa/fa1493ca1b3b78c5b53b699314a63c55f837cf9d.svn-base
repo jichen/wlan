@@ -1,0 +1,42 @@
+<%@page contentType="text/html;charset=UTF-8"%>
+<%@include file="/include.inc.jsp" %>
+<%
+System.out.println("jsp");
+%>
+
+<form method="post" action="${ctx }/portalmanagement/rules/add" class="pageForm required-validate" onsubmit="return validateCallback(this, navTabAjaxDone);">
+	<table border="1" align="left" style="width: 70%;height:100%;">
+		<tr>
+			<td align="left" height="25px">
+				<input type="checkbox" name="is_only_client"> 禁止同一用户同时使用多个客户端
+			</td>
+		</tr>
+		<tr>
+			<td align="left" height="25px">
+				重复验证间隔<input type="text" name="auth_interval" size="2" maxlength="2" value="1"/>分钟
+			</td>
+		</tr>
+		<tr>
+			<td align="left" height="25px">
+				验证码有效期<input type="text" name="time" size="2" maxlength="2" value="10"/>分钟
+			</td>
+		</tr>
+		<tr>
+			<td align="left" height="25px"><input type="hidden"/>黑名单:</td>
+		</tr>	
+		<tr>
+			<td align="left"> 
+				<textarea cols="91" rows="4" name="memo"></textarea>
+			</td>
+		</tr>	
+	
+	</table>
+			
+	<div class="formBar">
+		<ul>
+			<li><div class="buttonActive"><div class="buttonContent"><button type="submit">确定</button></div></div></li>
+			<li><div class="button"><div class="buttonContent"><button type="button" class="close">关闭</button></div></div></li>
+		</ul>
+	</div>
+</table>
+</form>

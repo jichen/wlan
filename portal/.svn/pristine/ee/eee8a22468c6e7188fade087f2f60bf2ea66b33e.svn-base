@@ -1,0 +1,198 @@
+package com.cmct.common.util.ui;
+
+
+
+public class PageModel {
+	public final static String ORDER_DIRECTION_ASC = "ASC"; 
+	public final static String ORDER_DIRECTION_DESC = "DESC";
+
+	private static final Integer DEFAULT_PAGE_SIZE = 10;
+
+	private Integer plainPageNum = 1;
+	
+
+	private Integer pageNum = 1;
+	private Integer numPerPage = DEFAULT_PAGE_SIZE;
+	private String orderField = "";
+	private String orderDirection = ORDER_DIRECTION_DESC;
+	
+	/**
+	 * ��ҳ��
+	 */
+	private Integer totalPage = 1;
+
+	/**
+	 * ǰһҳ
+	 */
+	private Integer prePage = 1;
+
+	/**
+	 * ��һҳ
+	 */
+	private Integer nextPage = 1;
+	
+	/**
+	 * �ܼ�¼��
+	 */
+	private Integer totalCount = 0;
+
+	/**  
+	 * ���� pageNum ��ֵ   
+	 * @return pageNum  
+	 */
+	public Integer getPageNum() {
+		if (pageNum > totalPage) {
+			pageNum = totalPage;
+		}
+		return pageNum;
+	}
+
+	/**  
+	 * ���� pageNum ��ֵ  
+	 * @param pageNum
+	 */
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum > 0 ? pageNum : 1;
+		this.plainPageNum = this.pageNum;
+	}
+
+	/**  
+	 * ���� numPerPage ��ֵ   
+	 * @return numPerPage  
+	 */
+	public int getNumPerPage() {
+		return numPerPage;
+	}
+
+	/**  
+	 * ���� numPerPage ��ֵ  
+	 * @param numPerPage
+	 */
+	public void setNumPerPage(Integer numPerPage) {
+		this.numPerPage = numPerPage > 0 ? numPerPage : 10;
+	}
+
+	/**  
+	 * ���� orderField ��ֵ   
+	 * @return orderField  
+	 */
+	public String getOrderField() {
+		return orderField;
+	}
+
+	/**  
+	 * ���� orderField ��ֵ  
+	 * @param orderField
+	 */
+	public void setOrderField(String orderField) {
+		this.orderField = orderField;
+	}
+
+	/**  
+	 * ���� orderDirection ��ֵ   
+	 * @return orderDirection  
+	 */
+	public String getOrderDirection() {
+		return orderDirection;
+	}
+
+	/**  
+	 * ���� orderDirection ��ֵ  
+	 * @param orderDirection
+	 */
+	public void setOrderDirection(String orderDirection) {
+		this.orderDirection = orderDirection;
+	}
+
+	/**  
+	 * ���� totalPage ��ֵ   
+	 * @return totalPage  
+	 */
+	public Integer getTotalPage() {
+		return totalPage;
+	}
+
+	/**  
+	 * ���� totalPage ��ֵ  
+	 * @param totalPage
+	 */
+	public void setTotalPage(Integer totalPage) {
+		this.totalPage = totalPage;
+	}
+
+	/**  
+	 * ���� prePage ��ֵ   
+	 * @return prePage  
+	 */
+	public Integer getPrePage() {
+		prePage = pageNum - 1;
+		if (prePage < 1) {
+			prePage = 1;
+		}
+		return prePage;
+	}
+
+	/**  
+	 * ���� prePage ��ֵ  
+	 * @param prePage
+	 */
+	public void setPrePage(Integer prePage) {
+		this.prePage = prePage;
+	}
+
+	/**  
+	 * ���� nextPage ��ֵ   
+	 * @return nextPage  
+	 */
+	public Integer getNextPage() {
+		nextPage = pageNum + 1;
+		if (nextPage > totalPage) {
+			nextPage = totalPage;
+		}
+		
+		return nextPage;
+	}
+
+	/**  
+	 * ���� nextPage ��ֵ  
+	 * @param nextPage
+	 */
+	public void setNextPage(Integer nextPage) {
+		this.nextPage = nextPage;
+	}
+
+	/**  
+	 * ���� totalCount ��ֵ   
+	 * @return totalCount  
+	 */
+	public Integer getTotalCount() {
+		return totalCount;
+	}
+
+	/**  
+	 * ���� totalCount ��ֵ  
+	 * @param totalCount
+	 */
+	public void setTotalCount(Integer totalCount) {
+		this.totalCount = totalCount;
+		totalPage = (Integer)(totalCount - 1) / this.numPerPage + 1;
+	}
+
+	/**  
+	 * ���� plainPageNum ��ֵ   
+	 * @return plainPageNum  
+	 */
+	public int getPlainPageNum() {
+		return plainPageNum;
+	}
+
+	/**  
+	 * ���� plainPageNum ��ֵ  
+	 * @param plainPageNum
+	 */
+	public void setPlainPageNum(Integer plainPageNum) {
+		this.plainPageNum = plainPageNum;
+	}
+
+	
+}

@@ -1,0 +1,29 @@
+package com.cmct.portal.service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cmct.portal.dao.UserRoleDao;
+import com.cmct.portal.po.UserRolePO;
+
+
+@Service
+public class UserRoleService {
+	@Autowired
+	private UserRoleDao userRoleDao;
+	
+	public void save(UserRolePO entity){
+		userRoleDao.save(entity);
+	}
+	
+	
+	public List<UserRolePO> find(Integer id) {
+		Map<String, Object> propertiesMap =new HashMap<String, Object>();
+		propertiesMap.put("userId", id);
+		return userRoleDao.find(propertiesMap);
+	} 
+}

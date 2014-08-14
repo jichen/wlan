@@ -1,0 +1,161 @@
+package com.cmct.portal.template.controller;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.cmct.common.util.Encodes;
+import com.cmct.portal.po.TemplateMapPO;
+import com.cmct.portal.po.TemplatePagePO;
+import com.cmct.portal.service.TemplateMapService;
+import com.cmct.portal.service.TemplatePageService;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+
+@Controller
+@RequestMapping(value = "/template")
+public class TemplateController {
+	
+	@Autowired
+	private TemplatePageService templatePageService;
+
+	@Autowired
+	private TemplateMapService templateMapService;
+
+	@RequestMapping(value = "/execute")
+	public String execute(HttpServletRequest request,HttpServletResponse response) throws Exception {
+	   Integer id=1;
+	   String template_type="mobile";
+	   TemplatePagePO bean = templatePageService.findOne(id);
+	   Configuration cfg = new Configuration();	   
+	   //确定模板
+	   cfg.setServletContextForTemplateLoading(request.getSession().getServletContext(), bean.getTemplatelocal());
+	   Template t = cfg.getTemplate(bean.getPagename());
+	   response.setContentType("text/html;charset=UTF-8");
+	   //显示
+	   Map<String,Object> dataMap = new HashMap<String,Object>();
+	   Map<String,Object> propertiesMap = new HashMap<String,Object>();
+		propertiesMap.put("template_id",id);
+		propertiesMap.put("teminal_type","mobile");
+		List<TemplateMapPO> list=templateMapService.findList(propertiesMap);
+	   Integer textnum=Integer.valueOf(bean.getTextcount());
+	   Integer cssnum=Integer.valueOf(bean.getCsscount());
+	   Integer imagenum=Integer.valueOf(bean.getImagecount());
+	   
+	   for(int i=1;i<textnum+1;i++){
+		   for(TemplateMapPO map:list){
+			   if(map.getData_type().equals("text")){
+				   if(map.getValue_name().equals("text_"+i)){
+					   dataMap.put("text_"+i,map.getValue());
+				   }
+			   }
+		   }
+	   }
+	   for(int i=1;i<cssnum+1;i++){
+		   for(TemplateMapPO map:list){
+			   if(map.getData_type().equals("css")){
+				   if(map.getValue_name().equals("css_"+i)){
+					   dataMap.put("css_"+i,map.getValue());
+				   }
+			   }
+		   }
+	   }
+	   for(int i=1;i<imagenum+1;i++){
+		   for(TemplateMapPO map:list){
+			   if(map.getData_type().equals("image")){
+				   if(map.getValue_name().equals("image_"+i)){
+					   dataMap.put("image_"+i,map.getValue());
+				   }
+			   }
+		   }
+	   }
+	   PrintWriter out = response.getWriter();
+	   t.process(dataMap, out);
+	   return "";
+	}
+	
+	
+	@RequestMapping(value = "/preview/{id}")
+	public String preview(@PathVariable("id") Integer id,HttpServletRequest request,HttpServletResponse response) throws Exception {		
+	   TemplatePagePO bean = templatePageService.findOne(id);
+	   Configuration cfg = new Configuration();	   
+	   //确定模板
+	   cfg.setServletContextForTemplateLoading(request.getSession().getServletContext(), bean.getTemplatelocal());
+	   Template t = cfg.getTemplate(bean.getPagename());
+	   response.setContentType("text/html;charset=UTF-8");
+	   //显示
+	   Map<String,Object> dataMap = new HashMap<String,Object>();
+	   Map<String,Object> propertiesMap = new HashMap<String,Object>();
+		propertiesMap.put("template_id",id);
+		propertiesMap.put("teminal_type","mobile");
+		List<TemplateMapPO> list=templateMapService.findList(propertiesMap);
+		if(list.size()<1){
+			propertiesMap.put("template_id",id);
+			propertiesMap.remove("teminal_type");
+			propertiesMap.put("teminal_type","pc");
+		}
+		list=null;
+		list=templateMapService.findList(propertiesMap);
+	   Integer textnum=Integer.valueOf(bean.getTextcount());
+	   Integer cssnum=Integer.valueOf(bean.getCsscount());
+	   Integer imagenum=Integer.valueOf(bean.getImagecount());
+	   
+	   for(int i=1;i<textnum+1;i++){
+		   for(TemplateMapPO map:list){
+			   if(map.getData_type().equals("text")){
+				   if(map.getValue_name().equals("text_"+i)){
+					   dataMap.put("text_"+i,map.getValue());
+				   }
+			   }
+		   }
+	   }
+	   for(int i=1;i<cssnum+1;i++){
+		   for(TemplateMapPO map:list){
+			   if(map.getData_type().equals("css")){
+				   if(map.getValue_name().equals("css_"+i)){
+					   dataMap.put("css_"+i,map.getValue());
+				   }
+			   }
+		   }
+	   }
+	   for(int i=1;i<imagenum+1;i++){
+		   for(TemplateMapPO map:list){
+			   if(map.getData_type().equals("image")){
+				   if(map.getValue_name().equals("image_"+i)){
+					   dataMap.put("image_"+i,map.getValue());
+				   }
+			   }
+		   }
+	   }
+	   PrintWriter out = response.getWriter();
+	   dataMap.put("ctx", request.getContextPath());
+	   t.process(dataMap, out);
+	   return "";
+	}	
+	@RequestMapping(value = "/imageshow")
+	public String imageshow(String path,HttpServletRequest request,HttpServletResponse response) throws Exception {		
+	 //System.out.println(path);
+		
+	 File file=new File(path);
+	 BufferedImage bi=ImageIO.read(file);
+	 //获取图片扩展名
+	 String file_type=path.substring(path.lastIndexOf("."));
+	 
+	 ImageIO.write(bi, file_type, response.getOutputStream());
+	 
+	 return "";
+	}
+}

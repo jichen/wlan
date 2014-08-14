@@ -1,0 +1,64 @@
+package com.cmct.portal.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cmct.portal.dao.APDao;
+import com.cmct.portal.po.APPO;
+
+
+@Service
+public class APService  {
+	@Autowired
+	private APDao aPDao;
+	
+	public List<APPO> getAll(){
+		return aPDao.findAll();
+		
+	} 
+	
+	public void saveAP(APPO entity){
+		aPDao.save(entity);
+	} 
+	
+	public void updateAP(APPO entity){
+		aPDao.update(entity);
+	} 
+
+
+	public Integer countRow(String sql) {
+		if(sql==null || sql==""){
+			sql=" from APPO ";
+		}
+		return aPDao.getCount(sql);
+
+	} 
+	
+	
+	public APPO findOne(Integer id) {
+		return aPDao.get(id);
+
+	}
+	
+
+	public List<APPO> findPages_sql(String sql,Map propertiesMap,Integer start,Integer limit){
+		List<APPO> list=aPDao.pageQuery(sql, propertiesMap, start, limit);
+		return list;
+	}	
+	
+	
+	public List<APPO> findPages(Map propertiesMap,Integer start,Integer limit){
+		List<APPO> list=aPDao.find(propertiesMap, start, limit);
+		return list;
+	}
+	
+	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+		return aPDao.getTotalCount(sql, propertiesMap);
+	} 
+
+	
+	
+}

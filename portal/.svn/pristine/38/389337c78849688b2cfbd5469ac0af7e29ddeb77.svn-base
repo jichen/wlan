@@ -1,0 +1,23 @@
+package com.cmct.portal.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cmct.portal.dao.UserDao;
+import com.cmct.portal.po.UserPO;
+
+
+@Service
+public class UserService {
+	@Autowired
+	private UserDao userDao;
+	
+	public List<UserPO> getAll(){
+		return userDao.findAll();
+		
+	} 
+	
+
+}

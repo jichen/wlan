@@ -1,0 +1,56 @@
+package com.cmct.portal.po;
+
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "T_AUTHRULE")
+public class AuthRulePO {
+
+	private Integer id;
+	
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	private String is_only_client;
+	
+	@Column(nullable = false, length = 1)
+	public String getIs_only_client() {
+		return is_only_client;
+	}
+	public void setIs_only_client(String is_only_client) {
+		this.is_only_client = is_only_client;
+	}
+
+	private Integer auth_interval;
+	@Column(nullable = false, length = 11)
+	public Integer getAuth_interval() {
+		return auth_interval;
+	}
+	public void setAuth_interval(Integer auth_interval) {
+		this.auth_interval = auth_interval;
+	}
+
+	private Integer time;
+	@Column(nullable = false, length = 11)
+	public Integer getTime() {
+		return time;
+	}
+	public void setTime(Integer time) {
+		this.time = time;
+	}
+
+}

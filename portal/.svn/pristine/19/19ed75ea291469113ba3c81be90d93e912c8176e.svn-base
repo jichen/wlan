@@ -1,0 +1,55 @@
+<%@page contentType="text/html;charset=UTF-8"%>
+<%@include file="/pages/view/include.inc.jsp"%>
+<%@include file="/include.inc.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台登录页面</title>
+<script type="text/javascript">
+function submitFun(){
+	if($("#usernameId").val()==""){
+		alert("请输入用户名称");
+		return false;
+	}
+	else if($("#passwordId").val()==""){
+		alert("请输入密码");
+		return false;
+	}else{
+		loginform.submit();
+	}
+	
+}
+setTimeout("look()",500);
+function look(){
+	if($("#msg").val()==null || $("#msg").val()==""){
+	}else{
+		alert($("#msg").val());
+	}
+}
+</script>
+</head>
+<body>
+<div id="login"  align="center">
+    <div>后台登录</div>
+    <div>
+       <input type="hidden" value="${msg}" id="msg" name="msg"/>
+       <form id="loginform" name="loginform" action="${ctx}/submit" method="post" >
+          <div>
+            <span>用户名：</span>
+            <input id="usernameId" name="username" type="text" maxlength="20" value="" />
+          </div>
+          <div>
+            <span>密&nbsp;&nbsp;码：</span>
+            <input id="passwordId" name="password" type="password" maxlength="20" value="" />
+          </div>
+          <div><p/></div>
+          <div align="center">
+		    <input name="" type="button" id="J_SubmitStatic" value="登录" onclick="submitFun()"/>
+		    <input name="" type="reset" id="J_ResetStatic" value="重置"/>
+  		  </div>
+       </form>
+    </div>
+</div>
+</body>
+</html>

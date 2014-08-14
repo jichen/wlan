@@ -1,0 +1,78 @@
+package com.cmct.portal.po;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+
+@Entity
+@Table(name = "T_TEMPLATE_MAP")
+public class TemplateMapPO {
+	//主键
+	private Integer id;
+	//对应T_Template_Page的id
+	private Integer template_id;
+	//对应终端类型
+	private String teminal_type;
+	//数据的类型
+	private String data_type;
+	//对应模板名称
+	private String value_name;
+	//内容
+	private String value;
+
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	@Column(nullable = false, length = 11)
+	public Integer getTemplate_id() {
+		return template_id;
+	}
+	public void setTemplate_id(Integer template_id) {
+		this.template_id = template_id;
+	}
+	
+	@Column(nullable = false, length = 10)
+	public String getTeminal_type() {
+		return teminal_type;
+	}
+	public void setTeminal_type(String teminal_type) {
+		this.teminal_type = teminal_type;
+	}
+	
+	@Column(nullable = false, length = 10)
+	public String getData_type() {
+		return data_type;
+	}
+	public void setData_type(String data_type) {
+		this.data_type = data_type;
+	}
+	
+	@Column(nullable = false, length = 20)
+	public String getValue_name() {
+		return value_name;
+	}
+	public void setValue_name(String value_name) {
+		this.value_name = value_name;
+	}
+	
+	@Column(nullable = false, length = 255)
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
+}

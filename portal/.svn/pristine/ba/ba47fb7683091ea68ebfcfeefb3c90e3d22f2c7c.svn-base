@@ -1,0 +1,108 @@
+<%@page contentType="text/html;charset=UTF-8" 	trimDirectiveWhitespaces="true"%>
+<%@include file="/include.inc.jsp" %>
+<script type="text/javascript">
+function rules_add_Callback(form, callback) {
+	//获取表单
+	var $form = $(form);
+	//定义submit
+	var _submitFn = function() {
+		$.ajax({
+			type : form.method || 'POST',
+			url : $form.attr("action"),
+			data : $form.serializeArray(),
+			dataType : "json",
+			cache : false,
+			success : callback || DWZ.ajaxDone,
+			error : DWZ.ajaxError
+		});
+	}
+	//校验blacklist
+	var flag = false;
+	var message="请输入11位数字组成的电话号码";
+	var list= new Array();
+	var blacklist=$form.find("textarea").val();
+	//js换行符    \n    java中\r\n  
+	list=blacklist.split("\n");
+	
+	if(list !=null && list !=""){
+		for(var a=0;a<list.length;a++){
+			if(!/^\d{11}$/.test(list[a])){
+				flag = true;
+			}
+			
+		}
+	}
+
+	if (flag) {
+		alertMsg.info(message);
+	} else {
+		_submitFn();
+	}
+	return false;
+	
+	
+}
+
+//给文本框赋值
+function filetohidden(file,hfile){
+	var filename=file.value;
+	hfile.value=file.value;
+	
+}
+
+</script>
+<form action="${ctx }/templatemap/authmap/tMadd" method="post" class="pageForm required-validate" 
+	enctype="multipart/form-data" onsubmit="return validateCallback(this, navTabAjaxDone);" >
+	
+	<input type=hidden name="id" value="${bean.id}"/>
+	<div class="pageFormContent" layoutH="56" align="left">
+		<div>
+			<p style="width: 250px">
+				<label style="width: 80px">模板名称:</label><label style="width: 80px">${bean.templatename}</label><input type="hidden" name="template_id"  value="${bean.id}" class="digits" readonly="readonly"/>
+			</p><p></p><p></p>
+			<p style="width: 300px">
+				<label style="width: 80px">终端类型:</label>
+				<input type="checkbox" name="pc"  value="Y" class="textInput"><label style="width: 20px">PC</label>
+				<input type="checkbox" name="mobile"  value="Y" class="textInput"><label style="width: 60px">移动终端</label>
+			</p><p></p><p></p>
+			<c:if test="${bean.csscount >0}">
+				<c:forEach var="x" begin="1" end="${bean.csscount}" step="1">
+					<p style="width: 600px">
+						<label style="width: 80px">CSS式样${x}:</label>
+						<input id="css_${x}_file" name="css_${x}_file" type="file"  size="40" class="required" onchange="filetohidden(css_${x}_file,css_${x})"/>
+						<input name="css_${x}" type="hidden" value="" >
+					</p><p style="width: 20px"></p><p style="width: 20px"></p>
+				</c:forEach>
+			</c:if>			
+			
+			<c:if test="${bean.imagecount >0}">
+				<c:forEach var="x" begin="1" end="${bean.imagecount}" step="1">
+					<p style="width: 600px">
+						<label style="width: 80px">页面图片${x}:</label>
+						<input id="image_${x}_file" name="image_${x}_file" type="file"  size="40" class="required" onchange="filetohidden(image_${x}_file,image_${x})" />
+						<input name="image_${x}" type="hidden" value="" >
+					</p><p style="width: 20px"></p><p style="width: 20px"></p>
+				</c:forEach>
+			</c:if>
+			<c:if test="${bean.textcount >0}">
+				<c:forEach var="x" begin="1" end="${bean.textcount}" step="1">
+					<p style="width: 600px">
+						<label style="width: 80px">文本内容${x}:</label><input id="text_${x}"  class="required"  size="80" maxlength="255" name="text_${x}" type=text value="" >
+					</p><p style="width: 20px"></p><p style="width: 20px"></p>
+				</c:forEach>
+			</c:if>			
+			<input type="hidden" value="${bean.textcount}" name="textcount" >
+			<input type="hidden" value="${bean.imagecount}" name="imagecount" >
+			<input type="hidden" value="${bean.csscount}" name="csscount" >
+		</div>
+			
+	
+	</div>
+	<div class="formBar">
+		<ul>
+			<li><div class="buttonActive"><div class="buttonContent"><button type="submit">确定</button></div></div></li>
+			<li><div class="button"><div class="buttonContent"><button type="button" class="close">关闭</button></div></div></li>
+		</ul>
+	</div>
+</table>
+</form>

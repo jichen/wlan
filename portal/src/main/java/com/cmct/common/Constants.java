@@ -1,0 +1,70 @@
+package com.cmct.common;
+
+/**
+ * 
+ * @title
+ * @description 该类主要用于定义所用在系统中需要定义的常量
+ * @usage
+ * @copyright Copyright 2011 SHCMCT Corporation. All rights reserved.
+ * @company 上海中移通信技术工程有限公司
+ * @author John.Yao
+ * @create 2012-3-27 下午3:07:49
+ */
+public interface Constants {
+
+	public final static String PORTAL_LOGIN_USER = "PORTAL_LOGIN_USER";//系统登录用户
+
+	/**
+	 * Funtion
+	 */
+	public final static String Funtion_Login="登录";
+	public final static String Funtion_Exit="退出";
+	
+	public final static String Funtion_Add = "添加";
+	public final static String Funtion_Delete = "删除";
+	public final static String Funtion_Update = "修改";
+
+	
+	public final static String Funtion_Content_Add = "模板页面内容添加";
+	public final static String Funtion_Content_Delete = "模板页面内容删除";
+	public final static String Funtion_Content_Update = "模板页面内容修改";
+	
+	public final static String Funtion_View = "浏览";
+	
+	//分配权限
+	public final static String Funtion_Assign_Roles = "分配权限";
+	//撤销权限
+	public final static String Funtion_Undo_Role = "撤销权限";
+	/**
+	 * MODULE
+	 */
+	public final static String MODULE_LOGIN_SYSTEM="登录系统";
+	public final static String MODULE_EXIT_SYSTEM="退出系统";	
+	
+	public final static String MODULE_RADIUS_LOG="Radius日志";
+	
+	public final static String MODULE_AUTH_RULE = "认证规则设置";
+	public final static String MODULE_BLACKLIST = "黑名单管理";
+	public final static String MODULE_AUTH_PAGE = "认证页面设置";
+	public final static String MODULE_PORTAL_LOG="Portal日志";
+	
+	public final static String MODULE_STATISTICS_USER="上网用户统计分析";
+	public final static String MODULE_STATISTICS_LOGIN="用户登陆日志查询";
+		
+	public final static String MODULE_AP = "AP位置信息管理";
+	public final static String MODULE_AC = "AC管理";
+	public final static String MODULE_CUSTOMER = "企业管理";
+	public final static String MODULE_SYS_MODULE = "系统模块管理";
+	public final static String MODULE_SYS_USER = "系统用户管理";
+	public final static String MODULE_SYS_ROLE = "系统权限模块管理";
+	
+	
+	/**
+	 * 文件目录
+	 * 
+	 */
+	public final static String FilePath_CSS="css/";
+	public final static String FilePath_IMAGE="images/";
+	public final static String FilePath_TEMPLATE_PAGE="template";
+
+}

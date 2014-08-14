@@ -1,0 +1,53 @@
+package com.cmct.portal.statistics.controller;
+
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.WebUtils;
+
+import com.cmct.common.Constants;
+import com.cmct.common.annotation.Log;
+import com.cmct.common.util.AbstractController;
+import com.cmct.common.util.ui.PageFormModel;
+import com.cmct.common.util.ui.Page;
+import com.cmct.portal.po.ACPO;
+import com.cmct.portal.po.UserPO;
+import com.cmct.portal.service.ACService;
+import com.cmct.portal.service.WLANUSERLogService;
+
+
+@Controller
+@RequestMapping("/statistics/wlanUserLog")
+public class WUserInterLogController extends AbstractController {
+	
+	
+	@Autowired
+	private WLANUSERLogService wUSERLogService;
+
+
+	/**
+	 * 
+	 */
+	@RequestMapping(value = "/list")
+	public ModelAndView list(Page page,PageFormModel pageForm,HttpServletRequest req) throws Exception {
+		Map mp=new HashMap();
+		return new ModelAndView("/pages/view/sysmanagement/ac/list",mp);
+	}
+	
+	
+	
+	
+}

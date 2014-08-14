@@ -1,0 +1,19 @@
+package com.cmct.portal.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.cmct.portal.dao.LoginLogDao;
+import com.cmct.portal.po.LoginLogPO;
+
+
+
+@Service
+public class LoginLogService {
+	@Autowired
+	private LoginLogDao loginLogDao;
+	
+	public void save(LoginLogPO entity){
+		loginLogDao.save(entity);
+	} 
+}

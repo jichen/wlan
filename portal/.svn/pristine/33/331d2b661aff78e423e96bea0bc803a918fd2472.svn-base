@@ -1,0 +1,391 @@
+package com.cmct.portal.interfaces.model;
+
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.cmct.common.util.Passwordmd5;
+
+
+
+
+/**
+ * 
+ * @title Portal协议客户端,用于发送和接收数据报文		
+ * @description	
+ * @usage		
+ * @copyright	Copyright 2011  SHCMCT Corporation. All rights reserved.
+ * @company		上海中移通信技术工程有限公司
+ * @author		jichen
+ * @create		2014-3-19 下午2:03:05
+ */
+public class PortalClient {
+
+	/**
+	 * IP地址
+	 */
+    private String hostName;
+    
+    /**
+     * 端口
+     */
+    private int port;
+    
+    /**
+     * UDP发送延迟
+     */
+    private int timeout;
+    
+    /**
+     * UDP重发次数
+     */
+    private int retryCount;
+    
+    /**
+     * UDP套接字
+     */
+    private DatagramSocket socket;
+
+    
+	public DatagramSocket getSocket() {
+		return socket;
+	}
+
+	public void setSocket(DatagramSocket socket) {
+		this.socket = socket;
+	}
+
+	public int getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
+	}
+
+	public int getRetryCount() {
+		return retryCount;
+	}
+
+	public void setRetryCount(int retryCount) {
+		this.retryCount = retryCount;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+    
+    public PortalClient(String hostName,int port,int timeout,int retryCount) {
+    	this.hostName = hostName;
+    	this.port = port;
+    	this.timeout = timeout;
+    	this.retryCount = retryCount;
+    }
+   
+    /**
+     * 包装ChallengerRequest报文数据
+     * @param userIP
+     * @param serialNo
+     * @return
+     */
+    public PortalData wrapChallengeRequestData(String userIP,int serialNo) {
+    	PortalData data = new PortalData();
+    	data.setVersion(Protocal.PORTAL_PROTOCOL_VERSION_1);
+    	data.setType(Protocal.PORTAL_PROTOCOL_TYPE_REQ_CHALLENGE);
+    	data.setAuthType(Protocal.PORTAL_PROTOCOL_AUTH_TYPE_CHAP);
+    	data.setRsv(Protocal.PORTAL_PROTOCOL_RSV);
+    	data.setSerialNo(serialNo);
+    	data.setReqId(0);
+    	data.setIp(userIP);
+    	data.setPort(0);
+    	data.setErrorCode(0);
+    	data.setAttrNum(0);
+    	return data;
+    }
+    
+    /**
+     * 包装AuthRequest报文数据
+     * @param userIP
+     * @param reqId
+     * @param serialNo
+     * @param username
+     * @param password
+     * @param challenge
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    public PortalData wrapAuthRequestData(String userIP,int reqId,int serialNo,String username,String password,byte[] challenge) throws UnsupportedEncodingException {
+    	byte chapId = intToByteArray(reqId)[1];
+    	byte[] chapPassword = encodeChapPassword(chapId,Passwordmd5.MD5(password),challenge);
+    	PortalData data = new PortalData();
+    	data.setVersion(Protocal.PORTAL_PROTOCOL_VERSION_1);
+    	data.setType(Protocal.PORTAL_PROTOCOL_TYPE_REQ_AUTH);
+    	data.setAuthType(Protocal.PORTAL_PROTOCOL_AUTH_TYPE_CHAP);
+    	data.setRsv(Protocal.PORTAL_PROTOCOL_RSV);
+    	data.setSerialNo(serialNo);
+    	data.setReqId(reqId);
+    	data.setIp(userIP);
+    	data.setPort(0);
+    	data.setErrorCode(0);
+    	data.setAttrNum(2);
+    	List<Attribute> attributes = new ArrayList<Attribute>();
+    	//username属性
+    	Attribute userNameAttr = new Attribute();
+    	userNameAttr.setAttrType(Protocal.PORTAL_PROTOCOL_ATTRTYPE_USERNAME);
+    	byte[] userNameBytes = this.getUtf8Bytes(username);
+    	userNameAttr.setAttrLength(userNameBytes.length + 2);
+    	userNameAttr.setValue(userNameBytes);
+    	attributes.add(userNameAttr);
+    	//chappassword
+    	Attribute chappwdAttr = new Attribute();
+    	chappwdAttr.setAttrType(Protocal.PORTAL_PROTOCOL_ATTRTYPE_CHAPPASSWORD);
+    	chappwdAttr.setAttrLength(chapPassword.length + 2);
+    	chappwdAttr.setValue(chapPassword);
+    	attributes.add(chappwdAttr);
+    	data.setAttributes(attributes);
+    	return data;
+    }
+    
+    /**
+     * 包装AffAckAut数据
+     * @param userIP
+     * @param reqId
+     * @param serialNo
+     * @return
+     */
+    public PortalData wrapAffAckAuthData(String userIP,int reqId,int serialNo) {
+       	PortalData data = new PortalData();
+    	data.setVersion(Protocal.PORTAL_PROTOCOL_VERSION_1);
+    	data.setType(Protocal.PORTAL_PROTOCOL_TYPE_AFF_ACK_AUTH);
+    	data.setAuthType(Protocal.PORTAL_PROTOCOL_AUTH_TYPE_CHAP);
+    	data.setRsv(Protocal.PORTAL_PROTOCOL_RSV);
+    	data.setSerialNo(serialNo);
+    	data.setReqId(reqId);
+    	data.setIp(userIP);
+    	data.setPort(0);
+    	data.setErrorCode(0);
+    	data.setAttrNum(0);
+    	return data;
+    }
+    
+    
+    /**
+     * 包装LogoutRequest数据
+     * @param userIP
+     * @param reqId
+     * @param serialNo
+     * @return
+     */
+    public PortalData wrapLogoutRequestData(String userIP,int reqId,int serialNo,int errorCode) {
+       	PortalData data = new PortalData();
+    	data.setVersion(Protocal.PORTAL_PROTOCOL_VERSION_1);
+    	data.setType(Protocal.PORTAL_PROTOCOL_TYPE_REQ_LOGOUT);
+    	data.setAuthType(Protocal.PORTAL_PROTOCOL_AUTH_TYPE_CHAP);
+    	data.setRsv(Protocal.PORTAL_PROTOCOL_RSV);
+    	data.setSerialNo(serialNo);
+    	data.setReqId(reqId);
+    	data.setIp(userIP);
+    	data.setPort(0);
+    	data.setErrorCode(0);
+    	data.setAttrNum(0);
+    	return data;
+    }
+    
+    /**
+     * 
+     * @param data
+     * @return
+     * @throws IOException
+     */
+    private byte[] encode(PortalData data) throws IOException {
+    	ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    	DataOutputStream dos = new DataOutputStream(bos);
+    	dos.writeByte((byte) data.getVersion());
+    	dos.writeByte((byte) data.getType());
+    	dos.writeByte((byte) data.getAuthType());
+    	dos.writeByte((byte) data.getRsv());
+    	dos.write(intToByteArray(data.getSerialNo()));
+    	dos.write(intToByteArray(data.getReqId()));
+    	InetAddress address = InetAddress.getByName(data.getIp());
+    	dos.write(address.getAddress());
+    	dos.write(intToByteArray(data.getPort()));
+    	dos.writeByte((byte) data.getErrorCode());
+    	dos.writeByte((byte) data.getAttrNum());
+    	
+    	List<Attribute> attributes = data.getAttributes();
+    	if (attributes != null) {
+    		for (Attribute attr : attributes) {
+        		dos.writeByte(attr.getAttrType());
+        		dos.writeByte(attr.getAttrLength());
+        		dos.write(attr.getValue());
+        	}
+    	}
+    	dos.flush();
+    	return bos.toByteArray();
+    }
+    
+    public PortalData sendData(PortalData challengeReq) throws IOException {
+    	InetAddress udpServerAddress = InetAddress.getByName(hostName);
+    	byte[] sendData = encode(challengeReq);
+    	DatagramPacket packet = new DatagramPacket(sendData, sendData.length,udpServerAddress,port);
+    	if (socket ==null) {
+    		socket = new DatagramSocket();
+    	}
+    	DatagramPacket packetIn = new DatagramPacket(new byte[2048],2048);
+    	socket.setSoTimeout(timeout);
+    	for (int i = 0;i < retryCount;i++) {
+    		try {
+    			socket.send(packet);
+            	socket.receive(packetIn);
+            	return getPortalData(packetIn);
+    		} catch(Exception e) {
+    		   e.printStackTrace();	
+    		}
+       	}
+    	return null;
+    }
+    
+    public void sendDataWithoutResponese(PortalData challengeReq) throws IOException {
+    	InetAddress udpServerAddress = InetAddress.getByName(hostName);
+    	byte[] sendData = encode(challengeReq);
+    	DatagramPacket packet = new DatagramPacket(sendData, sendData.length,udpServerAddress,port);
+    	if (socket ==null) {
+    		socket = new DatagramSocket();
+    	}
+    	socket.setSoTimeout(timeout);
+    	socket.send(packet);
+    }
+    
+      
+    
+    public PortalData decode(byte[] data) throws Exception {
+    	ByteArrayInputStream bis = new ByteArrayInputStream(data);
+    	// 报文固定前十六字节数据
+       	byte[] dataFix = new byte[16];
+       	
+       	//报文不定长属性数据
+    	byte[] dataUnFix = new byte[data.length - 16];
+    	
+    	bis.read(dataFix, 0, 16);
+    	bis.read(dataUnFix);
+    	
+    	if (dataFix[0] == 0x00) {
+    		throw new Exception("invalid data");
+    	}
+    	
+       	PortalData receiveData = new PortalData();
+    	receiveData.setVersion(dataFix[0]);
+    	receiveData.setType(dataFix[1]);
+    	receiveData.setAuthType(dataFix[2]);
+    	receiveData.setRsv(dataFix[3]);
+    	receiveData.setSerialNo(byteArrayToInt(new byte[]{0,0,dataFix[4],dataFix[5]}));
+    	receiveData.setReqId(byteArrayToInt(new byte[]{0,0,dataFix[6],dataFix[7]}));
+    	receiveData.setIp(InetAddress.getByAddress(new byte[]{dataFix[8],dataFix[9],dataFix[10],dataFix[11]}).getHostAddress());
+    	receiveData.setPort(byteArrayToInt(new byte[]{0,0,dataFix[12],dataFix[13]}));
+    	receiveData.setErrorCode(dataFix[14]);
+    	int attrNum = dataFix[15];
+    	receiveData.setAttrNum(attrNum);
+    	int offSet = 0;
+    	List<Attribute> attributes = new ArrayList<Attribute>();
+    	for (int i = 0; i < attrNum; i++) {
+    		Attribute attr = new Attribute();
+    		int lengthPosition = offSet + 2;
+    		attr.setAttrType(dataUnFix[lengthPosition - 2]);
+    		int attrLength = dataUnFix[lengthPosition - 1];
+    		int valueLength = attrLength - 2;
+    		attr.setAttrLength(attrLength);
+    		byte[] valueArray = new byte[valueLength];
+    		for (int j = 0; j < valueLength; j++) {
+    			valueArray[j] = dataUnFix[lengthPosition + j];
+    		}
+    		attr.setValue(valueArray);
+    		attributes.add(attr);
+    		offSet = offSet + attrLength;
+    	}
+    	receiveData.setAttributes(attributes);
+    	return receiveData;
+    }
+    
+    public PortalData getPortalData(DatagramPacket packetIn) throws Exception {
+    	byte[] data = packetIn.getData();
+    	return decode(data);
+    }
+	 
+    
+ 
+    
+    private byte[] intToByteArray(int num) {
+    	byte[] b = new byte[2];
+    	for (int i = 0; i < 4; i++) {
+    		if (i > 1) {
+    			b[i - 2] = (byte) (num >>> (24 - i * 8));
+    		}
+    	}
+    	return b;
+    }
+    
+    private int byteArrayToInt(byte[] b) {
+    	int value = 0;
+    	for (int i = 0; i < b.length; i++) {
+    		value+= (b[i] & 0xFF) << (8 * (3 - i));
+    	}
+    	return value;
+    }
+    
+	private byte[] encodeChapPassword(byte chapIdentifier,String plaintext, byte[] chapChallenge) {
+        // see RFC 2865 section 2.2
+		try {
+		    MessageDigest md5 = MessageDigest.getInstance("MD5");
+	        md5.reset();
+	        md5.update(chapIdentifier);
+	        md5.update(getUtf8Bytes(plaintext));
+	        byte[] chapHash = md5.digest(chapChallenge);
+	        System.out.println(hexString(chapHash));
+	        return chapHash;
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	private byte[] getUtf8Bytes(String str) {
+		try {
+			return str.getBytes("UTF-8");
+		} catch (UnsupportedEncodingException uee) {
+			return str.getBytes();
+		}
+	}
+	
+	private String hexString(byte[] byteArray){
+		StringBuffer hexValue= new StringBuffer();	
+		for(int i=0;i< byteArray.length;i++){	
+			int val= ((int)byteArray[i]) & 0xff ;
+			if(val<16){
+				hexValue.append(0);
+			}
+			hexValue.append(Integer.toHexString(val));
+		}
+		return hexValue.toString();
+	}
+}
