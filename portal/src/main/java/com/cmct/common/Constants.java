@@ -15,7 +15,7 @@ public interface Constants {
 	public final static String PORTAL_LOGIN_USER = "PORTAL_LOGIN_USER";//系统登录用户
 
 	/**
-	 * Funtion11233
+	 * Funtion
 	 */
 	public final static String Funtion_Login="登录";
 	public final static String Funtion_Exit="退出";
