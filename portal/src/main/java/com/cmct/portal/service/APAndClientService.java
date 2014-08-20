@@ -45,11 +45,11 @@ public class APAndClientService  {
 		return apClientDao.get(id);
 	} 
 	
-	public List<APAndClient> findAllWhere(Map propertiesMap){
+	public List<APAndClient> findAllWhere(Map<String,Object> propertiesMap){
 		return apClientDao.find(propertiesMap);
 	}
 	
-	public APAndClient find_Newest(Map propertiesMap){
+	public APAndClient find_Newest(Map<String,Object> propertiesMap){
 		List<APAndClient> list=apClientDao.find(propertiesMap);
 		if(list!=null && list.size()>0){
 			return list.get(list.size()-1);
@@ -57,18 +57,18 @@ public class APAndClientService  {
 		return null;
 	}
 	
-	public List<APAndClient> findPages(Map propertiesMap,Integer start,Integer limit){
+	public List<APAndClient> findPages(Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<APAndClient> list=apClientDao.find(propertiesMap, start, limit);
 		return list;
 	}
 
-	public List<APAndClient> findPages_sql(String sql,Map propertiesMap,Integer start,Integer limit){
+	public List<APAndClient> findPages_sql(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<APAndClient> list=apClientDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}	
 	
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return apClientDao.getTotalCount(sql, propertiesMap);
 	} 
 	

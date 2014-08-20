@@ -27,11 +27,11 @@ public class TemplateMapService {
 		templateMapDAO.delete(entity);
 	}
 	
-	public List<TemplateMapPO> findList(Map propertiesMap){
+	public List<TemplateMapPO> findList(Map<String,Object> propertiesMap){
 		return templateMapDAO.find(propertiesMap);		
 	}
 
-	public List<TemplateMapPO> findList(Map propertiesMap,List<String[]> order){
+	public List<TemplateMapPO> findList(Map<String,Object> propertiesMap,List<String[]> order){
 		return templateMapDAO.find(propertiesMap,order);		
 	}
 

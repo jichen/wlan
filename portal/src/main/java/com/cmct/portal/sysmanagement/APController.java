@@ -68,7 +68,7 @@ public class APController extends AbstractController {
 		List<APPO> aps=new ArrayList<APPO>();
 		APPO ap;
 		
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
 		String sqlCount="select count(*) from APPO where 1=1 ";
@@ -125,7 +125,7 @@ public class APController extends AbstractController {
 			aps.add(ap);
 		}
 		
-		Map mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("list",aps);
 		mp.put("page",page);
 		mp.put("pageForm",pageForm);

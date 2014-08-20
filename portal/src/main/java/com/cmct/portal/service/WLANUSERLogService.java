@@ -25,12 +25,12 @@ public class WLANUSERLogService {
 		wUSERLogDao.update(entity);
 	}
 	
-	public List<WLANUSERLogPO> pageQuery(String sql,Map propertiesMap,Integer start,Integer limit){
+	public List<WLANUSERLogPO> pageQuery(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<WLANUSERLogPO> list=wUSERLogDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return wUSERLogDao.getTotalCount(sql, propertiesMap);
 	} 
 	
@@ -41,7 +41,7 @@ public class WLANUSERLogService {
 		List<String[]> orderBies = new ArrayList<String[]>();
 		String[] orderBy = new String[] { "id", "desc" };//根据id
 		orderBies.add(orderBy);	
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		propertiesMap.put("username",username);
 		propertiesMap.put("userip",userip);
 		List<WLANUSERLogPO> list=wUSERLogDao.find(propertiesMap, orderBies);

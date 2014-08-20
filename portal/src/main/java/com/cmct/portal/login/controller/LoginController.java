@@ -28,14 +28,12 @@ import com.cmct.common.Constants;
 import com.cmct.common.annotation.Log;
 import com.cmct.common.shiro.URLAuthorizationFilter;
 import com.cmct.common.util.AbstractController;
-import com.cmct.portal.po.SnmpClientofAP;
 import com.cmct.portal.po.TemplateMapPO;
 import com.cmct.portal.po.TemplatePagePO;
 import com.cmct.portal.po.UserPO;
 import com.cmct.portal.service.TemplateMapService;
 import com.cmct.portal.service.TemplatePageService;
 import com.cmct.portal.service.UserService;
-import com.cmct.portal.snmpmib.ApMIBService;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -75,7 +73,7 @@ public class LoginController extends AbstractController {
 		
 		//获取URL中的参数
 		String userip=request.getParameter("wlanuserip");
-		String ssid=request.getParameter("ssid");
+		//String ssid=request.getParameter("ssid");
 		//判断访问的终端类型
 		String type="pc";
 		String userAgent = request.getHeader("user-agent").toLowerCase();

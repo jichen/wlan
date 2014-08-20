@@ -23,7 +23,7 @@ public class PortaltoRadius {
 	 * 
 	 */
 	//上线认证
-	private static Map<String,Object> rnum=new Hashtable();
+	private static Map<String,Object> rnum=new Hashtable<String,Object>();
 	
 	public static  Map<String,Object> wlanLogin(String acIP,String userIP,String username,String password) throws IOException, PortalException{
 		//目前写死，以后可能会传值

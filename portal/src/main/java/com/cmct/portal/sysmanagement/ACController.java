@@ -105,7 +105,7 @@ public class ACController extends AbstractController {
 		Collection<ACPO> list=null;
 		List<ACPO> acs=new ArrayList<ACPO>();
 		ACPO ac;
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
 		String sqlCount="select count(*) from ACPO where 1=1 ";
@@ -165,7 +165,7 @@ public class ACController extends AbstractController {
 			ac.setIsdelete(acPO.getIsdelete());
 			acs.add(ac);
 		}
-		Map mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("list",acs);
 		mp.put("page",page);
 		mp.put("pageForm",pageForm);
@@ -178,7 +178,7 @@ public class ACController extends AbstractController {
 		Collection<ACPO> list=null;
 		List<ACPO> acs=new ArrayList<ACPO>();
 		ACPO ac;
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
 		String sqlCount="select count(*) from ACPO where 1=1 ";
@@ -231,7 +231,7 @@ public class ACController extends AbstractController {
 			ac.setIsdelete(acPO.getIsdelete());
 			acs.add(ac);
 		}
-		Map mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("list",acs);
 		mp.put("page",page);
 		mp.put("pageForm",pageForm);

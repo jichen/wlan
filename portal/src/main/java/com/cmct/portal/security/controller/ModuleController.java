@@ -102,7 +102,7 @@ public class ModuleController extends AbstractController {
 	@RequestMapping(value = "/list/{parentId}")
 	public ModelAndView list( @PathVariable Integer parentId,Page page,PageFormModel pageForm, HttpServletRequest request) {
 		List<ModulePO> list = null;
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
 		String sqlCount="select count(*) from ModulePO where 1=1 ";
@@ -126,7 +126,7 @@ public class ModuleController extends AbstractController {
 		page.setTotalCount(moduleService.getTotalCount_where(sqlCount, propertiesMap));
 		request.getSession().setAttribute("parentModule", moduleService.get(pageForm.getParentId()));
 		
-		Map mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("list",list);
 		mp.put("page",page);
 		mp.put("pageForm",pageForm);

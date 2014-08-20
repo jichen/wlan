@@ -21,7 +21,7 @@ public class RadPostAuthService {
 	}
 	
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return radPostAuthDao.getTotalCount(sql, propertiesMap);
 	} 
 }

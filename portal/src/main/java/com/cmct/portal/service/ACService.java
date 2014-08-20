@@ -38,18 +38,18 @@ public class ACService  {
 
 	} 
 	
-	public List<ACPO> findPages(Map propertiesMap,Integer start,Integer limit){
+	public List<ACPO> findPages(Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<ACPO> list=aCDao.find(propertiesMap, start, limit);
 		return list;
 	}
 
-	public List<ACPO> findPages_sql(String sql,Map propertiesMap,Integer start,Integer limit){
+	public List<ACPO> findPages_sql(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<ACPO> list=aCDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}	
 	
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return aCDao.getTotalCount(sql, propertiesMap);
 	} 
 	

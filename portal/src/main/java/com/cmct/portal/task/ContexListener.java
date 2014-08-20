@@ -16,7 +16,6 @@ public class ContexListener implements ServletContextListener{
 	private  Timer timer = null;
 	public void contextInitialized(ServletContextEvent sce) {
 		logger.debug("计划开始");
-		// TODO Auto-generated method stub
 		timer = new Timer(true);
 		sce.getServletContext().log("服务器已经启动了");
         timer.schedule(new MyTask(sce.getServletContext()),0,1000*60*5);//每隔5分钟检查扫描一次
@@ -25,7 +24,6 @@ public class ContexListener implements ServletContextListener{
 	}
 
 	public void contextDestroyed(ServletContextEvent sce) {
-		// TODO Auto-generated method stub
 		timer.cancel();
 		sce.getServletContext().log("任务列表已经销毁了");
 	}

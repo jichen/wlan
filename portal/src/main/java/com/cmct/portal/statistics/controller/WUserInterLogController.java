@@ -2,8 +2,6 @@ package com.cmct.portal.statistics.controller;
 
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,38 +9,23 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import oracle.net.aso.e;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.WebUtils;
 
-import com.cmct.common.Constants;
-import com.cmct.common.annotation.Log;
 import com.cmct.common.util.AbstractController;
 import com.cmct.common.util.DateUtil;
 import com.cmct.common.util.ui.PageFormModel;
 import com.cmct.common.util.ui.Page;
-import com.cmct.portal.po.ACPO;
 import com.cmct.portal.po.StatisticsVo;
-import com.cmct.portal.po.UserPO;
-import com.cmct.portal.po.WLANUSERLogPO;
-import com.cmct.portal.service.ACService;
 import com.cmct.portal.service.StatisticsVoService;
-import com.cmct.portal.service.WLANUSERLogService;
 
 
 @Controller
 @RequestMapping("/statistics/wlanUserLog")
 public class WUserInterLogController extends AbstractController {
 	
-	
-	@Autowired
-	private WLANUSERLogService wUSERLogService;
 	@Autowired
 	private StatisticsVoService statisticsVoService;
 
@@ -51,7 +34,7 @@ public class WUserInterLogController extends AbstractController {
 	 */
 	@RequestMapping(value = "/list")
 	public ModelAndView list(Page page,PageFormModel pageForm,HttpServletRequest req) throws Exception {
-		Map mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		String type=pageForm.getDatetype();
 		String time1=req.getParameter("startTime");
 		String time2=req.getParameter("endTime");
@@ -60,7 +43,7 @@ public class WUserInterLogController extends AbstractController {
 		if(type==null && time1==null && time2==null){
 			return new ModelAndView("/pages/view/statistics/userwlanlog/userwlanlist",mp);
 		}else{
-			Map propertiesMap =new HashMap();
+			Map<String,Object> propertiesMap =new HashMap<String,Object>();
 			Integer start = 0;
 			Integer limit=page.getNumPerPage();
 			String sql_time="";
@@ -96,7 +79,7 @@ public class WUserInterLogController extends AbstractController {
 			sql=sql+where_sql+group_sql+orderby;
 			
 
-			String sqlCount="select count(*) from ( "+sql+" ) ";
+			//String sqlCount="select count(*) from ( "+sql+" ) ";
 			
 			List<Object> list=statisticsVoService.CountWlanList(sql, propertiesMap, start, limit);
 			

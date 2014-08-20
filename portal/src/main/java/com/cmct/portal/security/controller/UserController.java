@@ -15,12 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.geronimo.mail.util.Hex;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.UnknownAlgorithmException;
-import org.apache.shiro.crypto.hash.Sha512Hash;
 import org.apache.shiro.util.ByteSource;
-import org.junit.experimental.runners.Enclosed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -283,7 +280,7 @@ public class UserController extends AbstractController {
 	@RequestMapping(value = "/list")
 	public ModelAndView list(Page page,PageFormModel pageForm,HttpServletRequest req) throws Exception {	
 		List<UserPO> list=new ArrayList<UserPO>();
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap=new HashMap<String,Object>();
 		//设置显示数量
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
@@ -325,8 +322,8 @@ public class UserController extends AbstractController {
 			}
 		}
 		//计算符合条件的行数，分页需要
-		page.setTotalCount(userService.getTotalCount_where(sqlCount, propertiesMap));	
-		Map mp=new HashMap();
+		page.setTotalCount(userService.getTotalCount_where(sqlCount, propertiesMap));
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("list",userList);
 		mp.put("page",page);
 		mp.put("pageForm",pageForm);

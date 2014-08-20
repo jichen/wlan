@@ -53,7 +53,7 @@ public class TemplatePageController extends AbstractController {
 		Collection<TemplatePagePO> list=null;
 		List<TemplatePagePO> templatePages=new ArrayList<TemplatePagePO>();
 		TemplatePagePO templatePage;
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		//设置显示数量
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
@@ -93,7 +93,7 @@ public class TemplatePageController extends AbstractController {
 			templatePage.setIsmap(templatePagePO.getIsmap());
 			templatePages.add(templatePage);
 		}
-		Map mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("list",templatePages);
 		mp.put("page",page);
 		mp.put("pageForm",pageForm);

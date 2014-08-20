@@ -2,8 +2,6 @@ package com.cmct.portal.snmpmib;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 import java.util.Vector;
 
 import org.apache.commons.lang.StringUtils;
@@ -100,14 +98,12 @@ public class SnmpUtil {
 			transportProtocol=new DefaultUdpTransportMapping();
 			transportProtocol.listen();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		protocol=new Snmp(transportProtocol);
 		try {
 			protocol.listen();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 				

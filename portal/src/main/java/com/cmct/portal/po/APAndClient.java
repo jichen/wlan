@@ -11,8 +11,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Formula;
-
 
 @Entity
 @Table(name = "W_AP_ClIENT")

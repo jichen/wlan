@@ -28,7 +28,7 @@ public class SMSPWDLogService {
 		List<String[]> orderBies = new ArrayList<String[]>();
 		String[] orderBy = new String[] { "id", "desc" };//根据id
 		orderBies.add(orderBy);	
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		propertiesMap.put("username",username);
 		List<SMSPWDLogPO> list=sMSPWDLogDao.find(propertiesMap, orderBies);
 		if(null != list  && list.size()>0){

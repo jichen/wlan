@@ -45,7 +45,6 @@
 //				if (!current_hash) {
 //					if (current_hash != $.History._currentHash) {
 //						$.History._currentHash = current_hash;
-//						//TODO
 //					}
 //				} else {
 					if (current_hash != $.History._currentHash) {

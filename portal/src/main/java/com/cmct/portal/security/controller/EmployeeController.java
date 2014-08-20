@@ -43,7 +43,7 @@ public class EmployeeController {
 			user.setPwd(userPO.getPwd());
 			users.add(user);
 		}
-		Map mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("list",users);
 		return "/pages/view/security/employee/list";
 		

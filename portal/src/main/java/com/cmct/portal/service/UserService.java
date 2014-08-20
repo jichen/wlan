@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cmct.portal.dao.UserDao;
-import com.cmct.portal.po.CustomerPO;
 import com.cmct.portal.po.UserPO;
 
 
@@ -18,7 +17,7 @@ public class UserService {
 	private UserDao userDao;
 	
 	
-	public UserPO ByLogin(Map propertiesMap){
+	public UserPO ByLogin(Map<String,Object> propertiesMap){
 		//用户状态
 		propertiesMap.put("status","N");
 		List<UserPO> list=userDao.find(propertiesMap);
@@ -88,18 +87,18 @@ public class UserService {
 	
 
 	
-	public List<UserPO> findPages(Map propertiesMap,Integer start,Integer limit){
+	public List<UserPO> findPages(Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<UserPO> list=userDao.find(propertiesMap, start, limit);
 		return list;
 	}
 	
-	public List<UserPO> findPages_sql(String sql,Map propertiesMap,Integer start,Integer limit){
+	public List<UserPO> findPages_sql(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<UserPO> list=userDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}
 	
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return userDao.getTotalCount(sql, propertiesMap);
 	} 
 

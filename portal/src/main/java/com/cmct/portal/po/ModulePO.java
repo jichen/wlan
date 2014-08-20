@@ -35,6 +35,11 @@ import com.google.common.collect.Lists;
 public class ModulePO implements Comparable<ModulePO>, Serializable {
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private Integer id;
 	
 	@Column(nullable=false, length=32)

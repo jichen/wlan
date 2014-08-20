@@ -19,17 +19,17 @@ public class OperateLogService {
 		operateLogDao.save(entity);
 	} 
 	
-	public List<OperateLogPO> findPages(Map propertiesMap,Integer start,Integer limit){
+	public List<OperateLogPO> findPages(Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<OperateLogPO> list=operateLogDao.find(propertiesMap, start, limit);
 		return list;
 	}
 
-	public List<OperateLogPO> pageQuery(String sql,Map propertiesMap,Integer start,Integer limit){
+	public List<OperateLogPO> pageQuery(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<OperateLogPO> list=operateLogDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return operateLogDao.getTotalCount(sql, propertiesMap);
 	} 
 }

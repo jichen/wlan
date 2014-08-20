@@ -1,7 +1,6 @@
 package com.cmct.portal.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cmct.portal.dao.ModuleDao;
-import com.cmct.portal.po.ACPO;
 import com.cmct.portal.po.ModulePO;
 
 
@@ -38,7 +36,7 @@ public class ModuleService {
 	/**
 	 * 判断是否是根模块.
 	 */
-	private boolean isRoot(Integer id) {
+	public boolean isRoot(Integer id) {
 		return id == 1;
 	}
 
@@ -94,18 +92,18 @@ public class ModuleService {
 	}
 	
 
-	public List<ModulePO> findPages(Map propertiesMap,Integer start,Integer limit){
+	public List<ModulePO> findPages(Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<ModulePO> list=moduleDao.find(propertiesMap, start, limit);
 		return list;
 	}
 
-	public List<ModulePO> findPages_sql(String sql,Map propertiesMap,Integer start,Integer limit){
+	public List<ModulePO> findPages_sql(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<ModulePO> list=moduleDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}	
 	
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return moduleDao.getTotalCount(sql, propertiesMap);
 	} 
 	

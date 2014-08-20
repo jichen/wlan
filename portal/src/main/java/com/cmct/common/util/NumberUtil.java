@@ -39,7 +39,6 @@ public class NumberUtil {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		NumberUtil rm=new NumberUtil();
 		String rondom=rm.runVerifyCode(6);
 		System.out.println("rm="+rondom);

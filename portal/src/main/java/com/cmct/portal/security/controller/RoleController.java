@@ -100,7 +100,7 @@ public class RoleController extends AbstractController {
 
 	@RequestMapping(value = "/preUpdate/{id}")
 	public ModelAndView preUpdate(@PathVariable Integer id) {
-		Map mp = roleService.findOne_update(id);
+		Map<String,Object> mp = roleService.findOne_update(id);
 		
 		String rolePermissionList = (String) mp.get("rolePermissionList");
 		RolePO role = (RolePO) mp.get("role");
@@ -152,7 +152,7 @@ public class RoleController extends AbstractController {
 
 		List<RolePO> list = null;
 
-		Map propertiesMap =new HashMap();
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
 		String sqlCount="select count(*) from RolePO where 1=1 ";
@@ -168,7 +168,7 @@ public class RoleController extends AbstractController {
 		page.setTotalCount(roleService.getTotalCount_where(sqlCount, propertiesMap));
 		//request.getSession().setAttribute("parentModule", moduleService.get(pageForm.getParentId()));
 		
-		Map mp=new HashMap();
+		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("list",list);
 		mp.put("page",page);
 		mp.put("pageForm",pageForm);
@@ -178,7 +178,7 @@ public class RoleController extends AbstractController {
 	@RequestMapping(value = "/ajaxName")
 	public void ajaxName(HttpServletRequest request,HttpServletResponse response,String name) throws IOException {
 		RolePO info = roleService.findOne(name);
-		Map<String, Object> rs = new HashMap<String, Object>();
+		//Map<String, Object> rs = new HashMap<String, Object>();
 		PrintWriter pw=null;
 		pw=response.getWriter();
 		String ajaxDate="0";
@@ -196,7 +196,7 @@ public class RoleController extends AbstractController {
 		if (roles != null && roles.size() >= 1) {
 			info = roles.get(0);
 		}
-		Map<String, Object> rs = new HashMap<String, Object>();
+		//Map<String, Object> rs = new HashMap<String, Object>();
 		PrintWriter pw=null;
 		pw=response.getWriter();
 		String ajaxDate="0";

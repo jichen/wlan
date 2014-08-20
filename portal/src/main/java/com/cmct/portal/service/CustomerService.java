@@ -42,18 +42,18 @@ public class CustomerService  {
 	} 
 	
 	
-	public List<CustomerPO> findPages(Map propertiesMap,Integer start,Integer limit){
+	public List<CustomerPO> findPages(Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<CustomerPO> list=customerDao.find(propertiesMap, start, limit);
 		return list;
 	}
 	
 	
-	public List<CustomerPO> findPages_sql(String sql,Map propertiesMap,Integer start,Integer limit){
+	public List<CustomerPO> findPages_sql(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
 		List<CustomerPO> list=customerDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}
 	
-	public Integer getTotalCount_where(String sql, Map propertiesMap) {
+	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return customerDao.getTotalCount(sql, propertiesMap);
 	} 
 	
