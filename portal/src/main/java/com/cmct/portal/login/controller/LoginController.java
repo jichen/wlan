@@ -56,6 +56,9 @@ public class LoginController extends AbstractController {
 	@Autowired
 	private TemplateMapService templateMapService;
 	
+	@Autowired
+	private ApMIBService apMIBService;
+	
 	/**
 	 * 
 	 * @param request
@@ -84,12 +87,12 @@ public class LoginController extends AbstractController {
 			type="pc";
 		}		
 		//登录的AP位置，决定使用那套模板页面
-
-		String clientMac="14:9f:e8:03:63:f7";
-//		SnmpClientofAP obj=apMIBService.findAtoCByRunInfo(clientMac);
-//		System.out.println(obj.getApMac());
-//		String apMac=obj.getApMac().toString();
-//		
+		//"14:9f:e8:03:63:f7";
+		String clientMac=request.getParameter("usermac");
+		SnmpClientofAP obj=apMIBService.findAtoCByRunInfo(clientMac);
+		System.out.println(obj.getApMac());
+		String apMac=obj.getApMac().toString();
+		
 		
 		//获取模板页面
 		int id=1;

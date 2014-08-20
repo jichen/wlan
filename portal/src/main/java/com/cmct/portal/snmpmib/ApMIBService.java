@@ -107,7 +107,7 @@ public class ApMIBService {
 		
 		if(!apClientList.isEmpty()&&!apInfoList.isEmpty()&&!apStatusInfoList.isEmpty()){
 			for(SnmpAPtoClientAdress a:apClientList){
-				if(a.getClientMac().equals(clientMac)){
+				if(a.getClientMac().equalsIgnoreCase(clientMac)){
 					bean.setApSN(a.getApSN());
 					bean.setClientMac(clientMac);
 					break;
@@ -424,7 +424,7 @@ public class ApMIBService {
 				if(ipstr.length()!=2){
 					ipstr="0"+ipstr;
 				}
-				strHex=strHex+":"+ipstr;
+				strHex=strHex+"-"+ipstr;
 			}
 		}
 		if(strHex.length()>5){
