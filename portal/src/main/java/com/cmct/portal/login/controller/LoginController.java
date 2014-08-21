@@ -28,12 +28,20 @@ import com.cmct.common.Constants;
 import com.cmct.common.annotation.Log;
 import com.cmct.common.shiro.URLAuthorizationFilter;
 import com.cmct.common.util.AbstractController;
+import com.cmct.portal.po.ACPO;
+import com.cmct.portal.po.APPO;
+import com.cmct.portal.po.CustomerPO;
+import com.cmct.portal.po.SnmpClientofAP;
 import com.cmct.portal.po.TemplateMapPO;
 import com.cmct.portal.po.TemplatePagePO;
 import com.cmct.portal.po.UserPO;
+import com.cmct.portal.service.ACService;
+import com.cmct.portal.service.APService;
+import com.cmct.portal.service.CustomerService;
 import com.cmct.portal.service.TemplateMapService;
 import com.cmct.portal.service.TemplatePageService;
 import com.cmct.portal.service.UserService;
+import com.cmct.portal.snmpmib.ApMIBService;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -47,6 +55,15 @@ public class LoginController extends AbstractController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private APService apService;
+	
+	@Autowired
+	private ACService acService;
+
+	@Autowired
+	private CustomerService customerService;
 	
 	@Autowired
 	private TemplatePageService templatePageService;
@@ -91,9 +108,20 @@ public class LoginController extends AbstractController {
 		System.out.println(obj.getApMac());
 		String apMac=obj.getApMac().toString();
 		
-		
-		//获取模板页面
+		APPO ap=apService.findLoginAp(apMac);
 		int id=1;
+		if(ap!=null){
+			System.out.println("AP===="+ap.getLocation());
+			ACPO ac=acService.findOne(ap.getAc_id());
+			if(ac!=null){
+				System.out.println("AC======="+ac.getAc_name());
+				CustomerPO cp=customerService.findOne(ac.getCust_id());
+				if(cp!=null){
+					System.out.println("Customer======="+cp.getCust_name());
+				}
+			}
+		}
+		//获取模板页面
 		TemplatePagePO bean = templatePageService.findOne(id);
 		Configuration cfg = new Configuration();	   
 		//确定模板

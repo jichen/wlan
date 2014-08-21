@@ -1,5 +1,6 @@
 package com.cmct.portal.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,6 +55,18 @@ public class APService  {
 		List<APPO> list=aPDao.find(propertiesMap, start, limit);
 		return list;
 	}
+	
+	public APPO findLoginAp(String apMac){
+		Map<String,Object> propertiesMap=new HashMap<String, Object>();
+		propertiesMap.put("mac", apMac);
+		List<APPO> list =aPDao.find(propertiesMap, 0, 10);
+		if(list!=null && list.size()>0){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
+	
 	
 	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return aPDao.getTotalCount(sql, propertiesMap);
