@@ -110,6 +110,9 @@ public class LoginController extends AbstractController {
 		
 		APPO ap=apService.findLoginAp(apMac);
 		int id=1;
+		if(type.equals("pc")){
+			id=3;
+		}
 		if(ap!=null){
 			System.out.println("AP===="+ap.getLocation());
 			ACPO ac=acService.findOne(ap.getAc_id());

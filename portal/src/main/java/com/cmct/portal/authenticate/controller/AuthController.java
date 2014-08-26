@@ -215,6 +215,7 @@ public class AuthController {
 			session.setAttribute("serialNo", result.get("serialNo"));
 			session.setAttribute("reqID", result.get("reqID"));
 			rs.put("status","0");
+			rs.put("ctx", request.getContextPath());
 			rs.put("url", wlanurl);
 			rs.put("mac", clientMac);
 			rs.put("msg", "登陆成功");
@@ -300,7 +301,6 @@ public class AuthController {
 			rs.put("status","3");
 			rs.put("msg","系统异常请尽快联系服务方。");
 			return rs;
-			
 		}
 	}
 	

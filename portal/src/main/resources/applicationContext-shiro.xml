@@ -56,6 +56,12 @@
 				/authenticate/overdue = anon
 				/authenticate/wLanExit = anon
 				/access/wlan_index.jsp = anon
+				/access/success.jsp = anon
+				/access/success.jsp/** = anon
+				/access/off.jsp = anon
+				/access/success1.jsp = anon
+				/access/success1.jsp/** = anon
+				/access/off1.jsp = anon
 				/access/wlan_index.jsp/** = anon
 				/page/login/** = anon
 				/noPermit = anon
