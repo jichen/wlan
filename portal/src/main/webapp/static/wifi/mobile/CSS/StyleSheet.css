@@ -1,0 +1,134 @@
+﻿body {
+    padding: 0;
+    margin: 0;
+    font-size: 100%;
+    
+}
+
+.frm {
+    background: transparent url('../IMG/bg.png') 0 0px no-repeat;
+      background-size: 100% 100%;
+   padding-bottom:30px;
+    position: absolute;
+    height: auto;
+    width: 100%;
+}
+
+.head {
+    height: 55px;
+    width: 100%;
+    background: transparent url('../IMG/head.png') 0 0px no-repeat;
+    background-size: 100% 100%;
+    margin: auto;
+}
+
+.list {
+    background: transparent url('../IMG/frm_bg.png') 0 0px no-repeat;
+    margin: auto;
+    height: 400px;
+    width: 95%;
+    background-size: 100% 100%;
+    margin-top: 10px;
+}
+
+.h {
+    text-align: center;
+    height: 40px;
+    padding-top: 36px;
+    margin: auto;
+    border-bottom: 3px solid #a6c0d9;
+    width: 80%;
+}
+
+.blue {
+    color: #004b92;
+    font-size: 1.2em;
+    font-family: "黑体";
+}
+
+.en {
+    color: #2ca4e8;
+    font-family: Arial;
+    font-size: 0.8em;
+}
+
+.small {
+    font-size:1em;
+}
+.lag {
+    font-size:1.5em;
+}
+.lag2 {
+    font-size:3em;
+}
+.lag3 {
+    font-size:2em;
+}
+.item {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.left {
+    text-align: left;
+}
+
+.center {
+    text-align: center;
+}
+
+.item span {
+    margin-left: 10px;
+}
+
+.item input[type=text], input[type=password] {
+    border: 1px solid #c9d0d8;
+    width: 80%;
+    height: 30px;
+}
+
+#getpwd {
+    background: transparent url('../IMG/btn_getpwd.png') 0 0px no-repeat;
+      background-size: 100% 100%;
+    height: 46px;
+    margin-top:15px;
+}
+
+#login {
+    background: transparent url('../IMG/btn_login.png') 0 0px no-repeat;
+      background-size: 100% 100%;
+    height: 42px;
+}
+
+.item input[type=button] {    
+    border: none;
+    width: 155px;
+  
+}
+.alert{
+    color:#ff6a00;
+font-size:0.8em;
+padding-left:30px;
+}
+#off {
+    background: transparent url('../IMG/btn_off.png') 0 0px no-repeat;
+          background-size: 100% 100%;
+    height: 48px;
+    
+}
+.msg {
+    margin:auto;
+        background: transparent url('../IMG/msg.png') 0 0px no-repeat;
+          background-size: 100% 100%;
+    height: 62px;
+        width:60%;
+        margin-top:-16px;
+}
+#rest{
+     background: transparent url('../IMG/rest.png') 0 0px no-repeat;
+          background-size: 100% 100%;
+          height:50px;
+          margin-top:20px;
+}
