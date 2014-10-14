@@ -93,6 +93,7 @@ var DWZ = {
 		}
 	},
 	ajaxError:function(xhr, ajaxOptions, thrownError){
+		alert("filase");
 		if (alertMsg) {
 			alertMsg.error("<div>Http status: " + xhr.status + " " + xhr.statusText + "</div>" 
 				+ "<div>ajaxOptions: "+ajaxOptions + "</div>"

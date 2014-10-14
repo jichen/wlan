@@ -1,5 +1,6 @@
 package com.cmct.portal.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,31 @@ public class ACService  {
 		List<ACPO> list=aCDao.pageQuery(sql, propertiesMap, start, limit);
 		return list;
 	}	
+	
+	public ACPO findACip(String ip){
+		Map<String,Object> propertiesMap=new HashMap<String, Object>();
+		propertiesMap.put("ip", ip);
+		propertiesMap.put("isdelete", "N");
+		List<ACPO> list =aCDao.find(propertiesMap, 0, 5);
+		if(list!=null && list.size()>0){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
+	
+	public ACPO findACname(String acName){
+		Map<String,Object> propertiesMap=new HashMap<String, Object>();
+		propertiesMap.put("ac_name", acName);
+		propertiesMap.put("isdelete", "N");
+		List<ACPO> list =aCDao.find(propertiesMap, 0, 5);
+		if(list!=null && list.size()>0){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
+	
 	
 	
 	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {

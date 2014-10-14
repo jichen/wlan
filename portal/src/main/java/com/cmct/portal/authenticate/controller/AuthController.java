@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.cmct.common.util.PropertyConfigureHandler;
 import com.cmct.portal.po.ACPO;
 import com.cmct.portal.po.APAndClient;
+import com.cmct.portal.po.APPO;
 import com.cmct.portal.po.AuthRulePO;
 import com.cmct.portal.po.PhoneAndMac;
 import com.cmct.portal.po.SMSPWDLogPO;
@@ -29,6 +30,7 @@ import com.cmct.portal.po.SnmpClientofAP;
 import com.cmct.portal.po.WLANUSERLogPO;
 import com.cmct.portal.service.ACService;
 import com.cmct.portal.service.APAndClientService;
+import com.cmct.portal.service.APService;
 import com.cmct.portal.service.AuthRuleService;
 import com.cmct.portal.service.BLackListService;
 import com.cmct.portal.service.PhoneAndMacService;
@@ -49,6 +51,9 @@ public class AuthController {
 	
 	@Autowired
 	private ACService acService;
+	
+	@Autowired
+	private APService apService;
 	
 	@Autowired
 	private BLackListService blackListService;
@@ -123,6 +128,7 @@ public class AuthController {
 		AuthRulePO arPO=list.get(0);
 		//密码有效期
 		String validtime=arPO.getTime().toString();
+		String signOn=arPO.getIs_only_client();
 		//申请动态密码
 		SMSPWDLogPO bean=new SMSPWDLogPO();
 		bean.setUsername(username);
@@ -133,7 +139,8 @@ public class AuthController {
 		PostMethod pm = new PostMethod(path);
 		NameValuePair[] vp = {
 				new NameValuePair("username",username),
-				new NameValuePair("validtime",validtime)
+				new NameValuePair("validtime",validtime),
+				new NameValuePair("signOn",signOn)
 			};		
 		pm.addParameters(vp);
 		/*
@@ -268,8 +275,9 @@ public class AuthController {
 					rs.put("status","0");
 					rs.put("msg", "下线成功。");
 					String username=(String) session.getAttribute("username");
-					clientToApOfMAC_Exit(username,clientMac);
 					WLANUSERLogPO po=wUSERLogService.findNewOne(username, userIP);
+					String strAp=clientToApOfMAC_Exit(username,clientMac);
+					po.setApid(strAp);
 					if(po!=null){
 						po.setExittime(now);
 						po.setExitway("1");
@@ -337,7 +345,8 @@ public class AuthController {
 			apAndClientService.saveAPClient(apc);
 		}
 	}
-	private void clientToApOfMAC_Exit(String phone,String clientMac){
+	
+	private String clientToApOfMAC_Exit(String phone,String clientMac){
 		Map<String,Object> mp=new HashMap<String,Object>();
 		mp.put("mac", clientMac);
 		mp.put("phone", phone);
@@ -350,13 +359,17 @@ public class AuthController {
 		//更改APAndClient
 		Map<String,Object> mp1=new HashMap<String,Object>();
 		mp1.put("clientmac", clientMac);
-		mp1.put("status", "0");
-		APAndClient apc=apAndClientService.find_Newest(mp1);
+		//mp1.put("status", "0");
+		String sql="from APAndClient where clientmac= :clientmac order by outtime desc";
+		APAndClient apc=apAndClientService.find_Newest(sql,mp1);
 		if(apc!=null){
 			apc.setStatus("1");
 			apc.setOuttime(new Date());
 			apAndClientService.updateAPClient(apc);
 		}
+		APPO appo=apService.findLoginAp(apc.getApmac());
+		String str=appo.getAc_name()+"("+appo.getMac()+")";
+		return str;
 	}
 	
 	

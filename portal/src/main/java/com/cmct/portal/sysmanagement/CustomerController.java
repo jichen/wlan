@@ -1,6 +1,7 @@
 package com.cmct.portal.sysmanagement;
 
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,7 @@ import com.cmct.common.annotation.Log;
 import com.cmct.common.util.AbstractController;
 import com.cmct.common.util.ui.PageFormModel;
 import com.cmct.common.util.ui.Page;
+import com.cmct.portal.po.ACPO;
 import com.cmct.portal.po.CustomerPO;
 import com.cmct.portal.po.UserPO;
 import com.cmct.portal.service.CustomerService;
@@ -61,6 +64,7 @@ public class CustomerController extends AbstractController {
 		String sql="from CustomerPO where 1=1 ";
 		String sqlCount="select count(*) from CustomerPO where 1=1 ";
 		String where_sql="";
+		where_sql=" and isdelete='N' ";
 		if(pageForm.getCust_name()!=null){
 			if(pageForm.getCust_name().trim().length()>0){
 				propertiesMap.put("cust_name", "%"+pageForm.getCust_name().trim()+"%");
@@ -92,7 +96,8 @@ public class CustomerController extends AbstractController {
 			}
 		}
 
-		sql=sql+where_sql;
+		String ordersql=" order by createtime desc";
+		sql=sql+where_sql+ordersql;
 		sqlCount=sqlCount+where_sql;
 		
 		//获取列表
@@ -111,6 +116,7 @@ public class CustomerController extends AbstractController {
 			customer.setPhone(customerPO.getPhone());
 			customer.setIsdelete(customerPO.getIsdelete());
 			customer.setRemark(customerPO.getRemark());
+			customer.setCreatetime(customerPO.getCreatetime());
 			customers.add(customer);
 		}
 		Map<String,Object> mp=new HashMap<String,Object>();
@@ -137,12 +143,17 @@ public class CustomerController extends AbstractController {
 	@RequestMapping(value = "/add")
 	@ResponseBody
 	public String add(CustomerPO bean,HttpServletRequest request){
-		bean.setCreatetime(new Date());
-		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
-		bean.setCreateusername(user.getUsername());
-		bean.setIsdelete("N");
-		customerService.saveCustomer(bean);
-		return ajaxDoneSuccess(" " , true , REL_ID);
+		CustomerPO info=customerService.findCustomerName(bean.getCust_name());
+		if(info!=null){
+			return ajaxDoneError("企业名称已存在");
+		}else{
+			bean.setCreatetime(new Date());
+			UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
+			bean.setCreateusername(user.getUsername());
+			bean.setIsdelete("N");
+			customerService.saveCustomer(bean);
+			return ajaxDoneSuccess(" " , true , REL_ID);
+		}
 	}	
 	
 	/*
@@ -164,14 +175,19 @@ public class CustomerController extends AbstractController {
 	@RequestMapping(value = "/update")
 	@ResponseBody
 	public String update(CustomerPO bean,HttpServletRequest request) throws Exception {
-		if(bean.getIsdelete()==null || bean.getIsdelete()==""){
-			bean.setIsdelete("N");
+		CustomerPO info=customerService.findCustomerName(bean.getCust_name());
+		if(info!=null){
+			return ajaxDoneError("企业名称已存在");
+		}else{
+			if(bean.getIsdelete()==null || bean.getIsdelete()==""){
+				bean.setIsdelete("N");
+			}
+			bean.setUpdatetime(new Date());
+			UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
+			bean.setUpdateusername(user.getUsername());
+			customerService.updateCustomer(bean);
+			return ajaxDoneSuccess(" ",true,REL_ID);
 		}
-		bean.setUpdatetime(new Date());
-		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
-		bean.setUpdateusername(user.getUsername());
-		customerService.updateCustomer(bean);
-		return ajaxDoneSuccess(" ",true,REL_ID);
 	}
 	
 	/*
@@ -187,7 +203,7 @@ public class CustomerController extends AbstractController {
 		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
 		bean.setUpdateusername(user.getUsername());
 		customerService.updateCustomer(bean);
-		return ajaxDoneSuccess("删除成功", false, REL_ID);
+		return ajaxDoneSuccess(" ", false, REL_ID);
 	}
 
 	/*
@@ -253,5 +269,22 @@ public class CustomerController extends AbstractController {
 		mp.put("pageForm",pageForm);
 		return new ModelAndView("/pages/view/sysmanagement/customer/customerLookUp",mp);
 	}
+	/**
+	 * 判断是否存在
+	 */
+	@RequestMapping(value = "/ajaxCustomer")
+	@ResponseBody
+	public void ajaxCustomer(String name, HttpServletRequest request,HttpServletResponse response) throws Exception{
+		CustomerPO info=customerService.findCustomerName(name);
+		String ajaxDate="0";
+		if (info != null) {
+			ajaxDate="1";
+		}
+		PrintWriter pw=null;
+		pw=response.getWriter();
+		pw.write(ajaxDate);
+		pw.close();
+	}
+	
 	
 }

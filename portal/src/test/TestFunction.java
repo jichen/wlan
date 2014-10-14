@@ -12,7 +12,7 @@ public class TestFunction {
 	 */
 	public static void main(String[] args) throws IOException, PortalException {
 		// TODO Auto-generated method stub
-		com.cmct.portal.interfaces.radius.PortaltoRadius.wlanExit("192.168.11.75", "192.168.200.4");
+		com.cmct.portal.interfaces.radius.PortaltoRadius.wlanExit("192.168.11.75", "192.168.200.28");
 	}
 
 }

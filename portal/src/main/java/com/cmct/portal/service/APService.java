@@ -56,9 +56,33 @@ public class APService  {
 		return list;
 	}
 	
+	public APPO findLoginAp1(String apMac){
+		Map<String,Object> propertiesMap=new HashMap<String, Object>();
+		propertiesMap.put("mac", apMac);
+		propertiesMap.put("isdelete", 'N');
+		List<APPO> list =aPDao.find(propertiesMap, 0, 10);
+		if(list!=null && list.size()>0){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
+	
 	public APPO findLoginAp(String apMac){
 		Map<String,Object> propertiesMap=new HashMap<String, Object>();
 		propertiesMap.put("mac", apMac);
+		List<APPO> list =aPDao.find(propertiesMap, 0, 10);
+		if(list!=null && list.size()>0){
+			return list.get(0);
+		}else{
+			return null;
+		}
+	}
+	
+	public APPO findAPname(String apName){
+		Map<String,Object> propertiesMap=new HashMap<String, Object>();
+		propertiesMap.put("ap_name", apName);
+		propertiesMap.put("isdelete", "N");
 		List<APPO> list =aPDao.find(propertiesMap, 0, 10);
 		if(list!=null && list.size()>0){
 			return list.get(0);

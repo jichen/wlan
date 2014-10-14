@@ -8,10 +8,12 @@
 		$.ajax({
 			type : "post",
 			url : "${ctx}/security/role/ajaxName",
-			data : {'roleName' : $(obj).val()},
+			data : {'name' : $(obj).val()},
 			success : function(data) {
-				if(data='0'){
+				if(data==1){
 					$("#roleMsgName").html("<span class='required'>该角色名称已存在</span>");
+				}else if(data==0){
+					$("#roleMsgName").html("");
 				}
 			},
 			error : function(data){
@@ -24,11 +26,14 @@
 		$.ajax({
 			type : "post",
 			url : "${ctx}/security/role/ajaxCode",
-			data : {'roleCode' : $(obj).val()},
+			data : {'code' : $(obj).val()},
 			success : function(data) {
-				if(data='0'){
+				if(data==1){
 					$("#roleMsgCode").html("<span class='required'>该角色编号已存在</span>");
+				}else if(data==0){
+					$("#roleMsgCode").html("");
 				}
+				
 			},
 			error : function(data){
 				$("#roleMsgCode").html("<span class='required'>该角色编号已存在</span>");

@@ -1,24 +1,31 @@
 <%@page contentType="text/html;charset=UTF-8"%>
 <%@include file="/include.inc.jsp" %>
 <script type="text/javascript">
-function isview(flag,id){
+function isview(flag,id,deleteflag){
 	var url="${ctx}/template/preview/"+id;
 	$("#preview").attr("href",url);
-	
-	if(flag=='N'){
-
-		$("#tMAdd").attr("disabled",false);
-		$("#tMUpdate").attr("disabled","");
-		$("#preview").attr("disabled","");
-		
-	}else if(flag=='Y'){
-		$("#tMAdd").attr("disabled","");
-		$("#tMUpdate").attr("disabled",false);	
-		$("#preview").attr("disabled",false);	
+	if(deleteflag=='N'){
+		if(flag=='N'){
+			alert($(".pageShow").find("#tMAdd"));
+			$(".pageShow").find("#tMAdd").attr("disabled",false);
+			$(".pageShow").find("#tMUpdate").attr("disabled","");
+			//$(".pageShow").find("#preview").attr("disabled","");
+		}else if(flag=='Y'){
+			alert($(".pageShow").find("#tMAdd"));
+			$(".pageShow").find("#tMAdd").attr("disabled","");
+			$(".pageShow").find("#tMUpdate").attr("disabled",false);	
+			//$(".pageShow").find("#preview").attr("disabled",false);	
+		}
+	}else if(deleteflag=='Y'){
+		alert($(".pageShow").find("#tMAdd"));
+		$(".pageShow").find("#tMAdd").attr("disabled","");
+		$(".pageShow").find("#tMUpdate").attr("disabled","");
+		//$(".pageShow").find("#preview").attr("disabled","");
 	}
 	
 }
 </script>
+
 <div class="pageHeader">
 <form  id="pagerForm" action="${ctx}/templatepage/authpage/list"  method="post"  rel="pagerForm"  onsubmit="return navTabSearch(this);">
 		<c:choose>
@@ -64,18 +71,20 @@ function isview(flag,id){
 </form>
 </div>
 <div class="pageContent">
+	<div class="pageShow">
 	<div class="panelBar">
 		<ul class="toolBar">
 			<li><a class="add"   id="tPAdd"  href="${ctx}/templatepage/authpage/preadd"     target="navTab" rel="tPAdd"><span>新增模板</span></a></li>
-			<li><a class="edit"   id="tPUpdate"  href="${ctx}/templatepage/authpage/preupdate/{slt_uid}"     target="navTab" rel="tPUpdate"><span>编辑模板</span></a></li>
-			<li><a class="add"   id="tMAdd"    disabled  href="${ctx}/templatemap/authmap/preadd/{slt_uid}"     target="navTab" rel="tMAdd"><span>新增模板内容</span></a></li>
-			<li><a class="edit"  id="tMUpdate" disabled  href="${ctx}/templatemap/authmap/preUpdate/{slt_uid}"  target="navTab" rel="tMUpdate"><span>编辑模板内容</span></a></li>
+			<li><a class="edit"   id="tPUpdate" name="tPUpdate" href="${ctx}/templatepage/authpage/preupdate/{slt_uid}"     target="navTab" rel="tPUpdate"><span>编辑模板</span></a></li>
+			<li><a class="add"   id="tMAdd"   name="tMAdd" disabled  href="${ctx}/templatemap/authmap/preadd/{slt_uid}"     target="navTab" rel="tMAdd"><span>新增模板内容</span></a></li>
+			<li><a class="edit"  id="tMUpdate" name="tMUpdate" disabled  href="${ctx}/templatemap/authmap/preUpdate/{slt_uid}"  target="navTab" rel="tMUpdate"><span>编辑模板内容</span></a></li>
 			<!-- 
 			<li><a class="icon"  id="preview"  disabled  href="" target="_blank" ><span>预览</span></a></li>
 			
 			<li><a class="delete" href="${ctx}/sysmanagement/ac/delete/{slt_uid}" target="ajaxTodo" title="确认要删除该设置?"><span>删除模板内容</span></a></li>
 			-->
 		</ul>
+	</div>
 	</div>
 	<table class="table"  layoutH="145"  width="100%" >
 		<thead>
@@ -90,7 +99,7 @@ function isview(flag,id){
 		</thead>
 		<tbody>
 			<c:forEach var="templatePages" items="${list}"  varStatus="status">
-			<tr target="slt_uid" rel="${templatePages.id}" onclick="isview('${templatePages.ismap}','${templatePages.id}')">
+			<tr target="slt_uid" rel="${templatePages.id}" onclick="isview('${templatePages.ismap}','${templatePages.id}','${templatePages.isdelete}')">
 				<td>${status.index+1}</td>
 				<td>${templatePages.templatename}</td>
 				<td>${templatePages.csscount}</td>

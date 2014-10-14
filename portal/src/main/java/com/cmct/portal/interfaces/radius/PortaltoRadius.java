@@ -57,7 +57,8 @@ public class PortaltoRadius {
 			throw new PortalException("PORTAL_E03");
 		}		
 		if (ackAuthData.getErrorCode() != Protocal.PORTAL_PROTOCOL_ERRCODE_REQ_SUCCESS) {
-			//抛出异常,认证失败			throw new PortalException("PORTAL_E04");
+			//抛出异常,认证失败			
+			throw new PortalException("PORTAL_E04");
 		}
 		PortalData affAckAuthData = client.wrapAffAckAuthData(ackAuthData.getIp(), ackAuthData.getReqId(), ackAuthData.getSerialNo());
 		client.sendDataWithoutResponese(affAckAuthData);

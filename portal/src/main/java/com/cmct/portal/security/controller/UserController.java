@@ -358,9 +358,9 @@ public class UserController extends AbstractController {
 			user.setSalt(salt.toHex());
 			user.setPwdEncryption(Encodes.encodeHex(hash));
 			userService.update(user);
-			return ajaxDoneSuccess("操作成功");
+			return ajaxDoneSuccess(" ");
 		}
-		return ajaxDoneSuccess("旧密码输入错误", false, StringUtils.EMPTY);
+		return ajaxDoneSuccess(" ", false, StringUtils.EMPTY);
 	}
 	
 	

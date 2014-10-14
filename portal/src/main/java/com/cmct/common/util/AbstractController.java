@@ -19,16 +19,16 @@ import java.util.Date;
  * @description 
  * @usage		
  * @copyright	Copyright 2011  SHCMCT Corporation. All rights reserved.
- * @company		ÉÏº£ÖÐÒÆÍ¨ÐÅ¼¼Êõ¹¤³ÌÓÐÏÞ¹«Ë¾
+ * @company		ï¿½Ïºï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½Å¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¹ï¿½Ë¾
  * @author		John.Yao
- * @create		2012-11-15 ÏÂÎç1:13:21
+ * @create		2012-11-15 ï¿½ï¿½ï¿½ï¿½1:13:21
  */
 public abstract class AbstractController {
 
 	public static final String LOGIN_NAME = "_loginName";
 
 	/**
-	 * ¶Ô²ÎÊý½øÐÐÀàÐÍ×ª»»
+	 * ï¿½Ô²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½
 	 * @param request
 	 * @param binder
 	 */

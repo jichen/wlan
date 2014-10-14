@@ -84,18 +84,18 @@ public class RoleController extends AbstractController {
 	public String add(RolePO role,HttpServletRequest request) {
 		RolePO mulRole = roleService.findOne(role.getName());
 		if (mulRole != null) {
-			return ajaxDoneError("该角色已存在");
+			return ajaxDoneError();
 		}
 		List<RolePO> roles = roleService.findByCode(role.getCode());
 		if (roles != null && roles.size() >= 1) {
 			mulRole = roles.get(0);
 		}
 		if (mulRole != null) {
-			return ajaxDoneError("该角色已存在");
+			return ajaxDoneError();
 		}
 		refactor(role);
 		roleService.save(role);
-		return ajaxDoneSuccess(" ",true,LIST);
+		return ajaxDoneSuccess(" ",true,"userRoleList");
 	}
 
 	@RequestMapping(value = "/preUpdate/{id}")
@@ -125,11 +125,11 @@ public class RoleController extends AbstractController {
 			list1.add(role);
 		}
 		if (list != null && list.size() >= 2 || list1 != null && list1.size() >= 2) {
-			return ajaxDoneError("该角色已存在");
+			return ajaxDoneError();
 		} else {
 			refactor(role);
 			roleService.update(role);
-			return ajaxDoneSuccess(" ", true, "LIST");
+			return ajaxDoneSuccess(" ", true, "userRoleList");
 		}
 	}
 
@@ -142,7 +142,7 @@ public class RoleController extends AbstractController {
 			return ajaxDoneError("超级管理员不能删除");
 		} else {
 			roleService.delete(id);
-			return ajaxDoneSuccess(" ", false, "LIST");
+			return ajaxDoneSuccess(" ", false, "userRoleList");
 		}
 	}
 	

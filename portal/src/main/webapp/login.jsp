@@ -9,7 +9,6 @@
 <script src="${ctx}/static/js/jquery/jquery-1.7.2.js" type="text/javascript"></script>
 <script type="text/javascript">
 function submitFun(){
-	alert($("#usernameId"));
 	if($.trim($("#usernameId").val())==""){
 		alert("请输入用户名称");
 	}
@@ -28,7 +27,7 @@ function submitFun(){
 			success:function(json){
 				if(json["status"]==0){
 					$("#randImageId").attr("src","${ctx}/verify?"+Math.random());
-					alert(json["msg"]);
+					alert(json["msg"] );
 				}
 				else if(json["status"]==1){
 					window.location.href="${ctx}/index";
@@ -49,11 +48,15 @@ function reloadImage(){
 	$("#randImageId").attr("src","${ctx}/verify?"+Math.random()); 
 }
 
+function keyEvent(){
+	if(window.event.keyCode==13){
+		submitFun();
+	}
+}
+
 </script>
 </head>
-<body>
-
-
+<body onkeypress="keyEvent()">
 <div class="main">
   <div class="login_main">
     <div class="login_home"></div>
@@ -65,23 +68,22 @@ function reloadImage(){
       <form id="Loginform" action="" method="post" class="login2" >
         <div class="login_frist">
           <div class="login_username">用户名
-            <input id="usernameId" name="username" type="text" style="color:black;" maxlength="10" value="" />
+            <input id="usernameId" name="username" type="text" style="color:white;" maxlength="10" value="" />
           </div>
 		  <div class="login_password">密&nbsp;&nbsp;&nbsp;&nbsp;码
-	          <input id="passwordId" name="password" type="password" style="color:black;" maxlength="10" value="" />
+	          <input id="passwordId" name="password" type="password" style="color:white;" maxlength="10" value="" />
 	      </div>
 
         </div>
         <div class="login_secred">
           <div class="login_code">验证码
-          	<input id="checkId" name="check" type="text" style="color:black;" maxlength="20" />
+          	<input id="checkId" name="check" type="text" style="color:white;" maxlength="20" />
           </div>
 		  <div class="login_sub">
 			<img class="log" id="randImageId" onclick="reloadImage()" style="width:100px;height:22px;" src="${ctx}/verify" />
 		  </div>
         </div>
 		<div class="login_sub_1">
-		  <input type="button" value="${ctx}" onclick="return submitFun(this);"/> 
 		  <image src="${ctx}/static/images/dl.gif" style="height:19px;"  onclick="return submitFun(this);" >
 		  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		  <image src="${ctx}/static/images/cz.png"  style="height:19px;" onclick="resetform();" >

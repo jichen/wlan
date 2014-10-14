@@ -77,7 +77,7 @@
     <url-pattern>*.png</url-pattern>
   </servlet-mapping>
   <session-config>
-    <session-timeout>120</session-timeout>
+    <session-timeout>60</session-timeout>
   </session-config>
   <error-page>
     <error-code>401</error-code>

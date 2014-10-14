@@ -47,17 +47,17 @@ function rules_add_Callback(form, callback) {
 	<div class="pageFormContent" layoutH="56">
 		<div>
 			<dl class="nowrap">
-				<c:choose>
-					<c:when test="${bean.is_only_client=='1'}">
-						<dt>禁止同一用户同时<br>使用多个客户端</dt>
-						<dd><input type="checkbox" style="margin-top: 5px;margin-left: -280px" name="is_only_client" checked="checked"></dd>
-					</c:when>
-					<c:otherwise>
-						<dt>禁止同一用户同时使用多个客户端</dt>
-						<dd><input type="checkbox" style="margin-top: 5px;margin-left: -280px" name="is_only_client" checked="checked"></dd>
-					</c:otherwise>
+					<c:choose>
+						<c:when test="${bean.is_only_client=='1'}">
+							<dt>禁止同一用户同时<br>使用多个客户端</dt>
+							<dd><input type="checkbox" style="margin-top: 5px;margin-left: -280px" name="is_only_client" checked="checked"></dd>
+						</c:when>
+						<c:otherwise>
+							<dt>禁止同一用户同时使用多个客户端</dt>
+							<dd><input type="checkbox" style="margin-top: 5px;margin-left: -280px" name="is_only_client" checked="checked"></dd>
+						</c:otherwise>
 					</c:choose>
-			</dl>	
+			</dl>
 			<dl class="nowrap">
 				<dt>重复验证间隔</dt>
 				<dd><input type="text" name="auth_interval" size="2" maxlength="2" value="${bean.auth_interval}" class="digits" /><label style="width:40px">分钟</label></dd>
@@ -75,7 +75,7 @@ function rules_add_Callback(form, callback) {
 				<input type="hidden" name="createusername" value="${bean.createusername}" readonly="readonly"/>
 				<input type="hidden" name="createtime" value="${bean.createtime}" readonly="readonly"/>
 		</div>
-	</div>	
+	</div>
 	<div class="formBar">
 		<ul>
 			<li><div class="buttonActive"><div class="buttonContent"><button type="submit">确定</button></div></div></li>

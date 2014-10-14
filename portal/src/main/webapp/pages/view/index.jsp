@@ -125,7 +125,7 @@
 						</ul>
 					</div>
 					</shiro:hasPermission>
-					<!-- 系统管理模块 -->
+					<!-- 系统管理模块 642990-->
 					<shiro:hasPermission name="SYS">
 					<div class="accordionHeader">
 						<h2>
@@ -210,7 +210,7 @@
 	</div>
 
 	<div id="footer">
-		中移通信 2013 <a href="ylxx.shumc.edu.cn" target="dialog">WLAN管理系统</a>
+		中移通信 2013 WLAN管理系统 
 	</div>
 
 </body>
@@ -223,8 +223,8 @@
 			//		loginUrl:"login.html",	// 跳到登录页面
 			statusCode : {
 				ok : 200,
-				error : 301,
-				timeout : 301
+				error : 300,
+				timeout : 403
 			}, //【可选】
 			debug : false, // 调试模式 【true|false】
 			callback : function() {

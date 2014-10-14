@@ -43,7 +43,7 @@
 		<table class="searchContent"  align="left" >
 			<tr>
 				<td>
-					&nbsp;&nbsp;用&nbsp;户&nbsp;名&nbsp;:
+					&nbsp;动态用户:
 				</td>
 				<td align="left">
 					<input name="name" type="text" size="30" value="${pageForm.name}">
@@ -98,7 +98,7 @@
 		<thead>
 			<tr>
 				<th width="40" >序号</th>
-				<th width="120" >用户名</th>
+				<th width="120" >动态用户</th>
 				<th width="150" >IP地址</th>
 				<th width="100" >认证时间</th>
 				<th width="100" >下线时间</th>
@@ -113,8 +113,8 @@
 				<td>${status.index+1}</td>
 				<td>${logs.username}</td>
 				<td>${logs.userip}</td>
-				<td><fmt:formatDate value="${logs.authtime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
-				<td><fmt:formatDate value="${logs.exittime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+				<td><fmt:formatDate value="${logs.authtime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+				<td><fmt:formatDate value="${logs.exittime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 				<td>${logs.onlinetime}</td>
 				<td>${logs.apid}</td>
 			</tr>

@@ -14,13 +14,13 @@
 	<dl>
 		<dt>角色编号：</dt>
 		<dd>
-			<input type="text" name="code" class="required" size="30" maxlength="32" alt="请输入角色编号" value="${role.code}"/>
+			<input type="text" name="code" class="required" size="30" maxlength="32" alt="请输入角色编号" readonly="readonly" value="${role.code}"/>
 		</dd>
 	</dl>
 	<dl>
 		<dt>角色名称：</dt>
 		<dd>
-			<input type="text" name="name" class="required" size="30" maxlength="32" alt="请输入角色名称" value="${role.name}"/>
+			<input type="text" name="name" class="required" size="30" maxlength="32" alt="请输入角色名称" readonly="readonly" value="${role.name}"/>
 		</dd>
 	</dl>
 	<dl class="nowrap">

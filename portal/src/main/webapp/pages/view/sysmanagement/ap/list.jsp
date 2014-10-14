@@ -66,7 +66,7 @@
 		<ul class="toolBar">
 			<li><a class="add"    href="${ctx}/sysmanagement/ap/preadd" target="navTab" rel="apadd"><span>新增AP</span></a></li>
 			<li><a class="edit"   href="${ctx}/sysmanagement/ap/preUpdate/{slt_uid}" target="navTab" rel="UserUpdate"><span>编辑AP</span></a></li>
-			<li><a class="delete" href="${ctx}/sysmanagement/ap/delete/{slt_uid}" target="ajaxTodo" title="确认要删除该设置{slt_uid}?"><span>删除AP</span></a></li>
+			<li><a class="delete" href="${ctx}/sysmanagement/ap/delete/{slt_uid}" target="ajaxTodo" title="确认要删除该AP?"><span>删除AP</span></a></li>
 		</ul>
 	</div>
 	<table class="table"   layoutH="145" width="100%" style="table-layout: fixed;">
@@ -76,9 +76,9 @@
 				<th width="100" >AP名称</th>
 				<th width="100" >位置</th>
 				<th width="100" >Nas-Port-ID</th>
+				<th width="200" >MAC地址</th>
 				<th width="100" >AC名称</th>
-				<th width="250" >备注</th>
-				<th width="50" >状态</th>
+				<th width="100" >创建时间</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -88,8 +88,10 @@
 				<td>${aps.ap_name}</td>
 				<td>${aps.location}</td>
 				<td>${aps.nas_port_id}</td>
+				<td>${aps.mac}</td>
 				<td>${aps.ac_name}</td>
-				<td>${aps.remark}</td>
+				<td><fmt:formatDate value="${aps.createtime}" pattern="yyyy-MM-dd"/></td>
+				<!-- 
 				<c:choose>
 					<c:when test="${aps.isdelete=='Y'}">
 						<td>已删除</td>
@@ -98,6 +100,7 @@
 						<td>使用中</td>
 					</c:otherwise>
 				</c:choose>
+				 -->
 			</tr>
 			</c:forEach>
 		</tbody>

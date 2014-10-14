@@ -64,7 +64,7 @@ public class WLANUSERLogPO {
 	/*
 	 * 登录的ap
 	 */	
-	private Integer apid;
+	private String apid;
 	
 
 	
@@ -138,12 +138,15 @@ public class WLANUSERLogPO {
 		this.onlinetime = onlinetime;
 	}
 	
-	@Column(nullable = true, length = 11)
-	public Integer getApid() {
+	
+	@Column(nullable = true)
+	public String getApid() {
 		return apid;
 	}
-	public void setApid(Integer apid) {
+	public void setApid(String apid) {
 		this.apid = apid;
 	}
+	
+
 	
 }

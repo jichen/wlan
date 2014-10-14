@@ -1,6 +1,7 @@
 package com.cmct.portal.sysmanagement;
 
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -48,14 +50,24 @@ public class ACController extends AbstractController {
 	@RequestMapping(value = "/add")
 	@ResponseBody
 	public String add(ACPO bean,HttpServletRequest request){
-		String cust_id = request.getParameter("cust.cust_id");
-		bean.setCust_id(Integer.valueOf(cust_id));
-		bean.setIsdelete("N");
-		bean.setCreatetime(new Date());
-		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
-		bean.setCreateusername(user.getUsername());
-		acService.saveAC(bean);
-		return ajaxDoneSuccess(" ",true,REL_ID);
+		String acName=bean.getAc_name();
+		String acIp=bean.getIp();
+		ACPO p1=acService.findACname(acName);
+		ACPO p2=acService.findACip(acIp);
+		if(p1!=null){
+			return ajaxDoneError("AC名称已存在");
+		}else if(p2!=null){
+			return ajaxDoneError("IP已存在");
+		}else{
+			String cust_id = request.getParameter("cust.cust_id");
+			bean.setCust_id(Integer.valueOf(cust_id));
+			bean.setIsdelete("N");
+			bean.setCreatetime(new Date());
+			UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
+			bean.setCreateusername(user.getUsername());
+			acService.saveAC(bean);
+			return ajaxDoneSuccess(" ",true,REL_ID);
+		}
 	}
 
 
@@ -71,16 +83,26 @@ public class ACController extends AbstractController {
 	@RequestMapping(value = "/update")
 	@ResponseBody
 	public String update(ACPO bean,HttpServletRequest request) throws Exception {
-		String cust_id = request.getParameter("cust.cust_id");
-		bean.setCust_id(Integer.valueOf(cust_id));
-		if(bean.getIsdelete()==null || bean.getIsdelete()==""){
-			bean.setIsdelete("N");
+		String acName=bean.getAc_name();
+		String acIp=bean.getIp();
+		ACPO p1=acService.findACname(acName);
+		ACPO p2=acService.findACip(acIp);
+		if(p1!=null){
+			return ajaxDoneError("AC名称已存在");
+		}else if(p2!=null){
+			return ajaxDoneError("IP已存在");
+		}else{
+			String cust_id = request.getParameter("cust.cust_id");
+			bean.setCust_id(Integer.valueOf(cust_id));
+			if(bean.getIsdelete()==null || bean.getIsdelete()==""){
+				bean.setIsdelete("N");
+			}
+			bean.setUpdatetime(new Date());
+			UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
+			bean.setUpdateusername(user.getUsername());
+			acService.updateAC(bean);
+			return ajaxDoneSuccess(" ",true,REL_ID);
 		}
-		bean.setUpdatetime(new Date());
-		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
-		bean.setUpdateusername(user.getUsername());
-		acService.updateAC(bean);
-		return ajaxDoneSuccess(" ",true,REL_ID);
 	}
 	
 
@@ -94,7 +116,7 @@ public class ACController extends AbstractController {
 		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
 		bean.setUpdateusername(user.getUsername());
 		acService.updateAC(bean);
-		return ajaxDoneSuccess("删除成功", false, REL_ID);
+		return ajaxDoneSuccess(" ", false, REL_ID);
 	}
 	
 	/**
@@ -111,6 +133,7 @@ public class ACController extends AbstractController {
 		String sqlCount="select count(*) from ACPO where 1=1 ";
 		String sql=" from ACPO where 1=1 ";
 		String where_sql="";
+		where_sql=" and isdelete='N' ";
 		if(pageForm.getPageNum()>0){
 			start=(Integer.valueOf(pageForm.getPageNum())-1)*page.getNumPerPage();
 		}
@@ -145,8 +168,8 @@ public class ACController extends AbstractController {
 				where_sql=where_sql+" and cust_id = (select id from CustomerPO where cust_name like :cust_name)";
 			}
 		}	
-
-		sql=sql+where_sql;
+		String ordersql=" order by createtime desc";
+		sql=sql+where_sql+ordersql;
 		sqlCount=sqlCount+where_sql;
 		list=acService.findPages_sql(sql ,propertiesMap, start, limit);
 
@@ -163,6 +186,7 @@ public class ACController extends AbstractController {
 			ac.setLocation(acPO.getLocation());
 			ac.setRemark(acPO.getRemark());
 			ac.setIsdelete(acPO.getIsdelete());
+			ac.setCreatetime(acPO.getCreatetime());
 			acs.add(ac);
 		}
 		Map<String,Object> mp=new HashMap<String,Object>();
@@ -214,7 +238,8 @@ public class ACController extends AbstractController {
 			}
 		}	
 
-		sql=sql+where_sql;
+		String ordersql=" order by createtime desc";
+		sql=sql+where_sql+ordersql;
 		sqlCount=sqlCount+where_sql;
 		list=acService.findPages_sql(sql ,propertiesMap, start, limit);
 		page.setTotalCount(acService.getTotalCount_where(sqlCount, propertiesMap));	
@@ -238,7 +263,38 @@ public class ACController extends AbstractController {
 		return new ModelAndView("/pages/view/sysmanagement/ac/acLookUp",mp);
 	}	
 	
-	
+	/**
+	 * 判断AP名是否存在
+	 */
+	@RequestMapping(value = "/ajaxACname")
+	@ResponseBody
+	public void ajaxACname(String name, HttpServletRequest request,HttpServletResponse response) throws Exception{
+		ACPO info=acService.findACname(name);
+		String ajaxDate="0";
+		if (info != null) {
+			ajaxDate="1";
+		}
+		PrintWriter pw=null;
+		pw=response.getWriter();
+		pw.write(ajaxDate);
+		pw.close();
+	}
+	/**
+	 * 判断AC名是否存在
+	 */
+	@RequestMapping(value = "/ajaxIP")
+	@ResponseBody
+	public void ajaxIP(String name, HttpServletRequest request,HttpServletResponse response) throws Exception{
+		ACPO info=acService.findACip(name);
+		String ajaxDate="0";
+		if (info != null) {
+			ajaxDate="1";
+		}
+		PrintWriter pw=null;
+		pw=response.getWriter();
+		pw.write(ajaxDate);
+		pw.close();
+	}
 	
 	
 }

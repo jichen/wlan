@@ -80,8 +80,7 @@
 				<th width="100" >地址</th>
 				<th width="100" >联系人</th>
 				<th width="100" >联系方式</th>
-				<th width="250" >备注</th>
-				<th width="50" >状态</th>
+				<th width="100" >创建时间</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -91,8 +90,9 @@
 				<td>${customers.cust_name}</td>
 				<td>${customers.address}</td>
 				<td>${customers.contact}</td>
-				<td>${customers.phone}</td>
-				<td>${customers.remark}</td>
+				<td>${customers.phone}</td>				
+				<td><fmt:formatDate value="${customers.createtime}" pattern="yyyy-MM-dd"/></td>
+				<!-- 
 				<c:choose>
 					<c:when test="${customers.isdelete=='Y'}">
 						<td>已删除</td>
@@ -101,6 +101,7 @@
 						<td>使用中</td>
 					</c:otherwise>
 				</c:choose>
+				-->
 			</tr>
 			</c:forEach>
 		</tbody>

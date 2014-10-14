@@ -1,11 +1,48 @@
 <%@page contentType="text/html;charset=UTF-8" 	trimDirectiveWhitespaces="true"%>
 <%@include file="/include.inc.jsp" %>
+<script type="text/javascript">
+function ajaxACname(obj){
+	$.ajax({
+		type : "post",
+		url : "${ctx}/sysmanagement/ac/ajaxACname",
+		data : {'name' : $(obj).val()},
+		success : function(data) {
+			if(data==1){
+				alertMsg.info("AC名称已存在");
+				return false;
+			}
+		},
+		error : function(data){
+			alertMsg.info("AC名称已存在");
+			return false;
+		}
+	});
+}
+
+function ajaxIP(obj){
+	$.ajax({
+		type : "post",
+		url : "${ctx}/sysmanagement/ac/ajaxIP",
+		data : {'name' : $(obj).val()},
+		success : function(data) {
+			if(data==1){
+				alertMsg.info("IP已存在");
+				return false;
+			}
+		},
+		error : function(data){
+			alertMsg.info("IP已存在");
+			return false;
+		}
+	});
+}
+</script>
 <form method="post" action="${ctx }/sysmanagement/ac/add" class="pageForm required-validate" onsubmit="return validateCallback(this, navTabAjaxDone);">
 	<div class="pageFormContent" layoutH="56">
 		<div>
 			<dl class="nowrap">
 				<dt>AC名称:</dt>
-				<dd><input type="text" name="ac_name"  class="required" size="40" maxlength="200" /></dd>
+				<dd><input type="text" name="ac_name"  class="required" size="40" maxlength="200" onblur="ajaxACname(this)"/></dd>
 			</dl>
 			<dl class="nowrap">
 				<dt>公司名称：</dt>
@@ -19,7 +56,7 @@
 			</dl>
 			<dl class="nowrap">
 				<dt>IP：</dt>
-				<dd><input type="text" name="ip"   class="required" size="40" maxlength="20"/></dd>
+				<dd><input type="text" name="ip"   class="required" size="40" maxlength="20" onblur="ajaxIP(this)"/></dd>
 			</dl>
 			<dl class="nowrap">
 				<dt>位置：</dt>

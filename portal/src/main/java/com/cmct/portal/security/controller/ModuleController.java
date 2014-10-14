@@ -89,7 +89,7 @@ public class ModuleController extends AbstractController {
 			return ajaxDoneError("模块删除失败：" + e.getMessage());
 		}
 		
-		return ajaxDoneSuccess("模块删除成功！", false, "moduleList");
+		return ajaxDoneSuccess(" ", false, "moduleList");
 	}
 	
 	@RequestMapping(value="/tree")

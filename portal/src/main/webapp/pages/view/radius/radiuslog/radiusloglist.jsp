@@ -35,7 +35,7 @@
 		<table class="searchContent"  align="left" >
 			<tr>
 				<td>
-					&nbsp;用户名称：
+					&nbsp;动态用户：
 				</td>
 				<td>
 					<input name="name" type="text" size="20" value="${pageForm.name}">
@@ -68,7 +68,7 @@
 		<thead>
 			<tr>
 				<th width="30" >序号</th>
-				<th width="100" >用户名称</th>
+				<th width="100" >动态用户</th>
 				<th width="100" >时间</th>
 				<th width="100" >结果</th>
 			</tr>

@@ -87,7 +87,7 @@ function openurl(){
 		alert("MAC为空");
 	}
 	var url="<%=request.getParameter("url")%>";
-	window.open(url);
+	//window.open(url);
 }
 
 </script>

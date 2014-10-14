@@ -50,6 +50,7 @@ public class SystemLogController extends AbstractController {
 		//查询语句
 		String sqlCount="select count(*) from LoginLogPO where 1=1 ";
 		String sql="from LoginLogPO where 1=1 ";
+		String sqlOrderBy=" order by login_time desc";
 		String whereSql="";
 		if(pageForm.getName()!=null){
 			if(pageForm.getName().trim().length()>0){
@@ -69,7 +70,7 @@ public class SystemLogController extends AbstractController {
 			whereSql=whereSql+" and login_time <= :end_time ";
 			mp.put("end_time",DateUtil.getFormatStringDate(pageForm.getEndTime(), DateUtil.DATE_FORMAT));
 		}
-		sql=sql+whereSql;
+		sql=sql+whereSql+sqlOrderBy;;
 		sqlCount=sqlCount+whereSql;
 		//获取列表
 		List<LoginLogPO> LoginLogs=loginLogService.pageQuery(sql,propertiesMap, start, limit);
@@ -97,6 +98,7 @@ public class SystemLogController extends AbstractController {
 		//查询语句
 		String sqlCount="select count(*) from OperateLogPO where 1=1 ";
 		String sql=" from OperateLogPO where 1=1 ";
+		String sqlOrderBy=" order by operatetime desc";
 		String whereSql="";
 		if(pageForm.getName()!=null){
 			if(pageForm.getName().trim().length()>0){
@@ -128,7 +130,7 @@ public class SystemLogController extends AbstractController {
 			whereSql=whereSql+" and operatetime <= :end";
 			mp.put("end_time",DateUtil.getFormatStringDate(pageForm.getEndTime(), DateUtil.DATE_FORMAT));
 		}
-		sql=sql+whereSql;
+		sql=sql+whereSql+sqlOrderBy;
 		sqlCount=sqlCount+whereSql;
 		//获取列表
 		List<OperateLogPO> OperateLogs=operateLogService.pageQuery(sql,propertiesMap, start, limit);

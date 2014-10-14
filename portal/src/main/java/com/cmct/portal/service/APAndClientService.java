@@ -49,10 +49,10 @@ public class APAndClientService  {
 		return apClientDao.find(propertiesMap);
 	}
 	
-	public APAndClient find_Newest(Map<String,Object> propertiesMap){
-		List<APAndClient> list=apClientDao.find(propertiesMap);
+	public APAndClient find_Newest(String sql,Map<String,Object> propertiesMap){
+		List<APAndClient> list=apClientDao.pageQuery(sql,propertiesMap,0,3);
 		if(list!=null && list.size()>0){
-			return list.get(list.size()-1);
+			return list.get(0);
 		}
 		return null;
 	}

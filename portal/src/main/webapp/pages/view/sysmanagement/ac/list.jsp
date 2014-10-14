@@ -70,7 +70,7 @@
 		<ul class="toolBar">
 			<li><a class="add"    href="${ctx}/sysmanagement/ac/preadd" target="navTab" rel="acAdd"><span>新增AC</span></a></li>
 			<li><a class="edit"   href="${ctx}/sysmanagement/ac/preUpdate/{slt_uid}" target="navTab" rel="acUpdate"><span>编辑AC</span></a></li>
-			<li><a class="delete" href="${ctx}/sysmanagement/ac/delete/{slt_uid}" target="ajaxTodo" title="确认要删除该设置?"><span>删除AC</span></a></li>
+			<li><a class="delete" href="${ctx}/sysmanagement/ac/delete/{slt_uid}" target="ajaxTodo" title="确认要删除该AC"><span>删除AC</span></a></li>
 		</ul>
 	</div>
 	<table class="table"  layoutH="145"  width="100%" >
@@ -81,8 +81,7 @@
 				<th width="100" >IP地址</th>
 				<th width="100" >安装位置</th>
 				<th width="100" >所属企业</th>
-				<th width="250" >备注</th>
-				<th width="50" >状态</th>
+				<th width="100" >创建时间</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -93,7 +92,8 @@
 				<td>${acs.ip}</td>
 				<td>${acs.location}</td>
 				<td>${acs.cust_name}</td>
-				<td>${acs.remark}</td>
+				<td><fmt:formatDate value="${acs.createtime}" pattern="yyyy-MM-dd"/></td>
+				<!-- 
 				<c:choose>
 					<c:when test="${acs.isdelete=='Y'}">
 						<td>已删除</td>
@@ -102,6 +102,7 @@
 						<td>使用中</td>
 					</c:otherwise>
 				</c:choose>
+				 -->
 			</tr>
 			</c:forEach>
 		</tbody>

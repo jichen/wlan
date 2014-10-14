@@ -27,7 +27,7 @@ function submitFun(){
 			data:{'username':phone},
 			success:function(date){
 				if(date=="N"){
-					alert("动态密码已过期，请重新获取");
+					alert("登录出现异常请与服务方联系");
 					return false;
 				}else{
 					alert("登陆成功");

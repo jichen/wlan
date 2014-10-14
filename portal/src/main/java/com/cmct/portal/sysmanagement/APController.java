@@ -1,6 +1,7 @@
 package com.cmct.portal.sysmanagement;
 
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -50,14 +52,24 @@ public class APController extends AbstractController {
 	@RequestMapping(value = "/add")
 	@ResponseBody
 	public String add(APPO bean,HttpServletRequest request){
-		String ac_id = request.getParameter("ac.ac_id");		
-		bean.setAc_id(Integer.valueOf(ac_id));		
-		bean.setCreatetime(new Date());
-		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
-		bean.setCreateusername(user.getUsername());
-		bean.setIsdelete("N");
-		apService.saveAP(bean);
-		return ajaxDoneSuccess(" ",true,REL_ID);
+		String apName=bean.getAp_name();
+		String apMac=bean.getMac();
+		APPO p1=apService.findAPname(apName);
+		APPO p2=apService.findLoginAp(apMac);
+		if(p1!=null){
+			return ajaxDoneError("AP名称已存在");
+		}else if(p2!=null){
+			return ajaxDoneError("MAC已存在");
+		}else{
+			String ac_id = request.getParameter("ac.ac_id");		
+			bean.setAc_id(Integer.valueOf(ac_id));		
+			bean.setCreatetime(new Date());
+			UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
+			bean.setCreateusername(user.getUsername());
+			bean.setIsdelete("N");
+			apService.saveAP(bean);
+			return ajaxDoneSuccess(" ",true,REL_ID);
+		}
 	}
 
 
@@ -74,7 +86,7 @@ public class APController extends AbstractController {
 		String sqlCount="select count(*) from APPO where 1=1 ";
 		String sql=" from APPO where 1=1 ";
 		String where_sql="";
-		
+		where_sql=" and isdelete='N' ";
 		if(pageForm.getPageNum()>0){
 			start=(Integer.valueOf(pageForm.getPageNum())-1)*page.getNumPerPage();
 		}
@@ -102,26 +114,23 @@ public class APController extends AbstractController {
 				where_sql=where_sql+" and isdelete= :isdelete";
 			}
 		}
-
-		sql=sql+where_sql;
+		String ordersql=" order by createtime desc";
+		sql=sql+where_sql+ordersql;
 		sqlCount=sqlCount+where_sql;
-		
 		list=apService.findPages_sql(sql,propertiesMap, start, limit);
-
 		page.setTotalCount(apService.getTotalCount_where(sqlCount, propertiesMap));
-		
-
-		
 		for(APPO apPO:list){
 			ap=new APPO();
 			ap.setId(apPO.getId());
 			ap.setAp_name(apPO.getAp_name());
 			ap.setNas_port_id(apPO.getNas_port_id());
 			ap.setLocation(apPO.getLocation());
+			ap.setMac(apPO.getMac());
 			ap.setAc_name(apPO.getAc_name());
 			ap.setAc_id(apPO.getAc_id());
 			ap.setRemark(apPO.getRemark());
 			ap.setIsdelete(apPO.getIsdelete());
+			ap.setCreatetime(apPO.getCreatetime());
 			aps.add(ap);
 		}
 		
@@ -148,16 +157,26 @@ public class APController extends AbstractController {
 	@RequestMapping(value = "/update")
 	@ResponseBody
 	public String update(APPO bean,HttpServletRequest request) throws Exception {
-		String ac_id = request.getParameter("ac.ac_id");		
-		bean.setAc_id(Integer.valueOf(ac_id));	
-		if(bean.getIsdelete()==null || bean.getIsdelete()==""){
-			bean.setIsdelete("N");
+		String apName=bean.getAp_name();
+		String apMac=bean.getMac();
+		APPO p1=apService.findAPname(apName);
+		APPO p2=apService.findLoginAp(apMac);
+		if(p1!=null){
+			return ajaxDoneError("AP名称已存在");
+		}else if(p2!=null){
+			return ajaxDoneError("MAC已存在");
+		}else{
+			String ac_id = request.getParameter("ac.ac_id");		
+			bean.setAc_id(Integer.valueOf(ac_id));	
+			if(bean.getIsdelete()==null || bean.getIsdelete()==""){
+				bean.setIsdelete("N");
+			}
+			bean.setUpdatetime(new Date());
+			UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
+			bean.setUpdateusername(user.getUsername());
+			apService.updateAP(bean);
+			return ajaxDoneSuccess("",true,REL_ID);
 		}
-		bean.setUpdatetime(new Date());
-		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
-		bean.setUpdateusername(user.getUsername());
-		apService.updateAP(bean);
-		return ajaxDoneSuccess(" ",true,REL_ID);
 	}
 	
 
@@ -171,6 +190,41 @@ public class APController extends AbstractController {
 		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
 		bean.setUpdateusername(user.getUsername());
 		apService.updateAP(bean);
-		return ajaxDoneSuccess("删除成功", false, REL_ID);
+		return ajaxDoneSuccess("", false, REL_ID);
 	}
+	
+	
+	/**
+	 * 判断AP名是否存在
+	 */
+	@RequestMapping(value = "/ajaxAPname")
+	@ResponseBody
+	public void ajaxAPname(String name, HttpServletRequest request,HttpServletResponse response) throws Exception{
+		APPO info=apService.findAPname(name);
+		String ajaxDate="0";
+		if (info != null) {
+			ajaxDate="1";
+		}
+		PrintWriter pw=null;
+		pw=response.getWriter();
+		pw.write(ajaxDate);
+		pw.close();
+	}
+	/**
+	 * 判断AP名是否存在
+	 */
+	@RequestMapping(value = "/ajaxMac")
+	@ResponseBody
+	public void ajaxMac(String name, HttpServletRequest request,HttpServletResponse response) throws Exception{
+		APPO info=apService.findLoginAp(name);
+		String ajaxDate="0";
+		if (info != null) {
+			ajaxDate="1";
+		}
+		PrintWriter pw=null;
+		pw=response.getWriter();
+		pw.write(ajaxDate);
+		pw.close();
+	}
+	
 }
