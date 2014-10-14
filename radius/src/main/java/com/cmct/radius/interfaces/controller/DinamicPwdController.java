@@ -41,13 +41,17 @@ public class DinamicPwdController {
 	
 	@RequestMapping(value = "/fetch")
 	@ResponseBody
-	public String fetch(HttpServletResponse rsp,String username,String validtime) {
+	public String fetch(HttpServletResponse rsp,String username,String validtime,String signOn) {
 		try {
 			/**
 			 * 计算失效时间
 			 */
 			Integer time=Integer.valueOf(validtime)*60;
-			String onTimePassword=radUserService.generateOnTimePassword(username,time);
+			boolean sso=false;
+			if(signOn.equals(Constants.PORTAL_SIGN_ON)){
+				sso=true;
+			}
+			String onTimePassword=radUserService.generateOnTimePassword(username,time,sso);
 			System.out.println("时间："+new Date()+"    密码:"+onTimePassword);
 			
 			String content="账号："+username+"，获取动态短信密码为："+onTimePassword+"，该密码有效期为："+validtime+"分钟。";

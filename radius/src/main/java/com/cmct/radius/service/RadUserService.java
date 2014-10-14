@@ -16,9 +16,11 @@ import com.cmct.common.util.Constants;
 import com.cmct.common.util.NumberUtil;
 import com.cmct.common.util.Passwordmd5;
 import com.cmct.radius.dao.RadCheckDao;
+import com.cmct.radius.dao.RadReplyDao;
 import com.cmct.radius.dao.RadUserGroupDao;
 import com.cmct.radius.dao.UserInfoDao;
 import com.cmct.radius.po.RadCheckPO;
+import com.cmct.radius.po.RadReplyPO;
 import com.cmct.radius.po.RadUserGroupPO;
 import com.cmct.radius.po.UserInfoPO;
 
@@ -26,6 +28,8 @@ import com.cmct.radius.po.UserInfoPO;
 public class RadUserService {
 	@Autowired
     private RadCheckDao radCheckDao;
+	@Autowired
+    private RadReplyDao radReplyDao;
 	
 	@Autowired
 	private UserInfoDao userInfoDao;
@@ -38,7 +42,7 @@ public class RadUserService {
 	 * 动态密码生成或更新
 	 * @param username
 	 */
-	public String generateOnTimePassword(String username,Integer expirationTime) throws Exception {
+	public String generateOnTimePassword(String username,Integer expirationTime,boolean sso) throws Exception {
 		String onTimePassword = NumberUtil.runVerifyCode(6);
 		Map<String,Object> paramsMap = new HashMap<String, Object>();
 		paramsMap.put("username", username);
@@ -66,11 +70,13 @@ public class RadUserService {
 			List<RadCheckPO> listCheckPOExpire = this.radCheckDao.find(paramsMap);
 			RadCheckPO radCheckExpire = listCheckPOExpire.get(0);
 			radCheckExpire.setValue(df.format(cal.getTime()));
-			
 			this.radCheckDao.update(radCheckPwd);
 			this.radCheckDao.update(radCheckExpire);
 			this.userInfoDao.update(userInfo);
+			
     	} else {
+
+    		
     		RadCheckPO radCheckPwd = new RadCheckPO();
     		radCheckPwd.setUsername(username);
     		radCheckPwd.setAttribute(Constants.RAD_PWD_TYPE_CLERTEXT);
@@ -92,6 +98,37 @@ public class RadUserService {
     		userGroup.setUsername(username);
     		userGroup.setGroupname(Constants.USER_GROUP_TYPE_DINAMIC_USER);
     		userGroup.setPriority(1);
+    		
+    		//只对新增客户设置单点登录
+    		if(sso){
+        		RadCheckPO radSignOn = new RadCheckPO();
+        		radSignOn.setUsername(username);
+        		radSignOn.setAttribute(Constants.RAD_SINGLE_SIGN_ON);
+        		radSignOn.setOp(":=");
+        		radSignOn.setValue(Constants.PORTAL_SIGN_ON);
+    			this.radCheckDao.save(radSignOn);
+    			
+    			
+    			RadReplyPO radReply1 = new RadReplyPO();
+    			radReply1.setUsername(username);
+    			radReply1.setOp(":=");
+    			radReply1.setAttribute(Constants.RAD_FRAMED_IP_ADDRESS);
+    			radReply1.setValue(Constants.RAD_FRAMED_IP_ADDRESS_VALUE);
+    			this.radReplyDao.save(radReply1);
+    		
+    			RadReplyPO radReply2 = new RadReplyPO();
+    			radReply2.setUsername(username);
+    			radReply2.setOp(":=");
+    			radReply2.setAttribute(Constants.RAD_SESSION_TIMEOUT);
+    			radReply2.setValue(Constants.RAD_SESSION_TIMEOUT_VALUE);
+    			this.radReplyDao.save(radReply2);
+    			
+			}
+    		
+    		
+    		
+    		
+    		
     		
     		this.radCheckDao.save(radCheckPwd);
     		this.radCheckDao.save(radCheckExpire);

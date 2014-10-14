@@ -39,8 +39,8 @@ public class RadiusLogToPortalController {
 		String orderby=" order by authdate desc,username asc";	
 		
 		if(username!=null && username.length()>1){
-			propertiesMap.put("username",username);
-			where_sql=where_sql+" and username >= :username";
+			propertiesMap.put("username","%"+username+"%");
+			where_sql=where_sql+" and username like :username";
 		}		
 		
 		//登录时间
