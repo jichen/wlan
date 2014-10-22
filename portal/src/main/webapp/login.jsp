@@ -54,10 +54,17 @@ function keyEvent(){
 	}
 }
 
+$(document).ready(function(){
+	var divID = $("body>div").attr("id");
+	if (divID != "login"){
+		window.location.href = "${ctx}/login";
+	}
+});
+
 </script>
 </head>
 <body onkeypress="keyEvent()">
-<div class="main">
+<div class="main" id="login">
   <div class="login_main">
     <div class="login_home"></div>
     <div class="login_title">
