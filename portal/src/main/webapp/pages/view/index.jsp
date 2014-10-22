@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" %>
 <%@include file="/include.inc.jsp"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -218,7 +218,7 @@
 <script type="text/javascript">
 	$(function() {
 		DWZ.init("${ctx}/static/js/dwz/dwz.frag.xml", {
-			loginUrl : "${ctx}/timeout",
+			loginUrl : "login_dialog.html",
 			loginTitle : "登录", // 弹出登录对话框
 			//		loginUrl:"login.html",	// 跳到登录页面
 			statusCode : {
@@ -226,13 +226,23 @@
 				error : 300,
 				timeout : 403
 			}, //【可选】
+			pageInfo : {
+				pageNum : "pageNum",
+				numPerPage : "numPerPage",
+				orderField : "orderField",
+				orderDirection : "orderDirection"
+			}, //【可选】
 			debug : false, // 调试模式 【true|false】
 			callback : function() {
 				initEnv();
 				//	$("#themeList").theme({themeBase:"themes"}); // themeBase 相对于index页面的主题base路径
 			}
+
 		});
 	});
+	function collapse() {
+		$('#sidebar .toggleCollapse div').trigger('click');
+	}
 </script>
 
 </html>

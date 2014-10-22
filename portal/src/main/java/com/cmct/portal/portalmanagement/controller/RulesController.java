@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
@@ -133,7 +134,7 @@ public class RulesController extends AbstractController {
 	}
 
 	@Log(module = Constants.MODULE_AUTH_RULE, function = Constants.Funtion_Update)
-	@RequestMapping(value = "/update")
+	@RequestMapping(value = "/update",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String update(AuthRulePO bean,String sql,HttpServletRequest request){
 		if(!(bean.getIs_only_client()==null))

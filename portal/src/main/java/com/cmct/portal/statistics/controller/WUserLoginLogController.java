@@ -77,8 +77,8 @@ public class WUserLoginLogController extends AbstractController {
 		
 		if(pageForm.getName()!=null){
 			if(pageForm.getName().trim().length()>0){
-				propertiesMap.put("username", pageForm.getName().trim());
-				where_sql=where_sql+" and username= :username";
+				propertiesMap.put("username", "%"+pageForm.getName().trim()+"%");
+				where_sql=where_sql+" and username like :username";
 			}
 		}
 		//只查看登录的成功日志

@@ -62,22 +62,22 @@ public class TemplatePageController extends AbstractController {
 		}
 		
 		//查询语句
-		String sqlCount="select count(*) from TemplatePagePO where 1=1 ";
+		String sql=" from TemplatePagePO ";
+		String sqlCount="select count(*) from TemplatePagePO ";
+		String whereSql=" where 1=1 ";
 		if(pageForm.getName()!=null){
 			if(pageForm.getName().trim().length()>0){
 				propertiesMap.put("templatename", "%"+pageForm.getName().trim()+"%");
-				sqlCount=sqlCount+" and templatename like :templatename";
+				whereSql=whereSql+" and templatename like :templatename ";
 			}
 		}
-		if(pageForm.getIsdelete()!=null){
-			if(pageForm.getIsdelete().trim().length()>0){
-				propertiesMap.put("isdelete", pageForm.getIsdelete().trim());
-				sqlCount=sqlCount+" and isdelete= :isdelete";
-			}
-		}
-		
+		propertiesMap.put("isdelete", "N");
+		whereSql=whereSql+" and isdelete= :isdelete ";
+	
+		sql=sql+whereSql+" order by createtime desc ";
+		sqlCount=sqlCount+whereSql;
 		//获取列表
-		list=templatePageService.findPages(propertiesMap, start, limit);
+		list=templatePageService.findPagesSql(sql,propertiesMap, start, limit);
 
 		//计算符合条件的行数，分页需要
 		page.setTotalCount(templatePageService.getTotalCount_where(sqlCount, propertiesMap));		

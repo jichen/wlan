@@ -3,7 +3,6 @@
 <script type="text/javascript">
 
 function ajaxCustomer(obj){
-	alert($(obj).val());
 	$.ajax({
 		type : "post",
 		url : "${ctx}/sysmanagement/customer/ajaxCustomer",

@@ -212,7 +212,7 @@ public class AuthController {
 			//对result进行判断，以及添加log
 			//目前无法获取
 			
-			//po.setApid("");
+			po.setApid("");
 			po.setAuthresult("OK");
 			wUSERLogService.save(po);
 			//将数据放入session中

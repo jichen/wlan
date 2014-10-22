@@ -77,12 +77,12 @@ public class PortalLogController extends AbstractController {
 		
 		if(pageForm.getName()!=null){
 			if(pageForm.getName().trim().length()>0){
-				propertiesMap.put("username", pageForm.getName().trim());
-				where_sql=where_sql+" and username= :username";
+				propertiesMap.put("username", "%"+pageForm.getName().trim()+"%");
+				where_sql=where_sql+" and username like :username";
 			}
 		}
-
-		sql=sql+where_sql;
+		String sqlorderby=" order by authtime desc ";
+		sql=sql+where_sql+sqlorderby;
 		sqlCount=sqlCount+where_sql;
 		List<WLANUSERLogPO> list=wUSERLogService.pageQuery(sql ,propertiesMap, start, limit);
 

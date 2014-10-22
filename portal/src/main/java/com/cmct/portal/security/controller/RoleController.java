@@ -134,7 +134,7 @@ public class RoleController extends AbstractController {
 	}
 
 	@Log(module = Constants.MODULE_SYS_ROLE, function = Constants.Funtion_Delete)
-	@RequestMapping(value = "/delete/{id}")
+	@RequestMapping(value = "/delete/{id}",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String delete(@PathVariable Integer id, HttpServletRequest request) {
 		if (id == Integer.valueOf(1)) {

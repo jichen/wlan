@@ -7,7 +7,6 @@ function ajaxAPname(obj){
 		url : "${ctx}/sysmanagement/ap/ajaxAPname",
 		data : {'name' : $(obj).val()},
 		success : function(data) {
-			alert(data);
 			if(data==1){
 				alertMsg.info("AP名称已存在");
 				return false;

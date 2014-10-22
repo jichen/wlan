@@ -21,14 +21,17 @@
 					<input name="name" type="text" value="${pageForm.name}">
 				</td>
 				<td>
-					状态:
+					
 				</td>
 				<td>
+				<!-- 
+			
 					<select name="isdelete"  style="width: 132px">
 						<option ${pageForm.isdelete == "null"?"selected":"" }  value="">请选择</option>
 						<option ${pageForm.isdelete == "N"?"selected":"" }  value="N">使用中</option>
 						<option ${pageForm.isdelete == "Y"?"selected":"" }  value="Y">已删除</option>
 					</select>
+					 -->
 				</td>
 				<td>
 				</td>
@@ -61,9 +64,8 @@
 		<thead>
 			<tr>
 				<th width="50" >序号</th>
-				<th width="150" >用户名称</th>
-				<th width="150" >创建时间</th>
-				<th width="120" >状态</th>
+				<th width="200" >用户名称</th>
+				<th width="200" >创建时间</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -71,15 +73,7 @@
 			<tr target="slt_uid" rel="${users.userid}">
 				<td>${users.userid}</td>
 				<td>${users.username}</td>
-				<td><fmt:formatDate value="${users.createtime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
-				<c:choose>
-					<c:when test="${users.status=='Y'}">
-						<td>已删除</td>
-					</c:when>
-					<c:otherwise>
-						<td>使用中</td>
-					</c:otherwise>
-				</c:choose>
+				<td><fmt:formatDate value="${users.createtime}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 			</tr>
 			</c:forEach>
 		</tbody>

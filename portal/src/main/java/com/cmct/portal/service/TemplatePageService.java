@@ -39,6 +39,11 @@ public class TemplatePageService {
 	}
 	
 	
+	public List<TemplatePagePO> findPagesSql(String sql,Map<String,Object> propertiesMap,Integer start,Integer limit){
+		List<TemplatePagePO> list=templatePageDAO.pageQuery(sql,propertiesMap, start, limit);
+		return list;
+	}
+	
 	public Integer getTotalCount_where(String sql, Map<String,Object> propertiesMap) {
 		return templatePageDAO.getTotalCount(sql, propertiesMap);
 	} 

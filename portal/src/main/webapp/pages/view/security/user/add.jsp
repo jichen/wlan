@@ -17,7 +17,6 @@ function username_validateCallback(form, callback){
 		});
 	}
 	var username=$("input[name='username']").val();
-	alert(username);
 	$.ajax({
 		type : "post",
 		url : "${ctx}/security/user/ajaxuserName",

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
@@ -49,7 +50,7 @@ public class APController extends AbstractController {
 
 
 	@Log(module = Constants.MODULE_AP, function = Constants.Funtion_Add)
-	@RequestMapping(value = "/add")
+	@RequestMapping(value = "/add",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String add(APPO bean,HttpServletRequest request){
 		String apName=bean.getAp_name();
@@ -154,34 +155,38 @@ public class APController extends AbstractController {
 
 
 	@Log(module = Constants.MODULE_AP, function = Constants.Funtion_Update)	
-	@RequestMapping(value = "/update")
+	@RequestMapping(value = "/update",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String update(APPO bean,HttpServletRequest request) throws Exception {
-		String apName=bean.getAp_name();
-		String apMac=bean.getMac();
-		APPO p1=apService.findAPname(apName);
-		APPO p2=apService.findLoginAp(apMac);
-		if(p1!=null){
-			return ajaxDoneError("AP名称已存在");
-		}else if(p2!=null){
-			return ajaxDoneError("MAC已存在");
-		}else{
-			String ac_id = request.getParameter("ac.ac_id");		
-			bean.setAc_id(Integer.valueOf(ac_id));	
-			if(bean.getIsdelete()==null || bean.getIsdelete()==""){
-				bean.setIsdelete("N");
+		APPO po=apService.findOne(bean.getId());
+		
+		if(!po.getAp_name().equals(bean.getAp_name())){
+			APPO po1=apService.findAPname(bean.getAp_name());
+			if(po1!=null){
+				return ajaxDoneError("AP名称已存在");
 			}
-			bean.setUpdatetime(new Date());
-			UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
-			bean.setUpdateusername(user.getUsername());
-			apService.updateAP(bean);
-			return ajaxDoneSuccess("",true,REL_ID);
 		}
+		if(!po.getMac().equalsIgnoreCase(bean.getMac())){
+			APPO po2=apService.findLoginAp(bean.getMac());
+			if(po2!=null){
+				return ajaxDoneError("MAC已存在");
+			}
+		}
+		
+		String ac_id = request.getParameter("ac.ac_id");		
+		bean.setAc_id(Integer.valueOf(ac_id));	
+		if(bean.getIsdelete()==null || bean.getIsdelete()==""){
+			bean.setIsdelete("N");
+		}
+		bean.setUpdatetime(new Date());
+		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
+		bean.setUpdateusername(user.getUsername());
+		apService.updateAP(bean);
+		return ajaxDoneSuccess("",true,REL_ID);
 	}
 	
-
 	@Log(module = Constants.MODULE_AP, function = Constants.Funtion_Delete)
-	@RequestMapping(value = "/delete/{id}")
+	@RequestMapping(value = "/delete/{id}",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String delete(@PathVariable("id") Integer id,HttpServletRequest request) throws Exception {
 		APPO bean = apService.findOne(id);

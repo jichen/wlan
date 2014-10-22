@@ -37,14 +37,16 @@
 			</tr>
 			<tr>
 				<td>
-					&nbsp;状态：
+					
 				</td>
 				<td>
+				<!-- 
 					<select name="isdelete"  style="width: 132px">
 						<option ${pageForm.isdelete == "null"?"selected":"" }  value="">请选择</option>
 						<option ${pageForm.isdelete == "N"?"selected":"" }  value="N">使用中</option>
 						<option ${pageForm.isdelete == "Y"?"selected":"" }  value="Y">已删除</option>
 					</select>
+				-->
 				</td>
 				<td></td>
 				<td></td>

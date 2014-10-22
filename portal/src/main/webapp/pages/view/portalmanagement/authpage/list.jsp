@@ -6,18 +6,18 @@ function isview(flag,id,deleteflag){
 	$("#preview").attr("href",url);
 	if(deleteflag=='N'){
 		if(flag=='N'){
-			alert($(".pageShow").find("#tMAdd"));
+			//alert($(".pageShow").find("#tMAdd"));
 			$(".pageShow").find("#tMAdd").attr("disabled",false);
 			$(".pageShow").find("#tMUpdate").attr("disabled","");
 			//$(".pageShow").find("#preview").attr("disabled","");
 		}else if(flag=='Y'){
-			alert($(".pageShow").find("#tMAdd"));
+			//alert($(".pageShow").find("#tMAdd"));
 			$(".pageShow").find("#tMAdd").attr("disabled","");
 			$(".pageShow").find("#tMUpdate").attr("disabled",false);	
 			//$(".pageShow").find("#preview").attr("disabled",false);	
 		}
 	}else if(deleteflag=='Y'){
-		alert($(".pageShow").find("#tMAdd"));
+		//alert($(".pageShow").find("#tMAdd"));
 		$(".pageShow").find("#tMAdd").attr("disabled","");
 		$(".pageShow").find("#tMUpdate").attr("disabled","");
 		//$(".pageShow").find("#preview").attr("disabled","");
@@ -49,14 +49,16 @@ function isview(flag,id,deleteflag){
 					<input name="name" type="text" value="${pageForm.name}">
 				</td>
 				<td>
-					&nbsp;状态：
+					 
 				</td>
 				<td>
+				<!-- 
 					<select name="isdelete"  style="width: 132px">
 						<option ${pageForm.isdelete == "null"?"selected":"" }  value="">请选择</option>
 						<option ${pageForm.isdelete == "N"?"selected":"" }  value="N">使用中</option>
 						<option ${pageForm.isdelete == "Y"?"selected":"" }  value="Y">已删除</option>
 					</select>
+					 -->
 				</td>
 				<td>
 				<div class="subBar">
@@ -89,12 +91,11 @@ function isview(flag,id,deleteflag){
 	<table class="table"  layoutH="145"  width="100%" >
 		<thead>
 			<tr>
-				<th width="30" >序号</th>
+				<th width="50" >序号</th>
 				<th width="200" >模板名称</th>
 				<th width="100" >式样数量</th>
 				<th width="100" >图片数量</th>
 				<th width="100" >文本数量</th>
-				<th width="50" >状态</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -105,14 +106,6 @@ function isview(flag,id,deleteflag){
 				<td>${templatePages.csscount}</td>
 				<td>${templatePages.imagecount}</td>
 				<td>${templatePages.textcount}</td>
-				<c:choose>
-					<c:when test="${templatePages.isdelete=='Y'}">
-						<td>已删除</td>
-					</c:when>
-					<c:otherwise>
-						<td>使用中</td>
-					</c:otherwise>
-				</c:choose>
 			</tr>
 			</c:forEach>
 		</tbody>

@@ -289,12 +289,8 @@ public class UserController extends AbstractController {
 		}
 		//查询语句
 		String sqlCount="select count(*) from UserPO where 1=1 ";
-		if(pageForm.getIsdelete()!=null){
-			if(pageForm.getIsdelete().trim().length()>0){
-				propertiesMap.put("status", pageForm.getIsdelete().trim());
-				sqlCount=sqlCount+" and status= :status";
-			}
-		}
+		propertiesMap.put("status", "N");
+		sqlCount=sqlCount+" and status= :status";
 		if(pageForm.getName()!=null){
 			if(pageForm.getName().trim().length()>0){
 				propertiesMap.put("username", pageForm.getName().trim());

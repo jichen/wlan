@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
@@ -26,8 +27,10 @@ import com.cmct.common.util.AbstractController;
 import com.cmct.common.util.ui.PageFormModel;
 import com.cmct.common.util.ui.Page;
 import com.cmct.portal.po.ACPO;
+import com.cmct.portal.po.APPO;
 import com.cmct.portal.po.UserPO;
 import com.cmct.portal.service.ACService;
+import com.cmct.portal.service.APService;
 
 
 @Controller
@@ -38,6 +41,8 @@ public class ACController extends AbstractController {
 	
 	@Autowired
 	private ACService acService;
+	@Autowired
+	private APService apService;
 
 
 	@RequestMapping(value = "/preadd")
@@ -47,7 +52,7 @@ public class ACController extends AbstractController {
 	}
 
 	@Log(module = Constants.MODULE_AC, function = Constants.Funtion_Add)
-	@RequestMapping(value = "/add")
+	@RequestMapping(value = "/add",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String add(ACPO bean,HttpServletRequest request){
 		String acName=bean.getAc_name();
@@ -80,43 +85,59 @@ public class ACController extends AbstractController {
 	}
 
 	@Log(module = Constants.MODULE_AC, function = Constants.Funtion_Update)
-	@RequestMapping(value = "/update")
+	@RequestMapping(value = "/update",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String update(ACPO bean,HttpServletRequest request) throws Exception {
-		String acName=bean.getAc_name();
-		String acIp=bean.getIp();
-		ACPO p1=acService.findACname(acName);
-		ACPO p2=acService.findACip(acIp);
-		if(p1!=null){
-			return ajaxDoneError("AC名称已存在");
-		}else if(p2!=null){
-			return ajaxDoneError("IP已存在");
-		}else{
-			String cust_id = request.getParameter("cust.cust_id");
-			bean.setCust_id(Integer.valueOf(cust_id));
-			if(bean.getIsdelete()==null || bean.getIsdelete()==""){
-				bean.setIsdelete("N");
+		ACPO po=acService.findOne(bean.getId());
+		
+		if(!po.getAc_name().equals(bean.getAc_name())){
+			ACPO po1=acService.findACname(bean.getAc_name());
+			if(po1!=null){
+				return ajaxDoneError("AC名称已存在");
 			}
-			bean.setUpdatetime(new Date());
-			UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
-			bean.setUpdateusername(user.getUsername());
-			acService.updateAC(bean);
-			return ajaxDoneSuccess(" ",true,REL_ID);
 		}
-	}
-	
-
-	@Log(module = Constants.MODULE_AC, function = Constants.Funtion_Delete)
-	@RequestMapping(value = "/delete/{id}")
-	@ResponseBody
-	public String delete(@PathVariable("id") Integer id,HttpServletRequest request) throws Exception {
-		ACPO bean = acService.findOne(id);
-		bean.setIsdelete("Y");
+		if(!po.getIp().equalsIgnoreCase(bean.getIp())){
+			ACPO po2=acService.findACip(bean.getIp());
+			if(po2!=null){
+				return ajaxDoneError("IP已存在");
+			}
+		}
+		
+		
+		String cust_id = request.getParameter("cust.cust_id");
+		bean.setCust_id(Integer.valueOf(cust_id));
+		if(bean.getIsdelete()==null || bean.getIsdelete()==""){
+			bean.setIsdelete("N");
+		}
 		bean.setUpdatetime(new Date());
 		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
 		bean.setUpdateusername(user.getUsername());
 		acService.updateAC(bean);
-		return ajaxDoneSuccess(" ", false, REL_ID);
+		return ajaxDoneSuccess(" ",true,REL_ID);
+		
+	}
+	
+
+	@Log(module = Constants.MODULE_AC, function = Constants.Funtion_Delete)
+	@RequestMapping(value = "/delete/{id}",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
+	@ResponseBody
+	public String delete(@PathVariable("id") Integer id,HttpServletRequest request) throws Exception {
+		String sql=" from APPO where and isdelete= :isdelete and ac_id = :ac_id ";
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
+		propertiesMap.put("isdelete", "N");
+		propertiesMap.put("ac_id", id);
+		List<APPO> list =apService.findPages(propertiesMap, 0, 10);
+		if(list!=null && list.size()>0){
+			return ajaxDoneError("有AP挂载在该AC下，故无法删除");
+		}else{
+			ACPO bean = acService.findOne(id);
+			bean.setIsdelete("Y");
+			bean.setUpdatetime(new Date());
+			UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
+			bean.setUpdateusername(user.getUsername());
+			acService.updateAC(bean);
+			return ajaxDoneSuccess(" ", false, REL_ID);
+		}
 	}
 	
 	/**
@@ -150,12 +171,12 @@ public class ACController extends AbstractController {
 				where_sql=where_sql+" and location like :location";
 			}
 		}
-		if(pageForm.getIsdelete()!=null){
-			if(pageForm.getIsdelete().trim().length()>0){
-				propertiesMap.put("isdelete", pageForm.getIsdelete().trim());
-				where_sql=where_sql+" and isdelete= :isdelete";
-			}
-		}
+//		if(pageForm.getIsdelete()!=null){
+//			if(pageForm.getIsdelete().trim().length()>0){
+//				propertiesMap.put("isdelete", pageForm.getIsdelete().trim());
+//				where_sql=where_sql+" and isdelete= :isdelete";
+//			}
+//		}
 		if(pageForm.getIp()!=null){
 			if(pageForm.getIp().trim().length()>0){
 				propertiesMap.put("ip", pageForm.getIp());
@@ -205,9 +226,12 @@ public class ACController extends AbstractController {
 		Map<String,Object> propertiesMap =new HashMap<String,Object>();
 		Integer start = 0;
 		Integer limit=page.getNumPerPage();
-		String sqlCount="select count(*) from ACPO where 1=1 ";
+
+		String sqlCount="select count(*) from ACPO where 1=1  and isdelete='N' ";
 		String sql=" from ACPO where 1=1 ";
 		String where_sql="";
+		where_sql=" and isdelete= :isdelete ";
+		propertiesMap.put("isdelete", "N");
 		if(pageForm.getPageNum()>0){
 			start=(Integer.valueOf(pageForm.getPageNum())-1)*page.getNumPerPage();
 		}
@@ -215,8 +239,8 @@ public class ACController extends AbstractController {
 		
 		if(pageForm.getName()!=null){
 			if(pageForm.getName().trim().length()>0){
-				propertiesMap.put("ac_name", pageForm.getName().trim());
-				where_sql=where_sql+" and ac_name= :ac_name";
+				propertiesMap.put("ac_name", "%"+pageForm.getName().trim()+"%");
+				where_sql=where_sql+" and ac_name like :ac_name";
 			}
 		}
 		if(pageForm.getLocation()!=null){

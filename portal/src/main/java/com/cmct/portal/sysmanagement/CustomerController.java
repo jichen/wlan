@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
@@ -28,6 +29,7 @@ import com.cmct.common.util.ui.Page;
 import com.cmct.portal.po.ACPO;
 import com.cmct.portal.po.CustomerPO;
 import com.cmct.portal.po.UserPO;
+import com.cmct.portal.service.ACService;
 import com.cmct.portal.service.CustomerService;
 
 
@@ -41,6 +43,8 @@ public class CustomerController extends AbstractController {
 	@Autowired
 	private CustomerService customerService;
 
+	@Autowired
+	private ACService acService;
 	
 	/**
 	 *输出列表 
@@ -140,7 +144,7 @@ public class CustomerController extends AbstractController {
 	 *
 	 */
 	@Log(module = Constants.MODULE_CUSTOMER, function = Constants.Funtion_Add)
-	@RequestMapping(value = "/add")
+	@RequestMapping(value = "/add",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String add(CustomerPO bean,HttpServletRequest request){
 		CustomerPO info=customerService.findCustomerName(bean.getCust_name());
@@ -172,38 +176,53 @@ public class CustomerController extends AbstractController {
 	 */
 
 	@Log(module = Constants.MODULE_CUSTOMER, function = Constants.Funtion_Update)
-	@RequestMapping(value = "/update")
+	@RequestMapping(value = "/update",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String update(CustomerPO bean,HttpServletRequest request) throws Exception {
-		CustomerPO info=customerService.findCustomerName(bean.getCust_name());
-		if(info!=null){
-			return ajaxDoneError("企业名称已存在");
-		}else{
-			if(bean.getIsdelete()==null || bean.getIsdelete()==""){
-				bean.setIsdelete("N");
+		CustomerPO po=customerService.findOne(bean.getId());
+		
+		if(!po.getCust_name().equals(bean.getCust_name())){
+			CustomerPO po1=customerService.findCustomerName(bean.getCust_name());
+			if(po1!=null){
+				return ajaxDoneError("企业名称已存在");
 			}
-			bean.setUpdatetime(new Date());
-			UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
-			bean.setUpdateusername(user.getUsername());
-			customerService.updateCustomer(bean);
-			return ajaxDoneSuccess(" ",true,REL_ID);
 		}
+		
+		if(bean.getIsdelete()==null || bean.getIsdelete()==""){
+			bean.setIsdelete("N");
+		}
+		bean.setUpdatetime(new Date());
+		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
+		bean.setUpdateusername(user.getUsername());
+		customerService.updateCustomer(bean);
+		return ajaxDoneSuccess(" ",true,REL_ID);
+		
 	}
 	
 	/*
 	 * 删除（删除只是将数据更新）
 	 */
 	@Log(module = Constants.MODULE_CUSTOMER, function = Constants.Funtion_Delete)
-	@RequestMapping(value = "/delete/{id}")
+	@RequestMapping(value = "/delete/{id}",method=RequestMethod.POST,produces="text/html;charset=UTF-8")
 	@ResponseBody
 	public String delete(@PathVariable("id") Integer id,HttpServletRequest request) throws Exception {
-		CustomerPO bean = customerService.findOne(id);
-		bean.setIsdelete("Y");
-		bean.setUpdatetime(new Date());
-		UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
-		bean.setUpdateusername(user.getUsername());
-		customerService.updateCustomer(bean);
-		return ajaxDoneSuccess(" ", false, REL_ID);
+		String sql=" from ACPO where and isdelete= :isdelete and cust_id = :cust_id ";
+		Map<String,Object> propertiesMap =new HashMap<String,Object>();
+		propertiesMap.put("isdelete", "N");
+		propertiesMap.put("cust_id", id);
+		List<ACPO> list =acService.findPages(propertiesMap, 0, 10);
+		if(list!=null && list.size()>0){
+			return ajaxDoneError("有AC挂载在该企业下，故无法删除");
+		}else{
+			CustomerPO bean = customerService.findOne(id);
+			bean.setIsdelete("Y");
+			bean.setUpdatetime(new Date());
+			UserPO user =(UserPO) WebUtils.getSessionAttribute(request, Constants.PORTAL_LOGIN_USER);
+			bean.setUpdateusername(user.getUsername());
+			customerService.updateCustomer(bean);
+			return ajaxDoneSuccess(" ", false, REL_ID);
+			
+		}
 	}
 
 	/*
@@ -222,34 +241,35 @@ public class CustomerController extends AbstractController {
 			start=(pageForm.getPageNum()-1)*page.getNumPerPage();
 		}
 		
-		String sqlCount="select count(*) from CustomerPO where 1=1 ";
-		
+		String sqlCount="select count(*) from CustomerPO ";
+		String sql=" from CustomerPO ";
+		String whereSql=" where 1=1 ";
 		//默认删除的不显示
 		propertiesMap.put("isdelete", "N");
-		sqlCount=sqlCount+" and isdelete= :isdelete";
+		whereSql=whereSql+" and isdelete= :isdelete";
 		
 
 
 		if(pageForm.getCust_name()!=null && pageForm.getCust_name().trim().length()>0){
 			propertiesMap.put("cust_name", "%"+pageForm.getCust_name().trim()+"%");
-			sqlCount=sqlCount+" and cust_name like :cust_name";
+			whereSql=whereSql+" and cust_name like :cust_name";
 		}
 		if(pageForm.getLocation()!=null && pageForm.getLocation().trim().length()>0){
 			propertiesMap.put("location", "%"+pageForm.getLocation().trim()+"%");
-			sqlCount=sqlCount+" and address like :location";
+			whereSql=whereSql+" and address like :location";
 		}
 		if(pageForm.getContact()!=null && pageForm.getContact().trim().length()>0){
 			propertiesMap.put("contact", "%"+pageForm.getContact().trim()+"%");
-			sqlCount=sqlCount+" and contact like :contact";
+			whereSql=whereSql+" and contact like :contact";
 		}
 		if(pageForm.getPhone()!=null && pageForm.getPhone().trim().length()>0){
 			propertiesMap.put("phone", "%"+pageForm.getPhone().trim()+"%");
-			sqlCount=sqlCount+" and phone like :phone";
+			whereSql=whereSql+" and phone like :phone";
 		}
+		sql=sql+whereSql+" order by createtime desc ";
+		sqlCount=sqlCount+whereSql;
 		
-		
-		list=customerService.findPages(propertiesMap, start, limit);
-
+		list=customerService.findPages_sql(sql, propertiesMap, start, limit);
 		page.setTotalCount(customerService.getTotalCount_where(sqlCount, propertiesMap));		
 		
 		for(CustomerPO customerPO:list){

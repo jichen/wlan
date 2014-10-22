@@ -65,6 +65,7 @@ public class UserService {
 	public UserPO onlyOne_Username(String username){
 		Map<String,Object> propertiesMap = new HashMap<String,Object>();
 		propertiesMap.put("username",username);
+		propertiesMap.put("status","N");
 		List<UserPO> list=userDao.find(propertiesMap);
 		if(null != list  && list.size()>0){
 			return list.get(0);

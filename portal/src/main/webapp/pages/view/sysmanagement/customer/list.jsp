@@ -1,4 +1,4 @@
-<%@page contentType="text/html;charset=UTF-8"%>
+<%@page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8" trimDirectiveWhitespaces="true"%>
 <%@include file="/include.inc.jsp" %>
 <div class="pageHeader">
 <form onsubmit="return navTabSearch(this);" rel="pagerForm"  id="pagerForm" action="${ctx}/sysmanagement/customer/list" method="post">
@@ -41,14 +41,16 @@
 					<input name="phone" type="text" value="${pageForm.phone}">
 				</td>
 				<td>
-					&nbsp;状态：
+					
 				</td>
 				<td>
+				<!-- 
 					<select name="isdelete"  style="width: 132px">
 						<option ${pageForm.isdelete == "null"?"selected":"" }  value="">请选择</option>
 						<option ${pageForm.isdelete == "N"?"selected":"" }  value="N">使用中</option>
 						<option ${pageForm.isdelete == "Y"?"selected":"" }  value="Y">已删除</option>
 					</select>
+				-->
 				</td>
 				<td>
 				</td>

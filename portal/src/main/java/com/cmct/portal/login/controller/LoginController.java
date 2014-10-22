@@ -215,6 +215,12 @@ public class LoginController extends AbstractController {
 	@RequestMapping(value = "/login")
 	@ResponseBody
 	public ModelAndView login(HttpServletRequest request,HttpServletResponse response) {
+//        try {
+//			response.sendRedirect("http://localhost:8080/portal/login.jsp");
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		return new ModelAndView("/login");
 	}
 	
