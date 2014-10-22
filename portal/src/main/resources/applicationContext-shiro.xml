@@ -69,7 +69,6 @@
 				/static/** = anon
 				/pages/authenticate/** = anon
 				/** = authc,session
-				<!--/** = anon -->
 			</value>
 		</property>
 	</bean>
